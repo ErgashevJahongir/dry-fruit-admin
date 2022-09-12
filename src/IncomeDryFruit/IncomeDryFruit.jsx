@@ -24,6 +24,7 @@ const IncomeDryFruit = () => {
             )
             .then((data) => {
                 const fuel = data.data.data.dryFruit.map((item) => {
+                    console.log(item);
                     return {
                         ...item,
                         date: moment(item.date).format("DD-MM-YYYY"),
@@ -132,7 +133,7 @@ const IncomeDryFruit = () => {
         instance
             .post("api/dry/fruit/incomeDryFruit/add", { ...value })
             .then(function (response) {
-                message.success("Kelgan quruq meva muvofaqiyatli qo'shildi");
+                message.success("Kelgan quruq meva muvaffaqiyatli qo'shildi");
                 getIncomeDryFruits(current - 1, pageSize);
             })
             .catch(function (error) {
@@ -158,7 +159,7 @@ const IncomeDryFruit = () => {
                 ...data,
             })
             .then((res) => {
-                message.success("Kelgan quruq meva muvofaqiyatli taxrirlandi");
+                message.success("Kelgan quruq meva muvaffaqiyatli taxrirlandi");
                 getIncomeDryFruits(current - 1, pageSize);
             })
             .catch(function (error) {
@@ -179,7 +180,7 @@ const IncomeDryFruit = () => {
                 .then((data) => {
                     getIncomeDryFruits(current - 1, pageSize);
                     message.success(
-                        "Kelgan quruq meva muvofaqiyatli o'chirildi"
+                        "Kelgan quruq meva muvaffaqiyatli o'chirildi"
                     );
                 })
                 .catch((error) => {

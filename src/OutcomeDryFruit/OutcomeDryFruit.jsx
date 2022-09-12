@@ -3,27 +3,31 @@ import instance from "../Api/Axios";
 import moment from "moment";
 import { message } from "antd";
 import CustomTable from "../Module/Table/Table";
+import { useNavigate } from "react-router-dom";
 import { useData } from "../Hook/UseData";
 
-const OutcomeDryFruit = () => {
+const IncomeDryFruit = () => {
     const [incomeFuel, setIncomeFuel] = useState([]);
     const [loading, setLoading] = useState(true);
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { fuelsData, employe } = useData();
+    const { newDryFruitData, measurementData, dryfruitWarehouseData } =
+        useData();
+    const navigate = useNavigate();
 
-    const getIncomeFuels = (current, pageSize) => {
+    const getIncomeDryFruits = (current, pageSize) => {
         setLoading(true);
         instance
             .get(
-                `api/dry/fruit/outcomeDryFruit/getAllPageable?page=${current}&size=${pageSize}`
+                `api/dry/fruit/outcomeFruit/getAllPageable?page=${current}&size=${pageSize}`
             )
             .then((data) => {
                 const fuel = data.data.data.dryFruit.map((item) => {
+                    console.log(item);
                     return {
                         ...item,
-                        incomeTime: moment(item.incomeTime).toISOString(),
+                        date: moment(item.date).format("DD-MM-YYYY"),
                     };
                 });
                 setIncomeFuel(fuel);
@@ -31,28 +35,44 @@ const OutcomeDryFruit = () => {
             })
             .catch((error) => {
                 console.error(error);
-                message.error("Sotilgan mevani yuklashda muammo bo'ldi");
+                if (error.response.status === 500) navigate("/server-error");
+                message.error("Sotilgan quruq mevalarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoading(false));
     };
 
     const columns = [
         {
-            title: "Meva turi",
+            title: "Quruq meva turi",
             dataIndex: "dryFruitId",
             key: "dryFruitId",
             width: "20%",
-            search: false,
             render: (record) => {
-                const fuel = fuelsData.filter((item) => item.id === record);
-                return fuel[0]?.type;
+                const data = newDryFruitData.filter(
+                    (item) => item.id === record
+                );
+                return data[0]?.name;
             },
+            search: false,
+        },
+        {
+            title: "O'lchovi",
+            dataIndex: "measurementId",
+            key: "measurementId",
+            width: "15%",
+            render: (record) => {
+                const data = measurementData.filter(
+                    (item) => item.id === record
+                );
+                return data[0]?.name;
+            },
+            search: false,
         },
         {
             title: "Miqdori",
             dataIndex: "amount",
             key: "amount",
-            width: "20%",
+            width: "15%",
             sorter: (a, b) => {
                 if (a.amount < b.amount) {
                     return -1;
@@ -70,22 +90,19 @@ const OutcomeDryFruit = () => {
             key: "date",
             width: "20%",
             search: false,
-            render: (record) => {
-                return record.substr(0, 10);
-            },
         },
         {
-            title: "Sotilish narxi",
+            title: "Sotilgan narxi",
             dataIndex: "price",
             key: "price",
-            width: "20%",
+            width: "15%",
             search: false,
         },
         {
-            title: "Qarzdorlik",
-            dataIndex: "debt",
-            key: "debt",
-            width: "20%",
+            title: "Naqd pul",
+            dataIndex: "cash",
+            key: "cash",
+            width: "15%",
             search: false,
             render: (record) => {
                 return record ? "Bor" : "Yo'q";
@@ -97,41 +114,45 @@ const OutcomeDryFruit = () => {
         setLoading(true);
         const value = {
             ...values,
-            incomeTime: values.incomeTime.toISOString(),
+            date: values.date.toISOString(),
             debt: values.debt.target.value,
         };
         instance
-            .post("api/dry/fruit/outcomeFruit/", { ...value })
+            .post("api/dry/fruit/outcomeFruit/add", { ...value })
             .then(function (response) {
-                message.success("Sotilgan meva muvaffaqiyatli qo'shildi");
-                getIncomeFuels(current - 1, pageSize);
+                message.success("Sotilgan quruq meva muvaffaqiyatli qo'shildi");
+                getIncomeDryFruits(current - 1, pageSize);
             })
             .catch(function (error) {
                 console.error(error);
-                message.error("Sotilgan mevani qo'shishda muammo bo'ldi");
+                if (error.response.status === 500) navigate("/server-error");
+                message.error("Sotilgan quruq mevani qo'shishda muammo bo'ldi");
             })
             .finally(() => {
                 setLoading(false);
             });
     };
+
     const onEdit = (values, initial) => {
         setLoading(true);
-        const time = values.incomeTime.toISOString().substr(0, 10);
+        const time = moment(values.date, "DD-MM-YYYY").toISOString();
         const data = {
             ...values,
             debt: values.debt.target.value,
-            incomeTime: time,
-            id: initial.id,
+            date: time,
         };
         instance
-            .put(`api/dry/fruit/outcomeFruit/${initial.id}`, { ...data })
+            .put(`api/dry/fruit/outcomeFruit/update${initial.id}`, {
+                ...data,
+            })
             .then((res) => {
-                message.success("Sotilgan meva muvaffaqiyatli taxrirlandi");
-                getIncomeFuels(current - 1, pageSize);
+                message.success("Sotilgan quruq meva muvaffaqiyatli taxrirlandi");
+                getIncomeDryFruits(current - 1, pageSize);
             })
             .catch(function (error) {
                 console.error("Error in edit: ", error);
-                message.error("Sotilgan mevani taxrirlashda muammo bo'ldi");
+                if (error.response.status === 500) navigate("/server-error");
+                message.error("Sotilgan quruq mevani taxrirlashda muammo bo'ldi");
             })
             .finally(() => {
                 setLoading(false);
@@ -142,15 +163,19 @@ const OutcomeDryFruit = () => {
         setLoading(true);
         arr.map((item) => {
             instance
-                .delete(`api/dry/fruit/outcomeFruit/${item}`)
+                .delete(`api/dry/fruit/outcomeFruit/delete${item}`)
                 .then((data) => {
-                    getIncomeFuels(current - 1, pageSize);
-                    message.success("Sotilgan meva muvaffaqiyatli o'chirildi");
+                    getIncomeDryFruits(current - 1, pageSize);
+                    message.success(
+                        "Sotilgan quruq meva muvaffaqiyatli o'chirildi"
+                    );
                 })
                 .catch((error) => {
                     console.error(error);
+                    if (error.response.status === 500)
+                        navigate("/server-error");
                     message.error(
-                        "Sotilgan mevani o'chirishda muammo bo'ldi"
+                        "Sotilgan quruq mevani o'chirishda muammo bo'ldi"
                     );
                 });
             return null;
@@ -164,7 +189,7 @@ const OutcomeDryFruit = () => {
                 onEdit={onEdit}
                 onCreate={onCreate}
                 onDelete={handleDelete}
-                getData={getIncomeFuels}
+                getData={getIncomeDryFruits}
                 columns={columns}
                 tableData={incomeFuel}
                 current={current}
@@ -180,4 +205,4 @@ const OutcomeDryFruit = () => {
     );
 };
 
-export default OutcomeDryFruit;
+export default IncomeDryFruit;

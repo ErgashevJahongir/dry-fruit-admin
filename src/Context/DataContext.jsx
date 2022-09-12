@@ -101,7 +101,7 @@ export const DataProvider = ({ children }) => {
     const editIncomeFuelsData = [
         {
             name: "dryFruitWarehouseId",
-            label: "Yoqilg'i turi",
+            label: "Meva turi",
             inputSelect: (defaultId = null) => (
                 <CustomSelect
                     backValue={"id"}
@@ -148,6 +148,136 @@ export const DataProvider = ({ children }) => {
         {
             name: "date",
             label: "Kelish vaqti",
+            input: <Input />,
+        },
+        {
+            name: "debt",
+            label: "Qarzdorlik",
+            input: (
+                <Radio.Group>
+                    <Radio value="false"> Yo'q </Radio>
+                    <Radio value="true"> Bor </Radio>
+                </Radio.Group>
+            ),
+        },
+    ];
+
+    const outcomeDryFruitData = [
+        {
+            name: "dryFruitWarehouseId",
+            label: "Quruq meva turi",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq mevani skladdan tanlang"}
+                    selectData={dryfruitWarehouseData}
+                />
+            ),
+        },
+        {
+            name: "dryFruitId",
+            label: "Quruq meva nomi",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq mevani tanlang"}
+                    selectData={newDryFruitData}
+                />
+            ),
+        },
+        {
+            name: "measurementId",
+            label: "Quruq meva o'lchovi",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq meva o'lchovi"}
+                    selectData={measurementData}
+                />
+            ),
+        },
+        {
+            name: "amount",
+            label: "Quruq meva miqdori",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "price",
+            label: "Quruq meva narxi",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "date",
+            label: "Sotilish vaqti",
+            input: (
+                <DatePicker
+                    style={{ width: "100%" }}
+                    value={moment().format()}
+                />
+            ),
+        },
+        {
+            name: "debt",
+            label: "Qarzdorlik",
+            input: (
+                <Radio.Group>
+                    <Radio value="false"> Yo'q </Radio>
+                    <Radio value="true"> Bor </Radio>
+                </Radio.Group>
+            ),
+        },
+    ];
+
+    const editOutcomeDryFruitData = [
+        {
+            name: "dryFruitWarehouseId",
+            label: "Meva turi",
+            inputSelect: (defaultId = null) => (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq mevani skladdan tanlang"}
+                    selectData={dryfruitWarehouseData}
+                    DValue={defaultId}
+                />
+            ),
+        },
+        {
+            name: "dryFruitId",
+            label: "Quruq meva nomi",
+            inputSelect: (defaultId = null) => (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq mevani tanlang"}
+                    selectData={newDryFruitData}
+                    DValue={defaultId}
+                />
+            ),
+        },
+        {
+            name: "measurementId",
+            label: "Quruq meva o'lchovi",
+            inputSelect: (defaultId = null) => (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq meva o'lchovi"}
+                    selectData={measurementData}
+                    DValue={defaultId}
+                />
+            ),
+        },
+        {
+            name: "amount",
+            label: "Quruq meva miqdori",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "price",
+            label: "Quruq meva narxi",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "date",
+            label: "Sotilish vaqti",
             input: <Input />,
         },
         {
@@ -291,60 +421,6 @@ export const DataProvider = ({ children }) => {
         },
     ];
 
-    const outcomeDryfruitData = [
-        {
-            name: "categoryId",
-            label: "Kategoriyani tanlang",
-            inputSelect: (defaultId = null) => {
-                return (
-                    <CustomSelect
-                        DValue={defaultId}
-                        backValue={"id"}
-                        placeholder={"Kategoriyani tanlang"}
-                        selectData={categoryData}
-                     />
-                );
-            },
-        },
-        {
-            name: "incomePrice",
-            label: "Kelish narxi",
-            input: <InputNumber style={{ width: "100%" }} />,
-        },
-        {
-            name: "outcomePrice",
-            label: "Sotilish narxi",
-            input: <InputNumber style={{ width: "100%" }} />,
-        },
-        {
-            name: "debt",
-            label: "Qarzdorlik",
-            inputSelect: (defaultId = null) => {
-                return (
-                    <CustomSelect
-                        DValue={defaultId}
-                        backValue={"id"}
-                        placeholder={"Kategoriyani tanlang"}
-                        selectData={categoryData}
-                    />
-                );
-            },
-        },
-        ];
-        
-    const dryFruitWarehouse = [
-        {
-            name: "name",
-            label: "Meva nomi",
-            input: <Input />,
-        },
-        {
-            name: "id",
-            label: "Meva id",
-            input: <Input />,
-        },
-    ];
-    
     const indebtFormData = [
         {
             name: "incomeDryFruitId",
@@ -659,34 +735,34 @@ export const DataProvider = ({ children }) => {
         }
         case "/outcome-dryfruit": {
             formData = {
-                formData: outcomeDryfruitData,
-                editFormData: outcomeDryfruitData,
+                formData: outcomeDryFruitData,
+                editFormData: editOutcomeDryFruitData,
                 branchData: false,
                 timeFilterInfo: false,
                 deleteInfo: true,
                 createInfo: true,
                 editInfo: true,
                 timelyInfo: false,
-                editModalTitle: "Ishchini o'zgartirish",
-                modalTitle: "Yangi ishchi qo'shish",
+                editModalTitle: "Kelgan quruq mevani o'zgartirish",
+                modalTitle: "Kelgan quruq mevani qo'shish",
             };
             break;
         }
-        case "/warehouse-dryfruit": {
-            formData = {
-                formData: dryFruitWarehouse,
-                editFormData: dryFruitWarehouse,
-                branchData: false,
-                timeFilterInfo: false,
-                deleteInfo: true,
-                createInfo: true,
-                editInfo: true,
-                timelyInfo: false,
-                editModalTitle: "Mevani o'zgartirish",
-                modalTitle: "Yangi meva qo'shish",
-            };
-            break;
-        }
+        // case "/warehouse-dryfruit": {
+        //     formData = {
+        //         formData: dryFruitWarehouse,
+        //         editFormData: dryFruitWarehouse,
+        //         branchData: false,
+        //         timeFilterInfo: false,
+        //         deleteInfo: true,
+        //         createInfo: true,
+        //         editInfo: true,
+        //         timelyInfo: false,
+        //         editModalTitle: "Mevani o'zgartirish",
+        //         modalTitle: "Yangi meva qo'shish",
+        //     };
+        //     break;
+        // }
         default: {
             formData = { ...formData };
         }
