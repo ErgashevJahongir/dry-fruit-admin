@@ -363,6 +363,36 @@ export const DataProvider = ({ children }) => {
         },
     ];
 
+    const dryFruitWarehouseData = [
+        {
+            name: "branchId",
+            label: "Kategoriyani tanlang",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Kategoriyani tanlang"}
+                    selectData={categoryData}
+                />
+            ),
+        },
+        {
+            name: "dryFruitId",
+            label: "Kategoriyani tanlang",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Kategoriyani tanlang"}
+                    selectData={dryfruitData}
+                />
+            ),
+        },
+        {
+            name: "amount",
+            label: "Qiymati",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+    ];
+
     const editdryFruitData = [
         {
             name: "categoryId",
@@ -571,6 +601,7 @@ export const DataProvider = ({ children }) => {
             .get("api/dry/fruit/dryFruit/getAll")
             .then((data) => {
                 setDryfruitData(data.data.data);
+                console.log(data.data.data);
             })
             .catch((err) => console.error(err));
     };
@@ -580,6 +611,7 @@ export const DataProvider = ({ children }) => {
             .get("api/dry/fruit/dryFruitWarehouse/getAll")
             .then((data) => {
                 setDryfruitWarehouseData(data.data.data);
+                console.log(data.data.data);
             })
             .catch((err) => console.error(err));
     };
@@ -589,6 +621,7 @@ export const DataProvider = ({ children }) => {
             .get("api/dry/fruit/api/dry/fruit/branch")
             .then((data) => {
                 setBranchData(data.data.data);
+                console.log(data.data.data);
             })
             .catch((err) => console.error(err));
     };
@@ -748,21 +781,21 @@ export const DataProvider = ({ children }) => {
             };
             break;
         }
-        // case "/warehouse-dryfruit": {
-        //     formData = {
-        //         formData: dryFruitWarehouse,
-        //         editFormData: dryFruitWarehouse,
-        //         branchData: false,
-        //         timeFilterInfo: false,
-        //         deleteInfo: true,
-        //         createInfo: true,
-        //         editInfo: true,
-        //         timelyInfo: false,
-        //         editModalTitle: "Mevani o'zgartirish",
-        //         modalTitle: "Yangi meva qo'shish",
-        //     };
-        //     break;
-        // }
+        case "/warehouse-dryfruit": {
+            formData = {
+                formData: dryFruitWarehouseData,
+                editFormData: dryFruitWarehouseData,
+                branchData: false,
+                timeFilterInfo: false,
+                deleteInfo: true,
+                createInfo: true,
+                editInfo: true,
+                timelyInfo: false,
+                editModalTitle: "Mevani o'zgartirish",
+                modalTitle: "Yangi meva qo'shish",
+            };
+            break;
+        }
         default: {
             formData = { ...formData };
         }

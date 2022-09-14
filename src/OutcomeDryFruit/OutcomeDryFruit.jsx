@@ -24,7 +24,6 @@ const IncomeDryFruit = () => {
             )
             .then((data) => {
                 const fuel = data.data.data.dryFruit.map((item) => {
-                    console.log(item);
                     return {
                         ...item,
                         date: moment(item.date).format("DD-MM-YYYY"),
