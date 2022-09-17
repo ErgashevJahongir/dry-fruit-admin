@@ -14,7 +14,7 @@ export const DataProvider = ({ children }) => {
     const [categoryData, setCategoryData] = useState([]);
     const [dryfruitData, setDryfruitData] = useState([]);
     const [dryfruitWarehouseData, setDryfruitWarehouseData] = useState([]);
-    // const [roleData, setRoleData] = useState([]);
+    const [roleData, setRoleData] = useState([]);
     const [branchData, setBranchData] = useState([]);
     // const { token } = useToken();
     // let navigate = useNavigate();
@@ -164,17 +164,6 @@ export const DataProvider = ({ children }) => {
 
     const outcomeDryFruitData = [
         {
-            name: "dryFruitWarehouseId",
-            label: "Quruq meva turi",
-            input: (
-                <CustomSelect
-                    backValue={"id"}
-                    placeholder={"Quruq mevani skladdan tanlang"}
-                    selectData={dryfruitWarehouseData}
-                />
-            ),
-        },
-        {
             name: "dryFruitId",
             label: "Quruq meva nomi",
             input: (
@@ -229,18 +218,6 @@ export const DataProvider = ({ children }) => {
     ];
 
     const editOutcomeDryFruitData = [
-        {
-            name: "dryFruitWarehouseId",
-            label: "Meva turi",
-            inputSelect: (defaultId = null) => (
-                <CustomSelect
-                    backValue={"id"}
-                    placeholder={"Quruq mevani skladdan tanlang"}
-                    selectData={dryfruitWarehouseData}
-                    DValue={defaultId}
-                />
-            ),
-        },
         {
             name: "dryFruitId",
             label: "Quruq meva nomi",
@@ -366,29 +343,29 @@ export const DataProvider = ({ children }) => {
     const dryFruitWarehouseData = [
         {
             name: "branchId",
-            label: "Kategoriyani tanlang",
+            label: "Filialni",
             input: (
                 <CustomSelect
                     backValue={"id"}
-                    placeholder={"Kategoriyani tanlang"}
-                    selectData={categoryData}
+                    placeholder={"Filialni tanlang"}
+                    selectData={branchData}
                 />
             ),
         },
         {
             name: "dryFruitId",
-            label: "Kategoriyani tanlang",
+            label: "Quruq mevalar",
             input: (
                 <CustomSelect
                     backValue={"id"}
-                    placeholder={"Kategoriyani tanlang"}
-                    selectData={dryfruitData}
+                    placeholder={"Mevani tanlang"}
+                    selectData={newDryFruitData}
                 />
             ),
         },
         {
             name: "amount",
-            label: "Qiymati",
+            label: "Miqdori",
             input: <InputNumber style={{ width: "100%" }} />,
         },
     ];
@@ -448,6 +425,84 @@ export const DataProvider = ({ children }) => {
             name: "phoneNumber",
             label: "Ishchi nomeri",
             input: <Input />,
+        },
+    ];
+
+    const usersData = [
+        {
+            name: "fio",
+            label: "Ishchi FIO",
+            input: <Input />,
+        },
+        {
+            name: "password",
+            label: "Ishchi passwordi",
+            input: <Input />,
+        },
+        {
+            name: "phoneNumber",
+            label: "Ishchi nomeri",
+            input: <Input />,
+        },
+        {
+            name: "branchId",
+            label: "Filial",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Filialni tanlang"}
+                    selectData={branchData}
+                />
+            ),
+        },
+        // {
+        //     name: "roleId",
+        //     label: "roleId",
+        //     input: (
+        //         <CustomSelect
+        //             backValue={"id"}
+        //             placeholder={"Quruq mevani tanlang"}
+        //             selectData={roleData}
+        //         />
+        //     ),
+        // },
+        // {
+        //     name: "deleted",
+        //     label: "deleted",
+        //     // inputSelect: (defaultId = null) => {
+        //     //     const str = defaultId?.toString();
+        //     //     return (
+        //     //         <Radio.Group defaultValue={str}>
+        //     //             <Radio value="false"> Yo'q </Radio>
+        //     //             <Radio value="true"> Ha </Radio>
+        //     //         </Radio.Group>
+        //     //     );
+        //     // },
+        //     input: (
+        //         <Radio.Group>
+        //             <Radio value="false"> Yo'q </Radio>
+        //             <Radio value="true"> Ha </Radio>
+        //         </Radio.Group>
+        //     ),
+        // },
+        {
+            name: "block",
+            label: "block",
+            // inputSelect: (defaultId = null) => {
+            //     const str = defaultId?.toString();
+            //     return (
+            //         <Radio.Group defaultValue={str}>
+            //             <Radio value="false"> Yo'q </Radio>
+            //             <Radio value="true"> Ha </Radio>
+            //         </Radio.Group>
+            //     );
+            // },
+            input: (
+                <Radio.Group>
+                    <Radio value="false"> Yo'q </Radio>
+                    <Radio value="true"> Ha </Radio>
+                </Radio.Group>
+            ),
         },
     ];
 
@@ -601,7 +656,6 @@ export const DataProvider = ({ children }) => {
             .get("api/dry/fruit/dryFruit/getAll")
             .then((data) => {
                 setDryfruitData(data.data.data);
-                console.log(data.data.data);
             })
             .catch((err) => console.error(err));
     };
@@ -611,7 +665,6 @@ export const DataProvider = ({ children }) => {
             .get("api/dry/fruit/dryFruitWarehouse/getAll")
             .then((data) => {
                 setDryfruitWarehouseData(data.data.data);
-                console.log(data.data.data);
             })
             .catch((err) => console.error(err));
     };
@@ -621,19 +674,18 @@ export const DataProvider = ({ children }) => {
             .get("api/dry/fruit/api/dry/fruit/branch")
             .then((data) => {
                 setBranchData(data.data.data);
-                console.log(data.data.data);
             })
             .catch((err) => console.error(err));
     };
 
-    // const getRoleData = () => {
-    //     instance
-    //         .get("api/dry/fruit/category")
-    //         .then((data) => {
-    //             setCategoryData(data.data.data);
-    //         })
-    //         .catch((err) => console.error(err));
-    // };
+    const getRoleData = () => {
+        instance
+            .get("api/dry/fruit/role")
+            .then((data) => {
+                setRoleData(data.data.data);
+            })
+            .catch((err) => console.error(err));
+    };
 
     useEffect(() => {
         getMeasurementData();
@@ -641,6 +693,7 @@ export const DataProvider = ({ children }) => {
         getBranchData();
         getDryfruitData();
         getDryfruitWarehouseData();
+        getRoleData();
     }, []);
 
     let formData = {};
@@ -753,16 +806,16 @@ export const DataProvider = ({ children }) => {
         }
         case "/users": {
             formData = {
-                formData: workersData,
-                editFormData: workersData,
+                formData: usersData,
+                editFormData: usersData,
                 branchData: false,
                 timeFilterInfo: false,
                 deleteInfo: true,
                 createInfo: true,
                 editInfo: true,
                 timelyInfo: false,
-                editModalTitle: "Ishchini o'zgartirish",
-                modalTitle: "Yangi ishchi qo'shish",
+                editModalTitle: "Foydalanuvchini o'zgartirish",
+                modalTitle: "Yangi foydalanuvchi qo'shish",
             };
             break;
         }
@@ -776,8 +829,8 @@ export const DataProvider = ({ children }) => {
                 createInfo: true,
                 editInfo: true,
                 timelyInfo: false,
-                editModalTitle: "Kelgan quruq mevani o'zgartirish",
-                modalTitle: "Kelgan quruq mevani qo'shish",
+                editModalTitle: "Sotilgan quruq mevani o'zgartirish",
+                modalTitle: "Sotilgan quruq mevani qo'shish",
             };
             break;
         }

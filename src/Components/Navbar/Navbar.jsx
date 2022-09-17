@@ -164,7 +164,7 @@ function Navbar() {
                             key: "/income-dryfruit",
                             icon: (
                                 <Link to="/income-dryfruit">
-                                    <CloudUploadOutlined
+                                    <CloudDownloadOutlined  
                                         style={{ fontSize: "18px" }}
                                     />
                                 </Link>
@@ -175,7 +175,7 @@ function Navbar() {
                             key: "/outcome-dryfruit",
                             icon: (
                                 <Link to="/outcome-dryfruit">
-                                    <CloudDownloadOutlined
+                                    <CloudUploadOutlined
                                         style={{ fontSize: "18px" }}
                                     />
                                 </Link>

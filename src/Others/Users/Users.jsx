@@ -10,13 +10,13 @@ const Users = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { categoryData } = useData();
+    const { categoryData, branch, role } = useData();
 
     const getWorkers = (current, pageSize) => {
         setLoading(true);
         instance
             .get(
-                `api/dry/fruit/api/dry/fruit/user/page?page=${current}&size=${pageSize}`
+                `api/dry/fruit/api/dry/fruit/user/all-pageable?page=${current}&size=${pageSize}`
             )
             .then((data) => {
                 setWorkers(data.data.data.fuelReports);
@@ -24,57 +24,82 @@ const Users = () => {
             })
             .catch((error) => {
                 console.error(error);
-                message.error("Ishchilarni yuklashda muammo bo'ldi");
+                message.error("Foydalanuvchilarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoading(false));
     };
 
     const columns = [
         {
-            title: "Ishchi nomi",
+            title: "Foydalanuvchi nomi",
             dataIndex: "fio",
             key: "fio",
-            width: "48%",
+            width: "20%",
             search: true,
         },
+        // {
+        //     title: "Foydalanuvchi passwordi",
+        //     dataIndex: "password",
+        //     key: "password",
+        //     width: "20%",
+        //     search: false,
+        // },
         {
-            title: "Ishchi nomeri",
+            title: "Foydalanuvchi nomeri",
             dataIndex: "phoneNumber",
             key: "phoneNumber",
-            width: "48%",
+            width: "20%",
             search: false,
         },
-        // {
-        //     title: "Klient addressi",
-        //     dataIndex: "address",
-        //     key: "address",
-        //     width: "33%",
-        //     search: false,
-        //     sorter: (a, b) => {
-        //         if (a.address < b.address) {
-        //             return -1;
-        //         }
-        //         if (a.address > b.address) {
-        //             return 1;
-        //         }
-        //         return 0;
+        {
+            title: "Ishlash filiali",
+            dataIndex: "branchId",
+            key: "branchId",
+            width: "20%",
+            search: false,
+            // render: (record) => {
+                //         const fuel = branch.filter((item) => item.id === record);
+                //         return fuel[0]?.name;
+                //     },
+        },
+        {
+            title: "Role",
+            dataIndex: "roleId",
+            key: "roleId",
+            width: "20%",
+            search: false,
+        //     render: (record) => {
+        //         const fuel = role.filter((item) => item.id === record);
+        //         return fuel[0]?.name;
         //     },
-        // },
+        },
+        {
+            title: "Bloklangan",
+            dataIndex: "block",
+            key: "block",
+            width: "20%",
+            search: false,
+            render: (record) => {
+                return record ? "Ha" : "Yo'q";
+            },
+        },
     ];
 
     const onCreate = (values) => {
         setLoading(true);
         instance
-            .post(
-                `api/dry/fruit/api/dry/fruit/worker?fio=${values.fio}&phoneNumber=${values.phoneNumber}`
-            )
+            .post("api/dry/fruit/api/dry/fruit/user/post", {
+                ...values,
+                roleId: 3,
+                deleted: false,
+            })
             .then(function (response) {
-                message.success("Ishchi muvaffaqiyatli qo'shildi");
+                message.success("Foydalanuvchi muvaffaqiyatli qo'shildi");
                 getWorkers(current - 1, pageSize);
             })
             .catch(function (error) {
                 console.error(error);
-                message.error("Ishchini qo'shishda muammo bo'ldi");
+                message.error("Foydalanuvchini qo'shishda muammo bo'ldi");
             })
             .finally(() => {
                 setLoading(false);
@@ -84,17 +109,20 @@ const Users = () => {
     const onEdit = (values, initial) => {
         console.log(initial.id);
         setLoading(true);
+        const blocked = values.block === "true" ? true : false;
         instance
-            .put(
-                `api/dry/fruit/api/dry/fruit/user?id=${initial.id}&fio=${values.fio}&phoneNumber=${values.phoneNumber}&deleted=false`
-            )
+            .put(`api/dry/fruit/api/dry/fruit/user/update${initial.id}`, {
+                ...values,
+                deleted: false,
+                block: blocked,
+            })
             .then((res) => {
-                message.success("Ishchi muvaffaqiyatli taxrirlandi");
+                message.success("Foydalanuvchi muvaffaqiyatli taxrirlandi");
                 getWorkers(current - 1, pageSize);
             })
             .catch(function (error) {
                 console.error("Error in edit: ", error);
-                message.error("Ishchini taxrirlashda muammo bo'ldi");
+                message.error("Foydalanuvchini taxrirlashda muammo bo'ldi");
             })
             .finally(() => {
                 setLoading(false);
@@ -105,14 +133,14 @@ const Users = () => {
         setLoading(true);
         arr.map((item) => {
             instance
-                .delete(`api/dry/fruit/api/dry/fruit/user/${item}`)
+                .delete(`api/dry/fruit/api/dry/fruit/user/delete${item}`)
                 .then((data) => {
                     getWorkers(current - 1, pageSize);
-                    message.success("Ishchi muvaffaqiyatli o'chirildi");
+                    message.success("Foydalanuvchi muvaffaqiyatli o'chirildi");
                 })
                 .catch((error) => {
                     console.error(error);
-                    message.error("Ishchini o'chirishda muammo bo'ldi");
+                    message.error("Foydalanuvchini o'chirishda muammo bo'ldi");
                 });
             return null;
         });

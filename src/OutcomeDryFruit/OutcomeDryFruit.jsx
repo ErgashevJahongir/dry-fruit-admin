@@ -42,7 +42,7 @@ const IncomeDryFruit = () => {
 
     const columns = [
         {
-            title: "Quruq meva turi",
+            title: "Quruq meva nomi",
             dataIndex: "dryFruitId",
             key: "dryFruitId",
             width: "20%",
