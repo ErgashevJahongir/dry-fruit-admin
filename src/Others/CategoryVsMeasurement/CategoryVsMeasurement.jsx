@@ -9,6 +9,8 @@ import "./CategoryVsMeasurment.css";
 const CategoryVsMeasurement = () => {
     const [category, setCategory] = useState([]);
     const [measurement, setMeasurment] = useState([]);
+    const [current, setCurrent] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
     const [loadingCategory, setLoadingCategory] = useState(true);
     const [loading, setLoading] = useState(true);
     const [currentCategory, setCurrentCategory] = useState(1);
@@ -219,6 +221,10 @@ const CategoryVsMeasurement = () => {
                 <div>
                     <h3>O'lchov birligi</h3>
                     <CustomTable
+                        setCurrent={setCurrent}
+                        current={current}
+                        setPageSize={setPageSize}
+                        pageSize={pageSize}
                         onEdit={onEdit}
                         onCreate={onCreate}
                         getData={getMeasurment}
