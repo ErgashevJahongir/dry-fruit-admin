@@ -9,6 +9,7 @@ import CustomSelect from "../Module/Select/Select";
 export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
+    const [valueDebt, setValueDebt] = useState(null);
     const [user, setUser] = useState({});
     const [measurementData, setMeasurementData] = useState([]);
     const [categoryData, setCategoryData] = useState([]);
@@ -16,9 +17,14 @@ export const DataProvider = ({ children }) => {
     const [dryfruitWarehouseData, setDryfruitWarehouseData] = useState([]);
     // const [roleData, setRoleData] = useState([]);
     const [branchData, setBranchData] = useState([]);
+    const [qarzValue, setQarzValue] = useState("");
     // const { token } = useToken();
     // let navigate = useNavigate();
     let location = useLocation();
+
+    const onChangeDebt = (e) => {
+        setValueDebt(e.target.value);
+    };
 
     const DryFruitDataFunc = () => {
         return dryfruitData?.map((cat) => {
@@ -30,17 +36,27 @@ export const DataProvider = ({ children }) => {
         });
     };
 
+    const DryFruitWerehouseDataFunc = () => {
+        return dryfruitWarehouseData?.map((cat) => {
+            const data = branchData.filter((item) => item.id === cat.branchId);
+            const name = data[0]?.name;
+            return { ...cat, name: name };
+        });
+    };
+
+    const newDryFruitWerehouseData = DryFruitWerehouseDataFunc();
+
     const newDryFruitData = DryFruitDataFunc();
 
     const incomeFuelsData = [
         {
             name: "dryFruitWarehouseId",
-            label: "Quruq meva turi",
+            label: "Quruq meva kiritilayotgan filial",
             input: (
                 <CustomSelect
                     backValue={"id"}
-                    placeholder={"Quruq mevani skladdan tanlang"}
-                    selectData={dryfruitWarehouseData}
+                    placeholder={"Quruq meva kiritilayotgan filial"}
+                    selectData={newDryFruitWerehouseData}
                 />
             ),
         },
@@ -90,9 +106,25 @@ export const DataProvider = ({ children }) => {
             name: "debt",
             label: "Qarzdorlik",
             input: (
-                <Radio.Group>
+                <Radio.Group onChange={onChangeDebt}>
                     <Radio value="false"> Yo'q </Radio>
-                    <Radio value="true"> Bor </Radio>
+                    <Radio value="true">
+                        {" "}
+                        <p>Bor</p>
+                        {valueDebt === "true" ? (
+                            <div style={{ width: "100%", marginLeft: "-20px" }}>
+                                Qarizdorlik
+                                <InputNumber
+                                    value={qarzValue}
+                                    placeholder="Qarizdorlik"
+                                    onChange={(e) => setQarzValue(e)}
+                                    style={{
+                                        width: "100%",
+                                    }}
+                                />
+                            </div>
+                        ) : null}{" "}
+                    </Radio>
                 </Radio.Group>
             ),
         },
@@ -101,12 +133,12 @@ export const DataProvider = ({ children }) => {
     const editIncomeFuelsData = [
         {
             name: "dryFruitWarehouseId",
-            label: "Yoqilg'i turi",
+            label: "Quruq meva kiritilayotgan filial",
             inputSelect: (defaultId = null) => (
                 <CustomSelect
                     backValue={"id"}
-                    placeholder={"Quruq mevani skladdan tanlang"}
-                    selectData={dryfruitWarehouseData}
+                    placeholder={"Quruq meva kiritilayotgan filial"}
+                    selectData={newDryFruitWerehouseData}
                     DValue={defaultId}
                 />
             ),
@@ -302,7 +334,7 @@ export const DataProvider = ({ children }) => {
                         backValue={"id"}
                         placeholder={"Kategoriyani tanlang"}
                         selectData={categoryData}
-                     />
+                    />
                 );
             },
         },
@@ -330,8 +362,8 @@ export const DataProvider = ({ children }) => {
                 );
             },
         },
-        ];
-        
+    ];
+
     const dryFruitWarehouse = [
         {
             name: "name",
@@ -344,7 +376,7 @@ export const DataProvider = ({ children }) => {
             input: <Input />,
         },
     ];
-    
+
     const indebtFormData = [
         {
             name: "incomeDryFruitId",
@@ -702,8 +734,10 @@ export const DataProvider = ({ children }) => {
         branchData,
         setDryfruitWarehouseData,
         dryfruitWarehouseData,
+        newDryFruitWerehouseData,
         newDryFruitData,
         user,
+        qarzValue,
     };
 
     return (
