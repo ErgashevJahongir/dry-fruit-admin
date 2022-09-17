@@ -143,17 +143,18 @@ const CategoryVsMeasurement = () => {
 
     const onEdit = (values, initial) => {
         setLoading(true);
+        console.log(values, initial);
         instance
             .put(`api/dry/fruit/measurement/update${initial.id}`, { values })
             .then(function (response) {
                 getMeasurment();
                 getMeasurementData();
-                message.success("O'lchov birligi muvofaqiyatli qo'shildi");
+                message.success("O'lchov birligi muvofaqiyatli taxrirlandi");
             })
             .catch(function (error) {
                 console.error(error);
-                if (error.response.status === 500) navigate("/server-error");
-                message.error("O'lchov birligini qo'shishda muammo bo'ldi");
+                if (error.response?.status === 500) navigate("/server-error");
+                message.error("O'lchov birligini taxrirlashda muammo bo'ldi");
             })
             .finally(() => {
                 setLoading(false);

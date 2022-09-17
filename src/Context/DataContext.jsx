@@ -302,7 +302,7 @@ export const DataProvider = ({ children }) => {
                         backValue={"id"}
                         placeholder={"Kategoriyani tanlang"}
                         selectData={categoryData}
-                     />
+                    />
                 );
             },
         },
@@ -330,8 +330,8 @@ export const DataProvider = ({ children }) => {
                 );
             },
         },
-        ];
-        
+    ];
+
     const dryFruitWarehouse = [
         {
             name: "name",
@@ -344,7 +344,7 @@ export const DataProvider = ({ children }) => {
             input: <Input />,
         },
     ];
-    
+
     const indebtFormData = [
         {
             name: "incomeDryFruitId",
