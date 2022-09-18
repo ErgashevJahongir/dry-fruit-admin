@@ -455,48 +455,20 @@ export const DataProvider = ({ children }) => {
                 />
             ),
         },
-        // {
-        //     name: "roleId",
-        //     label: "roleId",
-        //     input: (
-        //         <CustomSelect
-        //             backValue={"id"}
-        //             placeholder={"Quruq mevani tanlang"}
-        //             selectData={roleData}
-        //         />
-        //     ),
-        // },
-        // {
-        //     name: "deleted",
-        //     label: "deleted",
-        //     // inputSelect: (defaultId = null) => {
-        //     //     const str = defaultId?.toString();
-        //     //     return (
-        //     //         <Radio.Group defaultValue={str}>
-        //     //             <Radio value="false"> Yo'q </Radio>
-        //     //             <Radio value="true"> Ha </Radio>
-        //     //         </Radio.Group>
-        //     //     );
-        //     // },
-        //     input: (
-        //         <Radio.Group>
-        //             <Radio value="false"> Yo'q </Radio>
-        //             <Radio value="true"> Ha </Radio>
-        //         </Radio.Group>
-        //     ),
-        // },
+        {
+            name: "roleId",
+            label: "roleId",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq mevani tanlang"}
+                    selectData={roleData}
+                />
+            ),
+        },
         {
             name: "block",
             label: "block",
-            // inputSelect: (defaultId = null) => {
-            //     const str = defaultId?.toString();
-            //     return (
-            //         <Radio.Group defaultValue={str}>
-            //             <Radio value="false"> Yo'q </Radio>
-            //             <Radio value="true"> Ha </Radio>
-            //         </Radio.Group>
-            //     );
-            // },
             input: (
                 <Radio.Group>
                     <Radio value="false"> Yo'q </Radio>
@@ -680,7 +652,7 @@ export const DataProvider = ({ children }) => {
 
     const getRoleData = () => {
         instance
-            .get("api/dry/fruit/role")
+            .get("api/dry/fruit/role/getAll")
             .then((data) => {
                 setRoleData(data.data.data);
             })

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import instance from "../../Api/Axios";
 import { message } from "antd";
-import { useData } from "../../Hook/UseData";
 import CustomTable from "../../Module/Table/Table";
 
 const Users = () => {
@@ -10,7 +9,6 @@ const Users = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { categoryData, branch, role } = useData();
 
     const getWorkers = (current, pageSize) => {
         setLoading(true);
@@ -37,13 +35,6 @@ const Users = () => {
             width: "20%",
             search: true,
         },
-        // {
-        //     title: "Foydalanuvchi passwordi",
-        //     dataIndex: "password",
-        //     key: "password",
-        //     width: "20%",
-        //     search: false,
-        // },
         {
             title: "Foydalanuvchi nomeri",
             dataIndex: "phoneNumber",
@@ -57,10 +48,6 @@ const Users = () => {
             key: "branchId",
             width: "20%",
             search: false,
-            // render: (record) => {
-                //         const fuel = branch.filter((item) => item.id === record);
-                //         return fuel[0]?.name;
-                //     },
         },
         {
             title: "Role",
@@ -68,10 +55,6 @@ const Users = () => {
             key: "roleId",
             width: "20%",
             search: false,
-        //     render: (record) => {
-        //         const fuel = role.filter((item) => item.id === record);
-        //         return fuel[0]?.name;
-        //     },
         },
         {
             title: "Bloklangan",
@@ -90,7 +73,6 @@ const Users = () => {
         instance
             .post("api/dry/fruit/api/dry/fruit/user/post", {
                 ...values,
-                roleId: 3,
                 deleted: false,
             })
             .then(function (response) {
@@ -107,14 +89,11 @@ const Users = () => {
     };
 
     const onEdit = (values, initial) => {
-        console.log(initial.id);
         setLoading(true);
-        const blocked = values.block === "true" ? true : false;
         instance
             .put(`api/dry/fruit/api/dry/fruit/user/update${initial.id}`, {
                 ...values,
                 deleted: false,
-                block: blocked,
             })
             .then((res) => {
                 message.success("Foydalanuvchi muvaffaqiyatli taxrirlandi");
