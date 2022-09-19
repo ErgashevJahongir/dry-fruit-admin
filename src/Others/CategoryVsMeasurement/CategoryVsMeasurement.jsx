@@ -44,7 +44,7 @@ const CategoryVsMeasurement = () => {
             .then(function (response) {
                 getCategory(currentCategory - 1, pageSizeCategory);
                 getCategoryData();
-                message.success("Kategoriya muvofaqiyatli qo'shildi");
+                message.success("Kategoriya muvaffaqiyatli qo'shildi");
             })
             .catch(function (error) {
                 console.error(error);
@@ -63,7 +63,7 @@ const CategoryVsMeasurement = () => {
             .then(function (response) {
                 getCategory(currentCategory - 1, pageSizeCategory);
                 getCategoryData();
-                message.success("Kategoriya muvofaqiyatli qo'shildi");
+                message.success("Kategoriya muvaffaqiyatli qo'shildi");
             })
             .catch(function (error) {
                 console.error(error);
@@ -84,7 +84,7 @@ const CategoryVsMeasurement = () => {
                 .then((data) => {
                     getCategoryData();
                     getCategory(currentCategory - 1, pageSizeCategory);
-                    message.success("Kategoriya muvofaqiyatli o'chirildi");
+                    message.success("Kategoriya muvaffaqiyatli o'chirildi");
                 })
                 .catch((error) => {
                     console.error(error);
@@ -131,7 +131,7 @@ const CategoryVsMeasurement = () => {
             .then(function (response) {
                 getMeasurment();
                 getMeasurementData();
-                message.success("O'lchov birligi muvofaqiyatli qo'shildi");
+                message.success("O'lchov birligi muvaffaqiyatli qo'shildi");
             })
             .catch(function (error) {
                 console.error(error);

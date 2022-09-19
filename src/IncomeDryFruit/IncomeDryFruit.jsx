@@ -174,7 +174,7 @@ const IncomeDryFruit = () => {
                 ...data,
             })
             .then((res) => {
-                message.success("Kelgan quruq meva muvofaqiyatli taxrirlandi");
+                message.success("Kelgan quruq meva muvaffaqiyatli taxrirlandi");
                 getIncomeDryFruits(current - 1, pageSize);
             })
             .catch(function (error) {
@@ -195,7 +195,7 @@ const IncomeDryFruit = () => {
                 .then((data) => {
                     getIncomeDryFruits(current - 1, pageSize);
                     message.success(
-                        "Kelgan quruq meva muvofaqiyatli o'chirildi"
+                        "Kelgan quruq meva muvaffaqiyatli o'chirildi"
                     );
                 })
                 .catch((error) => {
