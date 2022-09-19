@@ -12,8 +12,12 @@ const IncomeDryFruit = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { newDryFruitData, measurementData, dryfruitWarehouseData } =
-        useData();
+    const {
+        newDryFruitData,
+        measurementData,
+        newDryFruitWerehouseData,
+        qarzValue,
+    } = useData();
     const navigate = useNavigate();
 
     const getIncomeDryFruits = (current, pageSize) => {
@@ -47,7 +51,7 @@ const IncomeDryFruit = () => {
             key: "dryFruitWarehouseId",
             width: "20%",
             render: (record) => {
-                const data = dryfruitWarehouseData.filter(
+                const data = newDryFruitWerehouseData.filter(
                     (item) => item.id === record
                 );
                 return data[0]?.name;
@@ -127,12 +131,24 @@ const IncomeDryFruit = () => {
         const value = {
             ...values,
             date: values.date.toISOString(),
-            debt: values.debt.target.value,
+            debt: values.debt.target.value === "false" ? false : true,
         };
         instance
             .post("api/dry/fruit/incomeDryFruit/add", { ...value })
             .then(function (response) {
-                message.success("Kelgan quruq meva muvaffaqiyatli qo'shildi");
+                message.success("Kelgan quruq meva muvofaqiyatli qo'shildi");
+                instance
+                    .post("api/dry/fruit/debt/post", {
+                        incomeDryFruitId: response.data.data,
+                        workerId: null,
+                        outcomeDryFruitId: null,
+                        given: false,
+                        borrowAmount: values.price * values.amount - qarzValue,
+                    })
+                    .then((res) => {
+                        console.log(res);
+                    })
+                    .catch((err) => console.error(err));
                 getIncomeDryFruits(current - 1, pageSize);
             })
             .catch(function (error) {

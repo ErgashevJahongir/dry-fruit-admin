@@ -9,6 +9,8 @@ import "./CategoryVsMeasurment.css";
 const CategoryVsMeasurement = () => {
     const [category, setCategory] = useState([]);
     const [measurement, setMeasurment] = useState([]);
+    const [current, setCurrent] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
     const [loadingCategory, setLoadingCategory] = useState(true);
     const [loading, setLoading] = useState(true);
     const [currentCategory, setCurrentCategory] = useState(1);
@@ -143,17 +145,18 @@ const CategoryVsMeasurement = () => {
 
     const onEdit = (values, initial) => {
         setLoading(true);
+        console.log(values, initial);
         instance
             .put(`api/dry/fruit/measurement/update${initial.id}`, { values })
             .then(function (response) {
                 getMeasurment();
                 getMeasurementData();
-                message.success("O'lchov birligi muvaffaqiyatli qo'shildi");
+                message.success("O'lchov birligi muvofaqiyatli taxrirlandi");
             })
             .catch(function (error) {
                 console.error(error);
-                if (error.response.status === 500) navigate("/server-error");
-                message.error("O'lchov birligini qo'shishda muammo bo'ldi");
+                if (error.response?.status === 500) navigate("/server-error");
+                message.error("O'lchov birligini taxrirlashda muammo bo'ldi");
             })
             .finally(() => {
                 setLoading(false);
@@ -219,6 +222,10 @@ const CategoryVsMeasurement = () => {
                 <div>
                     <h3>O'lchov birligi</h3>
                     <CustomTable
+                        setCurrent={setCurrent}
+                        current={current}
+                        setPageSize={setPageSize}
+                        pageSize={pageSize}
                         onEdit={onEdit}
                         onCreate={onCreate}
                         getData={getMeasurment}
