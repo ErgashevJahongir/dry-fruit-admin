@@ -157,7 +157,7 @@ const InDebt = () => {
 
     return (
         <>
-            <h3>Ichki qarzlar</h3>
+            <h3>Ichki qarzlari</h3>
             <CustomTable
                 onEdit={onEdit}
                 onCreate={onCreate}
