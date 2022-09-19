@@ -25,8 +25,9 @@ function DrapdownMenu({ onClose, isVisible }) {
 
     const handleLogOut = (e) => {
         e.preventDefault();
-        sessionStorage.removeItem("token", token);
-        navigate("/login");
+        sessionStorage.removeItem("dry-fruit", token);
+        localStorage.removeItem("dry-fruit", token);
+        navigate("/login", { replace: true });
     };
     return (
         <Drawer

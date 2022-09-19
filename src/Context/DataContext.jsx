@@ -1,10 +1,10 @@
 import { DatePicker, Input, InputNumber, Radio } from "antd";
 import moment from "moment";
 import { createContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import instance from "../Api/Axios";
+import useToken from "../Hook/UseToken";
 import CustomSelect from "../Module/Select/Select";
-// import useToken from "../Hook/UseToken";
 
 export const DataContext = createContext();
 
@@ -14,10 +14,10 @@ export const DataProvider = ({ children }) => {
     const [categoryData, setCategoryData] = useState([]);
     const [dryfruitData, setDryfruitData] = useState([]);
     const [dryfruitWarehouseData, setDryfruitWarehouseData] = useState([]);
-    // const [roleData, setRoleData] = useState([]);
+    const [roleData, setRoleData] = useState([]);
     const [branchData, setBranchData] = useState([]);
-    // const { token } = useToken();
-    // let navigate = useNavigate();
+    const { token } = useToken();
+    let navigate = useNavigate();
     let location = useLocation();
 
     const DryFruitDataFunc = () => {
@@ -517,16 +517,17 @@ export const DataProvider = ({ children }) => {
             .catch((err) => console.error(err));
     };
 
-    // const getRoleData = () => {
-    //     instance
-    //         .get("api/dry/fruit/category")
-    //         .then((data) => {
-    //             setCategoryData(data.data.data);
-    //         })
-    //         .catch((err) => console.error(err));
-    // };
+    const getRoleData = () => {
+        instance
+            .get("api/dry/fruit/role/getAll")
+            .then((data) => {
+                setRoleData(data.data.data);
+            })
+            .catch((err) => console.error(err));
+    };
 
     useEffect(() => {
+        getRoleData();
         getMeasurementData();
         getCategoryData();
         getBranchData();
@@ -704,6 +705,8 @@ export const DataProvider = ({ children }) => {
         dryfruitWarehouseData,
         newDryFruitData,
         user,
+        roleData,
+        setUser,
     };
 
     return (

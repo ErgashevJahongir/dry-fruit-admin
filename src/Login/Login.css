@@ -40,7 +40,14 @@
 .ant-form-item-control-input-content {
     text-align: left;
 }
+
+#login-form .ant-input {
+    padding: 12px 15px;
+}
 #login-form .ant-input-affix-wrapper {
+    padding: 0 15px 0 0;
+}
+#login-form .ant-input-affix-wrapper .ant-input {
     padding: 12px 15px;
 }
 #login-form_username {

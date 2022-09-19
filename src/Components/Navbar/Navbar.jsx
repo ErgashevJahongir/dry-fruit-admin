@@ -14,30 +14,28 @@ import {
     TeamOutlined,
     AppstoreOutlined,
     BranchesOutlined,
+    BellOutlined,
 } from "@ant-design/icons";
-import {
-    Link,
-    useLocation,
-    // , useNavigate
-} from "react-router-dom";
-// import { useData } from "../../Hook/UseData";
-// import useToken from "../../Hook/UseToken";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useData } from "../../Hook/UseData";
+import useToken from "../../Hook/UseToken";
 import DrapdownMenu from "../DrapdownMenu/DrapdownMenu";
 
 const { Header } = Layout;
 
 function Navbar() {
     const [isVisible, setIsVisible] = useState(false);
-    // const { user } = useData();
-    // const { token } = useToken();
-    // const navigate = useNavigate();
+    const { user } = useData();
+    const { token } = useToken();
+    const navigate = useNavigate();
     const location = useLocation();
 
-    // const handleLogOut = (e) => {
-    //     e.preventDefault();
-    //     sessionStorage.removeItem("token", token);
-    //     navigate("/login");
-    // };
+    const handleLogOut = (e) => {
+        e.preventDefault();
+        sessionStorage.removeItem("dry-fruit", token);
+        localStorage.removeItem("dry-fruit", token);
+        navigate("/login", { replace: true });
+    };
 
     const showDrawer = () => {
         setIsVisible(true);
@@ -51,7 +49,7 @@ function Navbar() {
         <Menu
             items={[
                 {
-                    key: "1",
+                    key: "/profil",
                     icon: <UserOutlined />,
                     label: (
                         <Link
@@ -63,12 +61,27 @@ function Navbar() {
                     ),
                 },
                 {
-                    key: "2",
+                    key: "/notification",
+                    icon: <BellOutlined />,
+                    label: (
+                        <Link
+                            to="/notification"
+                            style={{
+                                width: "100px",
+                                display: "inline-block",
+                            }}
+                        >
+                            Eslatmalar
+                        </Link>
+                    ),
+                },
+                {
+                    key: "3",
                     danger: true,
                     icon: <LogoutOutlined />,
                     label: (
                         <div
-                            // onClick={(e) => handleLogOut(e)}
+                            onClick={(e) => handleLogOut(e)}
                             style={{ width: "100px" }}
                         >
                             Chiqish
@@ -85,7 +98,7 @@ function Navbar() {
                 width: "100%",
                 display: "flex",
                 alignItems: "center",
-                position: 'sticky',
+                position: "sticky",
                 top: 0,
                 left: 0,
                 right: 0,
