@@ -35,7 +35,9 @@ const IncomeDryFruit = () => {
             .catch((error) => {
                 console.error(error);
                 if (error.response.status === 500) navigate("/server-error");
-                message.error("Sotilgan quruq mevalarni yuklashda muammo bo'ldi");
+                message.error(
+                    "Sotilgan quruq mevalarni yuklashda muammo bo'ldi"
+                );
             })
             .finally(() => setLoading(false));
     };
@@ -145,13 +147,17 @@ const IncomeDryFruit = () => {
                 ...data,
             })
             .then((res) => {
-                message.success("Sotilgan quruq meva muvaffaqiyatli taxrirlandi");
+                message.success(
+                    "Sotilgan quruq meva muvaffaqiyatli taxrirlandi"
+                );
                 getIncomeDryFruits(current - 1, pageSize);
             })
             .catch(function (error) {
                 console.error("Error in edit: ", error);
                 if (error.response.status === 500) navigate("/server-error");
-                message.error("Sotilgan quruq mevani taxrirlashda muammo bo'ldi");
+                message.error(
+                    "Sotilgan quruq mevani taxrirlashda muammo bo'ldi"
+                );
             })
             .finally(() => {
                 setLoading(false);
