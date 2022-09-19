@@ -9,6 +9,8 @@ import "./CategoryVsMeasurment.css";
 const CategoryVsMeasurement = () => {
     const [category, setCategory] = useState([]);
     const [measurement, setMeasurment] = useState([]);
+    const [current, setCurrent] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
     const [loadingCategory, setLoadingCategory] = useState(true);
     const [loading, setLoading] = useState(true);
     const [currentCategory, setCurrentCategory] = useState(1);
@@ -42,7 +44,7 @@ const CategoryVsMeasurement = () => {
             .then(function (response) {
                 getCategory(currentCategory - 1, pageSizeCategory);
                 getCategoryData();
-                message.success("Kategoriya muvofaqiyatli qo'shildi");
+                message.success("Kategoriya muvaffaqiyatli qo'shildi");
             })
             .catch(function (error) {
                 console.error(error);
@@ -61,7 +63,7 @@ const CategoryVsMeasurement = () => {
             .then(function (response) {
                 getCategory(currentCategory - 1, pageSizeCategory);
                 getCategoryData();
-                message.success("Kategoriya muvofaqiyatli qo'shildi");
+                message.success("Kategoriya muvaffaqiyatli qo'shildi");
             })
             .catch(function (error) {
                 console.error(error);
@@ -82,7 +84,7 @@ const CategoryVsMeasurement = () => {
                 .then((data) => {
                     getCategoryData();
                     getCategory(currentCategory - 1, pageSizeCategory);
-                    message.success("Kategoriya muvofaqiyatli o'chirildi");
+                    message.success("Kategoriya muvaffaqiyatli o'chirildi");
                 })
                 .catch((error) => {
                     console.error(error);
@@ -129,7 +131,7 @@ const CategoryVsMeasurement = () => {
             .then(function (response) {
                 getMeasurment();
                 getMeasurementData();
-                message.success("O'lchov birligi muvofaqiyatli qo'shildi");
+                message.success("O'lchov birligi muvaffaqiyatli qo'shildi");
             })
             .catch(function (error) {
                 console.error(error);
@@ -220,6 +222,10 @@ const CategoryVsMeasurement = () => {
                 <div>
                     <h3>O'lchov birligi</h3>
                     <CustomTable
+                        setCurrent={setCurrent}
+                        current={current}
+                        setPageSize={setPageSize}
+                        pageSize={pageSize}
                         onEdit={onEdit}
                         onCreate={onCreate}
                         getData={getMeasurment}

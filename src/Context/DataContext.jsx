@@ -9,6 +9,7 @@ import CustomSelect from "../Module/Select/Select";
 export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
+    const [valueDebt, setValueDebt] = useState(null);
     const [user, setUser] = useState({});
     const [measurementData, setMeasurementData] = useState([]);
     const [categoryData, setCategoryData] = useState([]);
@@ -16,9 +17,15 @@ export const DataProvider = ({ children }) => {
     const [dryfruitWarehouseData, setDryfruitWarehouseData] = useState([]);
     const [roleData, setRoleData] = useState([]);
     const [branchData, setBranchData] = useState([]);
+    const [qarzValue, setQarzValue] = useState("");
     const { token } = useToken();
     let navigate = useNavigate();
+
     let location = useLocation();
+
+    const onChangeDebt = (e) => {
+        setValueDebt(e.target.value);
+    };
 
     const DryFruitDataFunc = () => {
         return dryfruitData?.map((cat) => {
@@ -30,17 +37,27 @@ export const DataProvider = ({ children }) => {
         });
     };
 
+    const DryFruitWerehouseDataFunc = () => {
+        return dryfruitWarehouseData?.map((cat) => {
+            const data = branchData.filter((item) => item.id === cat.branchId);
+            const name = data[0]?.name;
+            return { ...cat, name: name };
+        });
+    };
+
+    const newDryFruitWerehouseData = DryFruitWerehouseDataFunc();
+
     const newDryFruitData = DryFruitDataFunc();
 
     const incomeFuelsData = [
         {
             name: "dryFruitWarehouseId",
-            label: "Quruq meva turi",
+            label: "Quruq meva kiritilayotgan filial",
             input: (
                 <CustomSelect
                     backValue={"id"}
-                    placeholder={"Quruq mevani skladdan tanlang"}
-                    selectData={dryfruitWarehouseData}
+                    placeholder={"Quruq meva kiritilayotgan filial"}
+                    selectData={newDryFruitWerehouseData}
                 />
             ),
         },
@@ -90,9 +107,25 @@ export const DataProvider = ({ children }) => {
             name: "debt",
             label: "Qarzdorlik",
             input: (
-                <Radio.Group>
+                <Radio.Group onChange={onChangeDebt}>
                     <Radio value="false"> Yo'q </Radio>
-                    <Radio value="true"> Bor </Radio>
+                    <Radio value="true">
+                        {" "}
+                        <p>Bor</p>
+                        {valueDebt === "true" ? (
+                            <div style={{ width: "100%", marginLeft: "-20px" }}>
+                                Qarizdorlik
+                                <InputNumber
+                                    value={qarzValue}
+                                    placeholder="Qarizdorlik"
+                                    onChange={(e) => setQarzValue(e)}
+                                    style={{
+                                        width: "100%",
+                                    }}
+                                />
+                            </div>
+                        ) : null}{" "}
+                    </Radio>
                 </Radio.Group>
             ),
         },
@@ -101,12 +134,12 @@ export const DataProvider = ({ children }) => {
     const editIncomeFuelsData = [
         {
             name: "dryFruitWarehouseId",
-            label: "Yoqilg'i turi",
+            label: "Quruq meva kiritilayotgan filial",
             inputSelect: (defaultId = null) => (
                 <CustomSelect
                     backValue={"id"}
-                    placeholder={"Quruq mevani skladdan tanlang"}
-                    selectData={dryfruitWarehouseData}
+                    placeholder={"Quruq meva kiritilayotgan filial"}
+                    selectData={newDryFruitWerehouseData}
                     DValue={defaultId}
                 />
             ),
@@ -148,6 +181,113 @@ export const DataProvider = ({ children }) => {
         {
             name: "date",
             label: "Kelish vaqti",
+            input: <Input />,
+        },
+        {
+            name: "debt",
+            label: "Qarzdorlik",
+            input: (
+                <Radio.Group>
+                    <Radio value="false"> Yo'q </Radio>
+                    <Radio value="true"> Bor </Radio>
+                </Radio.Group>
+            ),
+        },
+    ];
+
+    const outcomeDryFruitData = [
+        {
+            name: "dryFruitId",
+            label: "Quruq meva nomi",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq mevani tanlang"}
+                    selectData={newDryFruitData}
+                />
+            ),
+        },
+        {
+            name: "measurementId",
+            label: "Quruq meva o'lchovi",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq meva o'lchovi"}
+                    selectData={measurementData}
+                />
+            ),
+        },
+        {
+            name: "amount",
+            label: "Quruq meva miqdori",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "price",
+            label: "Quruq meva narxi",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "date",
+            label: "Sotilish vaqti",
+            input: (
+                <DatePicker
+                    style={{ width: "100%" }}
+                    value={moment().format()}
+                />
+            ),
+        },
+        {
+            name: "debt",
+            label: "Qarzdorlik",
+            input: (
+                <Radio.Group>
+                    <Radio value="false"> Yo'q </Radio>
+                    <Radio value="true"> Bor </Radio>
+                </Radio.Group>
+            ),
+        },
+    ];
+
+    const editOutcomeDryFruitData = [
+        {
+            name: "dryFruitId",
+            label: "Quruq meva nomi",
+            inputSelect: (defaultId = null) => (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq mevani tanlang"}
+                    selectData={newDryFruitData}
+                    DValue={defaultId}
+                />
+            ),
+        },
+        {
+            name: "measurementId",
+            label: "Quruq meva o'lchovi",
+            inputSelect: (defaultId = null) => (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq meva o'lchovi"}
+                    selectData={measurementData}
+                    DValue={defaultId}
+                />
+            ),
+        },
+        {
+            name: "amount",
+            label: "Quruq meva miqdori",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "price",
+            label: "Quruq meva narxi",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "date",
+            label: "Sotilish vaqti",
             input: <Input />,
         },
         {
@@ -233,6 +373,36 @@ export const DataProvider = ({ children }) => {
         },
     ];
 
+    const dryFruitWarehouseData = [
+        {
+            name: "branchId",
+            label: "Filialni",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Filialni tanlang"}
+                    selectData={branchData}
+                />
+            ),
+        },
+        {
+            name: "dryFruitId",
+            label: "Quruq mevalar",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Mevani tanlang"}
+                    selectData={newDryFruitData}
+                />
+            ),
+        },
+        {
+            name: "amount",
+            label: "Miqdori",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+    ];
+
     const editdryFruitData = [
         {
             name: "categoryId",
@@ -291,57 +461,53 @@ export const DataProvider = ({ children }) => {
         },
     ];
 
-    const outcomeDryfruitData = [
+    const usersData = [
         {
-            name: "categoryId",
-            label: "Kategoriyani tanlang",
-            inputSelect: (defaultId = null) => {
-                return (
-                    <CustomSelect
-                        DValue={defaultId}
-                        backValue={"id"}
-                        placeholder={"Kategoriyani tanlang"}
-                        selectData={categoryData}
-                    />
-                );
-            },
-        },
-        {
-            name: "incomePrice",
-            label: "Kelish narxi",
-            input: <InputNumber style={{ width: "100%" }} />,
-        },
-        {
-            name: "outcomePrice",
-            label: "Sotilish narxi",
-            input: <InputNumber style={{ width: "100%" }} />,
-        },
-        {
-            name: "debt",
-            label: "Qarzdorlik",
-            inputSelect: (defaultId = null) => {
-                return (
-                    <CustomSelect
-                        DValue={defaultId}
-                        backValue={"id"}
-                        placeholder={"Kategoriyani tanlang"}
-                        selectData={categoryData}
-                    />
-                );
-            },
-        },
-    ];
-
-    const dryFruitWarehouse = [
-        {
-            name: "name",
-            label: "Meva nomi",
+            name: "fio",
+            label: "Ishchi FIO",
             input: <Input />,
         },
         {
-            name: "id",
-            label: "Meva id",
+            name: "password",
+            label: "Ishchi passwordi",
             input: <Input />,
+        },
+        {
+            name: "phoneNumber",
+            label: "Ishchi nomeri",
+            input: <Input />,
+        },
+        {
+            name: "branchId",
+            label: "Filial",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Filialni tanlang"}
+                    selectData={branchData}
+                />
+            ),
+        },
+        {
+            name: "roleId",
+            label: "roleId",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq mevani tanlang"}
+                    selectData={roleData}
+                />
+            ),
+        },
+        {
+            name: "block",
+            label: "block",
+            input: (
+                <Radio.Group>
+                    <Radio value="false"> Yo'q </Radio>
+                    <Radio value="true"> Ha </Radio>
+                </Radio.Group>
+            ),
         },
     ];
 
@@ -533,6 +699,7 @@ export const DataProvider = ({ children }) => {
         getBranchData();
         getDryfruitData();
         getDryfruitWarehouseData();
+        getRoleData();
     }, []);
 
     let formData = {};
@@ -645,38 +812,38 @@ export const DataProvider = ({ children }) => {
         }
         case "/users": {
             formData = {
-                formData: workersData,
-                editFormData: workersData,
+                formData: usersData,
+                editFormData: usersData,
                 branchData: false,
                 timeFilterInfo: false,
                 deleteInfo: true,
                 createInfo: true,
                 editInfo: true,
                 timelyInfo: false,
-                editModalTitle: "Ishchini o'zgartirish",
-                modalTitle: "Yangi ishchi qo'shish",
+                editModalTitle: "Foydalanuvchini o'zgartirish",
+                modalTitle: "Yangi foydalanuvchi qo'shish",
             };
             break;
         }
         case "/outcome-dryfruit": {
             formData = {
-                formData: outcomeDryfruitData,
-                editFormData: outcomeDryfruitData,
+                formData: outcomeDryFruitData,
+                editFormData: editOutcomeDryFruitData,
                 branchData: false,
                 timeFilterInfo: false,
                 deleteInfo: true,
                 createInfo: true,
                 editInfo: true,
                 timelyInfo: false,
-                editModalTitle: "Ishchini o'zgartirish",
-                modalTitle: "Yangi ishchi qo'shish",
+                editModalTitle: "Sotilgan quruq mevani o'zgartirish",
+                modalTitle: "Sotilgan quruq mevani qo'shish",
             };
             break;
         }
         case "/warehouse-dryfruit": {
             formData = {
-                formData: dryFruitWarehouse,
-                editFormData: dryFruitWarehouse,
+                formData: dryFruitWarehouseData,
+                editFormData: dryFruitWarehouseData,
                 branchData: false,
                 timeFilterInfo: false,
                 deleteInfo: true,
@@ -703,10 +870,12 @@ export const DataProvider = ({ children }) => {
         branchData,
         setDryfruitWarehouseData,
         dryfruitWarehouseData,
+        newDryFruitWerehouseData,
         newDryFruitData,
         user,
         roleData,
         setUser,
+        qarzValue,
     };
 
     return (
