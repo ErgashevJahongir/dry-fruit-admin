@@ -8,6 +8,7 @@ import CustomSelect from "../Module/Select/Select";
 
 export const DataContext = createContext();
 
+
 export const DataProvider = ({ children }) => {
     const [valueDebt, setValueDebt] = useState(null);
     const [user, setUser] = useState({});
