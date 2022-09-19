@@ -154,6 +154,18 @@ li {
     gap: 10px !important;
 }
 
+.example {
+    margin-bottom: 20px;
+    padding: 30px 50px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
 @media screen and (max-width: 1440px) {
     .container {
         width: 1020px;

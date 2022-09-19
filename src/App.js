@@ -1,12 +1,8 @@
-// import { useEffect } from "react";
-import {
-    Route,
-    Routes,
-    // , useNavigate
-} from "react-router-dom";
+import { useEffect } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Clients from "./Clients/Clients";
-// import useToken from "./Hook/UseToken";
-// import { useData } from "./Hook/UseData";
+import useToken from "./Hook/UseToken";
+import { useData } from "./Hook/UseData";
 import LayoutMenu from "./Components/Layout/Layout";
 import Dashboard from "./Dashboard/Dashboard";
 import WorkerDebt from "./Debt/WorkerDebt";
@@ -24,17 +20,18 @@ import Others from "./Others/Others/Others";
 import Branch from "./Others/BranchVsRole/Branch";
 import InDebt from "./Debt/InDebt";
 import OutDebt from "./Debt/OutDebt";
+import Notification from "./Components/Notification/Notification";
 
 function App() {
-    // const { token } = useToken();
-    // const navigate = useNavigate();
-    // const { user } = useData();
+    const { token } = useToken();
+    const navigate = useNavigate();
+    const { user } = useData();
 
-    // useEffect(() => {
-    //     // if (!token) {
-    //     //     return navigate("/login", { replace: true });
-    //     // }
-    // }, []);
+    useEffect(() => {
+        if (!token) {
+            return navigate("/login", { replace: true });
+        }
+    }, []);
     return (
         <Routes>
             <Route element={<LayoutMenu />}>
@@ -56,6 +53,7 @@ function App() {
                 <Route path="others" element={<Others />} />
                 <Route path="branchs" element={<Branch />} />
                 <Route path="profil" element={<Profil />} />
+                <Route path="notification" element={<Notification />} />
             </Route>
             <Route path="login" element={<Login />} />
             <Route path="*" element={<Error404 />} />

@@ -1,10 +1,10 @@
 import { DatePicker, Input, InputNumber, Radio } from "antd";
 import moment from "moment";
 import { createContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import instance from "../Api/Axios";
+import useToken from "../Hook/UseToken";
 import CustomSelect from "../Module/Select/Select";
-// import useToken from "../Hook/UseToken";
 
 export const DataContext = createContext();
 
@@ -18,8 +18,9 @@ export const DataProvider = ({ children }) => {
     const [roleData, setRoleData] = useState([]);
     const [branchData, setBranchData] = useState([]);
     const [qarzValue, setQarzValue] = useState("");
-    // const { token } = useToken();
-    // let navigate = useNavigate();
+    const { token } = useToken();
+    let navigate = useNavigate();
+
     let location = useLocation();
 
     const onChangeDebt = (e) => {
@@ -692,6 +693,7 @@ export const DataProvider = ({ children }) => {
     };
 
     useEffect(() => {
+        getRoleData();
         getMeasurementData();
         getCategoryData();
         getBranchData();
@@ -871,6 +873,8 @@ export const DataProvider = ({ children }) => {
         newDryFruitWerehouseData,
         newDryFruitData,
         user,
+        roleData,
+        setUser,
         qarzValue,
     };
 
