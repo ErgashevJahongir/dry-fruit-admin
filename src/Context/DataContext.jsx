@@ -11,6 +11,7 @@ export const DataContext = createContext();
 export const DataProvider = ({ children }) => {
     const [valueDebt, setValueDebt] = useState(null);
     const [user, setUser] = useState({});
+    const [workerData, setWorkerData] = useState([]);
     const [measurementData, setMeasurementData] = useState([]);
     const [categoryData, setCategoryData] = useState([]);
     const [dryfruitData, setDryfruitData] = useState([]);
@@ -513,19 +514,33 @@ export const DataProvider = ({ children }) => {
 
     const indebtFormData = [
         {
-            name: "incomeDryFruitId",
-            label: "Qarzga olingan mahsulot",
-            input: (
-                <CustomSelect
-                    backValue={"id"}
-                    placeholder={"Quruq mevani tanlang"}
-                    selectData={newDryFruitData}
-                />
-            ),
+            name: "borrowerName",
+            label: "Qarzdor ismi",
+            input: <Input style={{ width: "100%" }} />,
         },
         {
             name: "borrowAmount",
             label: "Qarz miqdori",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "Name",
+            label: "Qarz beruvchi ismi",
+            input: <Input style={{ width: "100%" }} />,
+        },
+        {
+            name: "deadline",
+            label: "Qarz berilgan vaqt",
+            input: (
+                <DatePicker
+                    style={{ width: "100%" }}
+                    value={moment().format()}
+                />
+            ),
+        },
+        {
+            name: "borrowerNumber",
+            label: "Qarzdor telefon no'mer",
             input: <InputNumber style={{ width: "100%" }} />,
         },
         {
@@ -542,18 +557,15 @@ export const DataProvider = ({ children }) => {
 
     const editIndebtFormData = [
         {
-            name: "incomeDryFruitId",
-            label: "Qarzga olingan mahsulot",
-            inputSelect: (defaultId = null) => {
-                return (
-                    <CustomSelect
-                        backValue={"id"}
-                        placeholder={"Quruq mevani tanlang"}
-                        selectData={newDryFruitData}
-                        DValue={defaultId}
-                    />
-                );
-            },
+            name: "borrowerName",
+            label: "Qarzdor ismi",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Kategoriyani tanlang"}
+                    selectData={categoryData}
+                />
+            ),
         },
         {
             name: "borrowAmount",
@@ -561,17 +573,19 @@ export const DataProvider = ({ children }) => {
             input: <InputNumber style={{ width: "100%" }} />,
         },
         {
+            name: "deadline",
+            label: "Qarz berilgan vaqt",
+            input: <Input style={{ width: "100%" }} />,
+        },
+        {
             name: "given",
             label: "Qarz uzilganmi",
-            inputSelect: (defaultId = null) => {
-                const str = defaultId?.toString();
-                return (
-                    <Radio.Group defaultValue={str}>
-                        <Radio value="false"> Yo'q </Radio>
-                        <Radio value="true"> Ha </Radio>
-                    </Radio.Group>
-                );
-            },
+            input: (
+                <Radio.Group>
+                    <Radio value="false"> Yo'q </Radio>
+                    <Radio value="true"> Ha </Radio>
+                </Radio.Group>
+            ),
         },
     ];
 
@@ -638,6 +652,15 @@ export const DataProvider = ({ children }) => {
         },
     ];
 
+    const getWorkerData = () => {
+        instance
+            .get("api/dry/fruit/api/dry/fruit/worker")
+            .then((data) => {
+                setWorkerData(data.data.data);
+            })
+            .catch((err) => console.error(err));
+    };
+
     const getMeasurementData = () => {
         instance
             .get("api/dry/fruit/measurement/all")
@@ -693,7 +716,7 @@ export const DataProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        getRoleData();
+        getWorkerData();
         getMeasurementData();
         getCategoryData();
         getBranchData();
@@ -795,6 +818,21 @@ export const DataProvider = ({ children }) => {
             };
             break;
         }
+        case "/worker-debts": {
+            formData = {
+                formData: indebtFormData,
+                editFormData: editIndebtFormData,
+                branchData: false,
+                timeFilterInfo: false,
+                deleteInfo: true,
+                createInfo: true,
+                editInfo: true,
+                timelyInfo: false,
+                editModalTitle: "Ishchi qarzni o'zgartirish",
+                modalTitle: "Ishchi qarz qo'shish",
+            };
+            break;
+        }
         case "/worker": {
             formData = {
                 formData: workersData,
@@ -873,6 +911,7 @@ export const DataProvider = ({ children }) => {
         newDryFruitWerehouseData,
         newDryFruitData,
         user,
+        workerData,
         roleData,
         setUser,
         qarzValue,
