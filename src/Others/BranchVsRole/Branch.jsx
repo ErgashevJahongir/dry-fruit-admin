@@ -35,6 +35,8 @@ const Branch = () => {
 
     const onCreate = (values) => {
         setLoading(true);
+        console.log(values.name);
+        console.log(values.main);
         instance
             .post(
                 `api/dry/fruit/api/dry/fruit/branch?name=${values.name}&main=${values.main}`
@@ -42,7 +44,7 @@ const Branch = () => {
             .then(function (response) {
                 getBranches(current - 1, pageSize);
                 getBranchData();
-                message.success("Filial muvofaqiyatli qo'shildi");
+                message.success("Filial muvaffaqiyatli qo'shildi");
             })
             .catch(function (error) {
                 console.error(error);
@@ -63,12 +65,12 @@ const Branch = () => {
             .then(function (response) {
                 getBranches(current - 1, pageSize);
                 getBranchData();
-                message.success("Filial muvofaqiyatli qo'shildi");
+                message.success("Filial muvaffaqiyatli qo'shildi");
             })
             .catch(function (error) {
                 console.error(error);
                 if (error.response.status === 500) navigate("/server-error");
-                message.error("Filialni qo'shishda muammo bo'ldi");
+                message.error("Filialni taxrirlashda muammo bo'ldi");
             })
             .finally(() => {
                 setLoading(false);
@@ -83,7 +85,7 @@ const Branch = () => {
                 .then((data) => {
                     getBranches(current - 1, pageSize);
                     getBranchData();
-                    message.success("Filial muvofaqiyatli o'chirildi");
+                    message.success("Filial muvaffaqiyatli o'chirildi");
                 })
                 .catch((error) => {
                     console.error(error);

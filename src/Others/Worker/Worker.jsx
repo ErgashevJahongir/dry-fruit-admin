@@ -44,22 +44,6 @@ const Worker = () => {
             width: "48%",
             search: false,
         },
-        // {
-        //     title: "Klient addressi",
-        //     dataIndex: "address",
-        //     key: "address",
-        //     width: "33%",
-        //     search: false,
-        //     sorter: (a, b) => {
-        //         if (a.address < b.address) {
-        //             return -1;
-        //         }
-        //         if (a.address > b.address) {
-        //             return 1;
-        //         }
-        //         return 0;
-        //     },
-        // },
     ];
 
     const onCreate = (values) => {
@@ -82,7 +66,6 @@ const Worker = () => {
     };
 
     const onEdit = (values, initial) => {
-        console.log(initial.id);
         setLoading(true);
         instance
             .put(

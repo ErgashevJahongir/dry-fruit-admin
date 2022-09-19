@@ -25,8 +25,9 @@ function DrapdownMenu({ onClose, isVisible }) {
 
     const handleLogOut = (e) => {
         e.preventDefault();
-        sessionStorage.removeItem("token", token);
-        navigate("/login");
+        sessionStorage.removeItem("dry-fruit", token);
+        localStorage.removeItem("dry-fruit", token);
+        navigate("/login", { replace: true });
     };
     return (
         <Drawer
@@ -79,7 +80,7 @@ function DrapdownMenu({ onClose, isVisible }) {
                         key: "/income-dryfruit",
                         icon: (
                             <Link to="/income-dryfruit">
-                                <CloudUploadOutlined
+                                <CloudDownloadOutlined 
                                     style={{ fontSize: "18px" }}
                                 />
                             </Link>
@@ -90,7 +91,7 @@ function DrapdownMenu({ onClose, isVisible }) {
                         key: "/outcome-dryfruit",
                         icon: (
                             <Link to="/outcome-dryfruit">
-                                <CloudDownloadOutlined
+                                <CloudUploadOutlined
                                     style={{ fontSize: "18px" }}
                                 />
                             </Link>

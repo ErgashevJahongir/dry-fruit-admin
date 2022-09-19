@@ -30,10 +30,16 @@ const InDebt = () => {
             .finally(() => setLoading(false));
     };
 
+    console.log("salom");
+
     const onCreate = (values) => {
         setLoading(true);
         instance
-            .post("api/dry/fruit/debt/post", { ...values, lenderId: null })
+            .post("api/dry/fruit/debt/post", {
+                ...values,
+                outcomeDryFruitId: null,
+                workerId: null,
+            })
             .then(function (response) {
                 message.success("Ichki qarz muvofaqiyatli qo'shildi");
                 getDebts(current - 1, pageSize);

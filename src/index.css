@@ -100,7 +100,7 @@ li {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #335ddc;
+    background-color: #5c5a5a;
     border-radius: 8px;
 }
 
@@ -152,6 +152,18 @@ li {
     align-items: center;
     justify-content: center;
     gap: 10px !important;
+}
+
+.example {
+    margin-bottom: 20px;
+    padding: 30px 50px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
 }
 
 @media screen and (max-width: 1440px) {
