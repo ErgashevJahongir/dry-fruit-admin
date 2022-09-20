@@ -7,24 +7,61 @@ import instance from "../Api/Axios";
 
 const Profil = () => {
     const [loading, setLoading] = useState(true);
+    const [limit, setLimit] = useState(null);
+    const [formLimit] = Form.useForm();
     const [form] = Form.useForm();
-    // const { user, getUserData } = useData();
+    const { user, getUserData, branchData, roleData } = useData();
+
+    const getLimit = () => {
+        instance
+            .get("api/dry/fruit/limit")
+            .then((data) => setLimit(data.data.data))
+            .catch((err) => console.error(err));
+    };
 
     useEffect(() => {
         setLoading(false);
+        getLimit();
     }, []);
+
+    const changeLimit = (values) => {
+        instance
+            .put(`api/dry/fruit/limit?limit=${values.limit}`)
+            .then((data) => {
+                getLimit();
+                setLimit(values);
+                message.success("Limit muvofaqiyatli taxrirlandi");
+            })
+            .catch((err) => {
+                console.error(err);
+                message.error("Limitni taxrirlashda muammo bo'ldi");
+            });
+    };
+
+    const update = () => {
+        formLimit
+            .validateFields()
+            .then((values) => {
+                changeLimit(values);
+                formLimit.resetFields();
+            })
+            .catch((info) => {
+                console.log("Validate Failed:", info);
+                setLoading(false);
+            });
+    };
 
     const onReset = () => {
         form.resetFields();
     };
 
     const onFill = (user) => {
-        // form.setFieldsValue({
-        //     fio: user.fio,
-        //     username: user.username,
-        //     phoneNumber: user.phoneNumber,
-        //     branchId: user.branchGetDTO?.name,
-        // });
+        form.setFieldsValue({
+            fio: user.fio,
+            phoneNumber: user.phoneNumber,
+            branchId: user.branchId,
+            roleId: user.roleId,
+        });
     };
 
     const onOk = () => {
@@ -59,9 +96,11 @@ const Profil = () => {
     const onUpdate = (values) => {
         delete values.passwordRetry;
         instance
-            .put(`api/oil/station/user/update${1}`, { ...values })
+            .put(`api/dry/fruit/api/dry/fruit/user/update${user.id}`, {
+                ...values,
+            })
             .then(function (response) {
-                // getUserData();
+                getUserData();
                 message.success("Foydalanuvchi muvofaqiyatli taxrirlandi");
             })
             .catch(function (error) {
@@ -77,7 +116,34 @@ const Profil = () => {
 
     return (
         <>
-            <h3>Profil</h3>
+            {user?.roleId === 1 ? (
+                <div>
+                    <h4>
+                        Yoqilg'i kam qolganda eslatish uchun limitni belgilang
+                    </h4>
+                    <Form form={formLimit} layout="vertical">
+                        <Form.Item
+                            name="limit"
+                            label={`Hozirda limit ${limit} litr`}
+                            labelCol={{ span: 4 }}
+                            wrapperCol={{ span: 6 }}
+                        >
+                            <Input placeholder="Limitni kiriting" />
+                        </Form.Item>
+                        <Form.Item>
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                onClick={update}
+                                style={{ width: 120 }}
+                            >
+                                O'zgartirish
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </div>
+            ) : null}
+            <h3 style={{ marginTop: "20px" }}>Profil</h3>
             <div
                 style={{
                     display: "flex",
@@ -96,26 +162,35 @@ const Profil = () => {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item name="username" label="Usernameni kiriting">
-                            <Input placeholder="Usernameni kiriting" />
+                        <Form.Item
+                            name="phoneNumber"
+                            label="Foydalanuvchi nomeri"
+                        >
+                            <Input placeholder="Foydalanuvchi nomeri kiriting" />
                         </Form.Item>
                     </Col>
                 </Row>
                 <Row gutter={16}>
                     <Col span={12}>
                         <Form.Item name="branchId" label="Ishlash filiali">
-                            {/* <CustomSelect
+                            <CustomSelect
+                                placeholder={"Ishlash filiali"}
                                 backValue={"id"}
-                                // DValue={user.branchGetDTO?.id}
-                            /> */}
+                                selectData={branchData}
+                                DValue={user.branchId}
+                                disabled={true}
+                            />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item
-                            name="phoneNumber"
-                            label="Foydalanuvchi nomeri"
-                        >
-                            <Input placeholder="Foydalanuvchi nomeri kiriting" />
+                        <Form.Item name="roleId" label="Roleni kiriting">
+                            <CustomSelect
+                                placeholder={"Roleni tanlang"}
+                                backValue={"id"}
+                                selectData={roleData}
+                                DValue={user.roleId}
+                                disabled={true}
+                            />
                         </Form.Item>
                     </Col>
                 </Row>
@@ -155,11 +230,7 @@ const Profil = () => {
                 <Row gutter={16} justify="center">
                     <Col span={24}>
                         <Form.Item>
-                            <Space
-                                // align="center"
-                                className="profil-buttons"
-                                size="middle"
-                            >
+                            <Space className="profil-buttons" size="middle">
                                 <Button
                                     type="primary"
                                     htmlType="submit"
@@ -177,7 +248,7 @@ const Profil = () => {
                                 </Button>
                                 <Button
                                     htmlType="button"
-                                    // onClick={() => onFill(user)}
+                                    onClick={() => onFill(user)}
                                     style={{ width: 120 }}
                                 >
                                     To'ldirish

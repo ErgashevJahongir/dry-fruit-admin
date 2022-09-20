@@ -21,6 +21,7 @@ const DryFruit = () => {
                 `api/dry/fruit/dryFruit/getAllPageable?page=${current}&size=${pageSize}`
             )
             .then((data) => {
+                console.log(data);
                 setIncomeDryFruits(data.data.data.dryFruit);
                 setTotalItems(data.data.data.totalItems);
             })
@@ -35,12 +36,28 @@ const DryFruit = () => {
     const columns = [
         {
             title: "Mahsulot nomi",
+            dataIndex: "name",
+            key: "name",
+            width: "20%",
+            search: true,
+        },
+        {
+            title: "Mahsulot kategoriyasi",
             dataIndex: "categoryId",
             key: "categoryId",
-            width: "33%",
+            width: "20%",
             render: (id) => {
                 const data = categoryData.filter((item) => item.id === id);
                 return data[0]?.name;
+            },
+            sorter: (a, b) => {
+                if (a.categoryId < b.categoryId) {
+                    return -1;
+                }
+                if (a.categoryId > b.categoryId) {
+                    return 1;
+                }
+                return 0;
             },
             search: false,
         },
@@ -48,7 +65,7 @@ const DryFruit = () => {
             title: "Kelish narxi",
             dataIndex: "incomePrice",
             key: "incomePrice",
-            width: "33%",
+            width: "20%",
             search: false,
             sorter: (a, b) => {
                 if (a.incomePrice < b.incomePrice) {
@@ -64,13 +81,29 @@ const DryFruit = () => {
             title: "Sotilish narxi",
             dataIndex: "outcomePrice",
             key: "outcomePrice",
-            width: "33%",
+            width: "20%",
             search: false,
             sorter: (a, b) => {
                 if (a.outcomePrice < b.outcomePrice) {
                     return -1;
                 }
                 if (a.outcomePrice > b.outcomePrice) {
+                    return 1;
+                }
+                return 0;
+            },
+        },
+        {
+            title: "Optom narxi",
+            dataIndex: "wholesalePrice",
+            key: "wholesalePrice",
+            width: "20%",
+            search: false,
+            sorter: (a, b) => {
+                if (a.wholesalePrice < b.wholesalePrice) {
+                    return -1;
+                }
+                if (a.wholesalePrice > b.wholesalePrice) {
                     return 1;
                 }
                 return 0;

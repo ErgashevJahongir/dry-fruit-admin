@@ -1,8 +1,8 @@
 import { useState } from "react";
 import instance from "../../Api/Axios";
 import { message } from "antd";
-import { useData } from "../../Hook/UseData";
 import CustomTable from "../../Module/Table/Table";
+import { useData } from "../../Hook/UseData";
 
 const Worker = () => {
     const [workers, setWorkers] = useState([]);
@@ -10,7 +10,7 @@ const Worker = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { categoryData } = useData();
+    const { branchData } = useData();
 
     const getWorkers = (current, pageSize) => {
         setLoading(true);
@@ -34,15 +34,28 @@ const Worker = () => {
             title: "Ishchi nomi",
             dataIndex: "fio",
             key: "fio",
-            width: "48%",
+            width: "33%",
             search: true,
         },
         {
             title: "Ishchi nomeri",
             dataIndex: "phoneNumber",
             key: "phoneNumber",
-            width: "48%",
+            width: "33%",
             search: false,
+        },
+        {
+            title: "Ishlash filiali",
+            dataIndex: "branchId",
+            key: "branchId",
+            width: "33%",
+            search: false,
+            render: (initealValue) => {
+                const branch = branchData?.filter(
+                    (item) => item?.id === initealValue
+                );
+                return branch[0]?.name;
+            },
         },
     ];
 
@@ -50,7 +63,7 @@ const Worker = () => {
         setLoading(true);
         instance
             .post(
-                `api/dry/fruit/api/dry/fruit/worker?fio=${values.fio}&phoneNumber=${values.phoneNumber}`
+                `api/dry/fruit/api/dry/fruit/worker?fio=${values.fio}&phoneNumber=${values.phoneNumber}&branchId=${values.branchId}`
             )
             .then(function (response) {
                 message.success("Ishchi muvaffaqiyatli qo'shildi");
@@ -69,7 +82,7 @@ const Worker = () => {
         setLoading(true);
         instance
             .put(
-                `api/dry/fruit/api/dry/fruit/worker?id=${initial.id}&fio=${values.fio}&phoneNumber=${values.phoneNumber}&deleted=false`
+                `api/dry/fruit/api/dry/fruit/worker?id=${initial.id}&fio=${values.fio}&phoneNumber=${values.phoneNumber}&branchId=${values.branchId}&deleted=false`
             )
             .then((res) => {
                 message.success("Ishchi muvaffaqiyatli taxrirlandi");

@@ -24,7 +24,7 @@ const Clients = () => {
             })
             .catch((error) => {
                 console.error(error);
-                if (error.response.status === 500) navigate("/server-error");
+                if (error?.response?.status === 500) navigate("/server-error");
                 message.error("Klientlarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoading(false));
@@ -84,7 +84,6 @@ const Clients = () => {
     };
 
     const onEdit = (values, initial) => {
-        console.log(initial.id);
         setLoading(true);
         instance
             .put(
@@ -96,7 +95,7 @@ const Clients = () => {
             })
             .catch(function (error) {
                 console.error("Error in edit: ", error);
-                if (error.response.status === 500) navigate("/server-error");
+                if (error?.response?.status === 500) navigate("/server-error");
                 message.error("Klientni taxrirlashda muammo bo'ldi");
             })
             .finally(() => {
@@ -115,13 +114,13 @@ const Clients = () => {
                 })
                 .catch((error) => {
                     console.error(error);
-                    if (error.response.status === 500)
+                    if (error?.response?.status === 500)
                         navigate("/server-error");
                     message.error("Klientni o'chirishda muammo bo'ldi");
-                });
+                })
+                .finally(() => setLoading(false));
             return null;
         });
-        setLoading(false);
     };
 
     return (

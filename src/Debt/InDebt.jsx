@@ -20,7 +20,13 @@ const InDebt = () => {
                 `api/dry/fruit/debt/get-income?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                setDebts(data.data.data.debts);
+                console.log(data);
+                const value = data.data.data.debts.map((item) => {
+                    return {
+                        ...item,
+                    };
+                });
+                setDebts();
                 setTotalItems(data.data.data.totalItems);
             })
             .catch((error) => {
