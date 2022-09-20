@@ -1,10 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import instance from "../../Api/Axios";
 import { message } from "antd";
 import CustomTable from "../../Module/Table/Table";
 import { useData } from "../../Hook/UseData";
 import "./Branch.css";
-import { useNavigate } from "react-router-dom";
 
 const Branch = () => {
     const [branches, setBranches] = useState([]);
@@ -35,8 +35,6 @@ const Branch = () => {
 
     const onCreate = (values) => {
         setLoading(true);
-        console.log(values.name);
-        console.log(values.main);
         instance
             .post(
                 `api/dry/fruit/api/dry/fruit/branch?name=${values.name}&main=${values.main}`
@@ -60,7 +58,13 @@ const Branch = () => {
         setLoading(true);
         instance
             .put(
-                `api/dry/fruit/api/dry/fruit/branch?id=${initial.id}&name=${values.name}&main=${values.main}&deleted=false`
+                `api/dry/fruit/api/dry/fruit/branch?id=${initial.id}&name=${values.name}&main=${values.main}&deleted=false`,
+                {
+                    id: initial.id,
+                    name: values.name,
+                    main: values.main,
+                    deleted: false,
+                }
             )
             .then(function (response) {
                 getBranches(current - 1, pageSize);

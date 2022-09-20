@@ -32,8 +32,11 @@ function Navbar() {
 
     const handleLogOut = (e) => {
         e.preventDefault();
-        sessionStorage.removeItem("dry-fruit", token);
-        localStorage.removeItem("dry-fruit", token);
+        if (sessionStorage.getItem("dry-fruit"))
+            sessionStorage.removeItem("dry-fruit", token);
+        if (localStorage.getItem("dry-fruit")) {
+            localStorage.removeItem("dry-fruit", token);
+        }
         navigate("/login", { replace: true });
     };
 
@@ -177,7 +180,7 @@ function Navbar() {
                             key: "/income-dryfruit",
                             icon: (
                                 <Link to="/income-dryfruit">
-                                    <CloudDownloadOutlined  
+                                    <CloudDownloadOutlined
                                         style={{ fontSize: "18px" }}
                                     />
                                 </Link>
@@ -320,8 +323,7 @@ function Navbar() {
                                 backgroundColor: "#fde3cf",
                             }}
                         >
-                            {/* {user.username?.charAt(0)} */}
-                            Ali
+                            {user?.fio?.charAt(0)}
                         </Avatar>
                     </Dropdown>
                 </span>

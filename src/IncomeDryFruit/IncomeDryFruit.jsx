@@ -1,13 +1,15 @@
 import { useState } from "react";
 import instance from "../Api/Axios";
 import moment from "moment";
-import { message } from "antd";
+import { Card, Col, message, Row, Statistic } from "antd";
 import CustomTable from "../Module/Table/Table";
 import { useNavigate } from "react-router-dom";
 import { useData } from "../Hook/UseData";
+import { ArrowDownOutlined } from "@ant-design/icons";
 
 const IncomeDryFruit = () => {
     const [incomeFuel, setIncomeFuel] = useState([]);
+    const [totalsum, setTotalsum] = useState();
     const [loading, setLoading] = useState(true);
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -27,14 +29,19 @@ const IncomeDryFruit = () => {
                 `api/dry/fruit/incomeDryFruit/getAllPageable?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                const fuel = data.data.data.dryFruit.map((item) => {
-                    return {
-                        ...item,
-                        date: moment(item.date).format("DD-MM-YYYY"),
-                    };
-                });
-                setIncomeFuel(fuel);
-                setTotalItems(data.data.data.totalItems);
+                console.log(data);
+                // const fuel =
+                //     data.data.data[0].totalIncomeDryFruit.incomeDryFruitGetDtoList.map(
+                //         (item) => {
+                //             return {
+                //                 ...item,
+                //                 date: moment(item.date).format("DD-MM-YYYY"),
+                //             };
+                //         }
+                //     );
+                // setTotalsum(data.data.data[0].totalIncomeDryFruit.totalSumma);
+                // setIncomeFuel(fuel);
+                // setTotalItems(data.data.data[0].totalItems);
             })
             .catch((error) => {
                 console.error(error);
@@ -213,6 +220,25 @@ const IncomeDryFruit = () => {
 
     return (
         <>
+            {totalsum ? (
+                <div className="site-statistic-demo-card">
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Card>
+                                <Statistic
+                                    title="Jami sarflangan pul"
+                                    value={totalsum}
+                                    valueStyle={{
+                                        color: "#cf1322",
+                                    }}
+                                    prefix={<ArrowDownOutlined />}
+                                    suffix="so'm"
+                                />
+                            </Card>
+                        </Col>
+                    </Row>
+                </div>
+            ) : null}
             <CustomTable
                 onEdit={onEdit}
                 onCreate={onCreate}

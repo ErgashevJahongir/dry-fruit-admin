@@ -5,26 +5,26 @@ import CustomTable from "../Module/Table/Table";
 import instance from "../Api/Axios";
 
 const WarehouseDryfruit = () => {
-    const [workers, setWorkers] = useState([]);
+    const [dryFruitWarehouseData, setDryfruitWarehouseData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { categoryData, newDryFruitData } = useData();
+    const { dryfruitData, branchData } = useData();
 
-    const getWorkers = (current, pageSize) => {
+    const getWerehouseDryFruit = (current, pageSize) => {
         setLoading(true);
         instance
             .get(
                 `api/dry/fruit/dryFruitWarehouse/getAllPageable?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                setWorkers(data.data.data.fuelReports);
+                setDryfruitWarehouseData(data.data.data.fuelReports);
                 setTotalItems(data.data.data.totalItems);
             })
             .catch((error) => {
                 console.error(error);
-                message.error("Mevalarni yuklashda muammo bo'ldi");
+                message.error("Ombordagi Mevalarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoading(false));
     };
@@ -36,6 +36,12 @@ const WarehouseDryfruit = () => {
             key: "branchId",
             width: "35%",
             search: false,
+            render: (initealValue) => {
+                const branch = branchData?.filter(
+                    (item) => item?.id === initealValue
+                );
+                return branch[0]?.name;
+            },
         },
         {
             title: "Quruq meva turi",
@@ -43,9 +49,7 @@ const WarehouseDryfruit = () => {
             key: "dryFruitId",
             width: "35%",
             render: (record) => {
-                const data = newDryFruitData.filter(
-                    (item) => item.id === record
-                );
+                const data = dryfruitData.filter((item) => item.id === record);
                 return data[0]?.name;
             },
             search: false,
@@ -74,7 +78,7 @@ const WarehouseDryfruit = () => {
             .post("api/dry/fruit/dryFruitWarehouse/add", { ...values })
             .then(function (response) {
                 message.success("Quruq meva omborga muvaffaqiyatli qo'shildi");
-                getWorkers(current - 1, pageSize);
+                getWerehouseDryFruit(current - 1, pageSize);
             })
             .catch(function (error) {
                 console.error(error);
@@ -87,10 +91,13 @@ const WarehouseDryfruit = () => {
     const onEdit = (values, initial) => {
         setLoading(true);
         instance
-            .put(`api/dry/fruit/dryFruitWarehouse/update${initial.id}`, { ...values })
+            .put(`api/dry/fruit/dryFruitWarehouse/update${initial.id}`, {
+                ...values,
+                deleted: false,
+            })
             .then((res) => {
                 message.success("Quruq meva muvaffaqiyatli taxrirlandi");
-                getWorkers(current - 1, pageSize);
+                getWerehouseDryFruit(current - 1, pageSize);
             })
             .catch(function (error) {
                 console.error("Error in edit: ", error);
@@ -107,8 +114,11 @@ const WarehouseDryfruit = () => {
             instance
                 .delete(`api/dry/fruit/dryFruitWarehouse/delete${item}`)
                 .then((data) => {
-                    getWorkers(current - 1, pageSize);
-                    message.success("Quruq meva ombordan muvaffaqiyatli o'chirildi");
+                    getWerehouseDryFruit(current - 1, pageSize);
+                    message.success(
+                        "Quruq meva ombordan muvaffaqiyatli o'chirildi"
+                    );
+                    setLoading(false);
                 })
                 .catch((error) => {
                     console.error(error);
@@ -118,7 +128,6 @@ const WarehouseDryfruit = () => {
                 });
             return null;
         });
-        setLoading(false);
     };
     return (
         <>
@@ -126,9 +135,9 @@ const WarehouseDryfruit = () => {
                 onEdit={onEdit}
                 onCreate={onCreate}
                 onDelete={handleDelete}
-                getData={getWorkers}
+                getData={getWerehouseDryFruit}
                 columns={columns}
-                tableData={workers}
+                tableData={dryFruitWarehouseData}
                 current={current}
                 pageSize={pageSize}
                 totalItems={totalItems}
@@ -143,5 +152,3 @@ const WarehouseDryfruit = () => {
 };
 
 export default WarehouseDryfruit;
-
-

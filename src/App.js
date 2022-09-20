@@ -21,17 +21,23 @@ import Branch from "./Others/BranchVsRole/Branch";
 import InDebt from "./Debt/InDebt";
 import OutDebt from "./Debt/OutDebt";
 import Notification from "./Components/Notification/Notification";
+import Loading from "./Components/Loading";
 
 function App() {
     const { token } = useToken();
     const navigate = useNavigate();
-    const { user } = useData();
+    const { userLoading } = useData();
 
     useEffect(() => {
         if (!token) {
             return navigate("/login", { replace: true });
         }
     }, []);
+
+    if (userLoading) {
+        return <Loading />;
+    }
+
     return (
         <Routes>
             <Route element={<LayoutMenu />}>

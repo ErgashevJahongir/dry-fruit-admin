@@ -1,7 +1,9 @@
 import { useState } from "react";
 import instance from "../../Api/Axios";
+import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 import CustomTable from "../../Module/Table/Table";
+import { useData } from "../../Hook/UseData";
 
 const Users = () => {
     const [workers, setWorkers] = useState([]);
@@ -9,6 +11,8 @@ const Users = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
+    const { roleData, branchData } = useData();
+    const navigate = useNavigate();
 
     const getWorkers = (current, pageSize) => {
         setLoading(true);
@@ -22,6 +26,7 @@ const Users = () => {
             })
             .catch((error) => {
                 console.error(error);
+                if (error.response.status === 500) navigate("/server-error");
                 message.error("Foydalanuvchilarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoading(false));
@@ -48,6 +53,12 @@ const Users = () => {
             key: "branchId",
             width: "20%",
             search: false,
+            render: (initealValue) => {
+                const branch = branchData?.filter(
+                    (item) => item?.id === initealValue
+                );
+                return branch[0]?.name;
+            },
         },
         {
             title: "Role",
@@ -55,6 +66,12 @@ const Users = () => {
             key: "roleId",
             width: "20%",
             search: false,
+            render: (initealValue) => {
+                const role = roleData?.filter(
+                    (item) => item?.id === initealValue
+                );
+                return role[0]?.name;
+            },
         },
         {
             title: "Bloklangan",
@@ -81,6 +98,7 @@ const Users = () => {
             })
             .catch(function (error) {
                 console.error(error);
+                if (error.response.status === 500) navigate("/server-error");
                 message.error("Foydalanuvchini qo'shishda muammo bo'ldi");
             })
             .finally(() => {
@@ -90,9 +108,12 @@ const Users = () => {
 
     const onEdit = (values, initial) => {
         setLoading(true);
+        const val = values?.block === "true" ? true : false;
         instance
             .put(`api/dry/fruit/api/dry/fruit/user/update${initial.id}`, {
                 ...values,
+                block: val,
+                password: null,
                 deleted: false,
             })
             .then((res) => {
@@ -101,6 +122,7 @@ const Users = () => {
             })
             .catch(function (error) {
                 console.error("Error in edit: ", error);
+                if (error.response.status === 500) navigate("/server-error");
                 message.error("Foydalanuvchini taxrirlashda muammo bo'ldi");
             })
             .finally(() => {
@@ -119,6 +141,8 @@ const Users = () => {
                 })
                 .catch((error) => {
                     console.error(error);
+                    if (error.response.status === 500)
+                        navigate("/server-error");
                     message.error("Foydalanuvchini o'chirishda muammo bo'ldi");
                 });
             return null;
@@ -149,4 +173,3 @@ const Users = () => {
 };
 
 export default Users;
-

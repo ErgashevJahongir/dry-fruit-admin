@@ -76,7 +76,6 @@ const CategoryVsMeasurement = () => {
     };
 
     const handleDeleteCategory = (arr) => {
-        console.log(arr);
         setLoadingCategory(true);
         arr.map((item) => {
             instance
@@ -145,7 +144,6 @@ const CategoryVsMeasurement = () => {
 
     const onEdit = (values, initial) => {
         setLoading(true);
-        console.log(values, initial);
         instance
             .put(`api/dry/fruit/measurement/update${initial.id}`, { values })
             .then(function (response) {
@@ -164,7 +162,6 @@ const CategoryVsMeasurement = () => {
     };
 
     const handleDelete = (arr) => {
-        console.log(arr);
         setLoading(true);
         arr.map((item) => {
             instance
