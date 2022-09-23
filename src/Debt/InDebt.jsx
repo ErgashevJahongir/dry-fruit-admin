@@ -11,7 +11,7 @@ const InDebt = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { usersData } = useData();
+    const { usersData, branchData, dryfruitData } = useData();
 
     const getDebts = (current, pageSize) => {
         setLoading(true);
@@ -26,7 +26,7 @@ const InDebt = () => {
                         ...item,
                     };
                 });
-                setDebts();
+                setDebts(value);
                 setTotalItems(data.data.data.totalItems);
             })
             .catch((error) => {
@@ -35,8 +35,6 @@ const InDebt = () => {
             })
             .finally(() => setLoading(false));
     };
-
-    console.log("salom");
 
     const onCreate = (values) => {
         setLoading(true);
@@ -108,24 +106,21 @@ const InDebt = () => {
 
     const columns = [
         {
-            title: "Qarzdor",
-            dataIndex: "borrower",
-            key: "borrower",
+            title: "Qarzdor filial",
+            dataIndex: "branchId",
+            key: "branchId",
             width: "20%",
             search: false,
+            render: (record) => {
+                const name = branchData?.filter((item) => item.id === record);
+                return name[0]?.name;
+            },
         },
         {
-            title: "Qarz miqdori",
-            dataIndex: "amount",
-            key: "amount",
-            width: "10%",
-            search: false,
-        },
-        {
-            title: "Qarz beruvchi",
-            dataIndex: "lenderOrBorrowerId",
-            key: "lenderOrBorrowerId",
-            width: "20%",
+            title: "Qarz oluvchi",
+            dataIndex: "createdBy",
+            key: "createdBy",
+            width: "15%",
             search: false,
             render: (record) => {
                 const name = usersData?.filter((item) => item.id === record);
@@ -133,17 +128,28 @@ const InDebt = () => {
             },
         },
         {
+            title: "Qarz olingan mahsulot",
+            dataIndex: "dryFruitId",
+            key: "dryFruitId",
+            width: "15%",
+            search: false,
+            render: (record) => {
+                const name = dryfruitData?.filter((item) => item.id === record);
+                return name[0]?.name;
+            },
+        },
+        {
+            title: "Qarz miqdori",
+            dataIndex: "borrowAmount",
+            key: "borrowAmount",
+            width: "15%",
+            search: false,
+        },
+        {
             title: "Berilgan vaqt",
             dataIndex: "givenTime",
             key: "givenTime",
             width: "20%",
-            search: false,
-        },
-        {
-            title: "To'liq qaytarilish vaqti",
-            dataIndex: "returnTime",
-            key: "returnTime",
-            width: "15%",
             search: false,
         },
         {

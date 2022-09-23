@@ -3,6 +3,7 @@ import { message } from "antd";
 import { useData } from "../Hook/UseData";
 import CustomTable from "../Module/Table/Table";
 import instance from "../Api/Axios";
+import { useNavigate } from "react-router-dom";
 
 const WarehouseDryfruit = () => {
     const [dryFruitWarehouseData, setDryfruitWarehouseData] = useState([]);
@@ -11,6 +12,7 @@ const WarehouseDryfruit = () => {
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
     const { dryfruitData, branchData } = useData();
+    const navigate = useNavigate();
 
     const getWerehouseDryFruit = (current, pageSize) => {
         setLoading(true);
@@ -19,12 +21,13 @@ const WarehouseDryfruit = () => {
                 `api/dry/fruit/dryFruitWarehouse/getAllPageable?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                setDryfruitWarehouseData(data.data.data.fuelReports);
-                setTotalItems(data.data.data.totalItems);
+                setDryfruitWarehouseData(data.data.data?.fuelReports);
+                setTotalItems(data.data.data?.totalItems);
             })
             .catch((error) => {
                 console.error(error);
                 message.error("Ombordagi Mevalarni yuklashda muammo bo'ldi");
+                if (error.response?.status === 500) navigate("/server-error");
             })
             .finally(() => setLoading(false));
     };
@@ -82,6 +85,7 @@ const WarehouseDryfruit = () => {
             })
             .catch(function (error) {
                 console.error(error);
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("Quruq mevani omborga qo'shishda muammo bo'ldi");
             })
             .finally(() => {
@@ -101,6 +105,7 @@ const WarehouseDryfruit = () => {
             })
             .catch(function (error) {
                 console.error("Error in edit: ", error);
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("Quruq mevani taxrirlashda muammo bo'ldi");
             })
             .finally(() => {
@@ -122,6 +127,8 @@ const WarehouseDryfruit = () => {
                 })
                 .catch((error) => {
                     console.error(error);
+                    if (error.response?.status === 500)
+                        navigate("/server-error");
                     message.error(
                         "Quruq mevani ombordan o'chirishda muammo bo'ldi"
                     );
@@ -129,6 +136,26 @@ const WarehouseDryfruit = () => {
             return null;
         });
     };
+
+    const getWarehouseDryfruitBranches = (value, current, pageSize) => {
+        setLoading(true);
+        instance
+            .get(
+                `api/dry/fruit/dryFruitWarehouse/getAllByBranchId${value}?page=${current}&size=${pageSize}`
+            )
+            .then((data) => {
+                console.log(data);
+                setDryfruitWarehouseData(data.data.data?.dryFruitWarehouse);
+                setTotalItems(data.data.data?.totalItems);
+            })
+            .catch((error) => {
+                console.error(error);
+                if (error.response?.status === 500) navigate("/server-error");
+                message.error("Sotilgan yoqilg'ilarni yuklashda muammo bo'ldi");
+            })
+            .finally(() => setLoading(false));
+    };
+
     return (
         <>
             <CustomTable
@@ -136,6 +163,7 @@ const WarehouseDryfruit = () => {
                 onCreate={onCreate}
                 onDelete={handleDelete}
                 getData={getWerehouseDryFruit}
+                getDataBranch={getWarehouseDryfruitBranches}
                 columns={columns}
                 tableData={dryFruitWarehouseData}
                 current={current}

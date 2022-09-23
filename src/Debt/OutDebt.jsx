@@ -11,7 +11,7 @@ const OutDebt = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { supplier, usersData } = useData();
+    const { dryfruitData, usersData, branchData, clientData } = useData();
 
     const getDebts = (current, pageSize) => {
         setLoading(true);
@@ -20,15 +20,12 @@ const OutDebt = () => {
                 `api/dry/fruit/debt/get-outcome?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                let value = data.data.data.debt?.map((df) => {
-                    const givenTime = moment(df.givenTime).format("DD-MM-YYYY");
-                    const returnTime = moment(df.returnTime).format(
-                        "DD-MM-YYYY"
-                    );
+                console.log(data);
+                let value = data.data.data.debts?.map((df) => {
+                    const deadline = moment(df.deadline).format("DD-MM-YYYY");
                     return {
                         ...df,
-                        returnTime: returnTime,
-                        givenTime: givenTime,
+                        deadline: deadline,
                     };
                 });
                 setDebts(value);
@@ -105,17 +102,32 @@ const OutDebt = () => {
 
     const columns = [
         {
-            title: "Qarz miqdori",
-            dataIndex: "amount",
-            key: "amount",
-            width: "10%",
+            title: "Qarzdor klient",
+            dataIndex: "clientId",
+            key: "clientId",
+            width: "15%",
             search: false,
+            render: (record) => {
+                const name = clientData?.filter((item) => item.id === record);
+                return name[0]?.fio;
+            },
         },
         {
-            title: "Qarz oluvchi odam",
-            dataIndex: "lenderOrBorrowerId",
-            key: "lenderOrBorrowerId",
+            title: "Qarzdor bergan filial",
+            dataIndex: "branchId",
+            key: "branchId",
             width: "20%",
+            search: false,
+            render: (record) => {
+                const name = branchData?.filter((item) => item.id === record);
+                return name[0]?.name;
+            },
+        },
+        {
+            title: "Qarz beruvchi",
+            dataIndex: "createdBy",
+            key: "createdBy",
+            width: "15%",
             search: false,
             render: (record) => {
                 const name = usersData?.filter((item) => item.id === record);
@@ -123,27 +135,27 @@ const OutDebt = () => {
             },
         },
         {
-            title: "Qarz beruvchi",
-            dataIndex: "lenderId",
-            key: "lenderId",
-            width: "20%",
+            title: "Olingan mahsulot",
+            dataIndex: "dryFruitId",
+            key: "dryFruitId",
+            width: "10%",
             search: false,
             render: (record) => {
-                const suppl = supplier.filter((item) => item.id === record);
-                return suppl[0]?.name;
+                const name = dryfruitData?.filter((item) => item.id === record);
+                return name[0]?.name;
             },
         },
         {
-            title: "Berilgan vaqt",
-            dataIndex: "givenTime",
-            key: "givenTime",
-            width: "20%",
+            title: "Qarz miqdori",
+            dataIndex: "borrowAmount",
+            key: "borrowAmount",
+            width: "10%",
             search: false,
         },
         {
-            title: "Qarz qaytarilish vaqti",
-            dataIndex: "returnTime",
-            key: "returnTime",
+            title: "Qaytarish vaqti",
+            dataIndex: "deadline",
+            key: "deadline",
             width: "20%",
             search: false,
         },

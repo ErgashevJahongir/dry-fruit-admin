@@ -118,13 +118,11 @@ const Profil = () => {
         <>
             {user?.roleId === 1 ? (
                 <div>
-                    <h4>
-                        Yoqilg'i kam qolganda eslatish uchun limitni belgilang
-                    </h4>
+                    <h4>Qancha qarz bera olish mumkinligini belgilang</h4>
                     <Form form={formLimit} layout="vertical">
                         <Form.Item
                             name="limit"
-                            label={`Hozirda limit ${limit} litr`}
+                            label={`Hozirda limit ${limit} tenge`}
                             labelCol={{ span: 4 }}
                             wrapperCol={{ span: 6 }}
                         >

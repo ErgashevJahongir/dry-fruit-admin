@@ -11,7 +11,7 @@ const WorkerDebt = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { workerData } = useData();
+    const { workerData, usersData } = useData();
 
     const getDebts = (current, pageSize) => {
         setLoading(true);
@@ -24,15 +24,14 @@ const WorkerDebt = () => {
                     ...data.data.data.debts.map((item) => {
                         return {
                             ...item,
-                            borrowerName: item.workerDto.fio,
-                            borrowerNumber: item.workerDto.phoneNumber,
-                            deadline: item.date,
+                            deadline: moment(item.deadline).format(
+                                "DD-MM-YYYY"
+                            ),
                         };
                     }),
                 ];
                 setDebts(value);
-                console.log(value);
-                // setTotalItems(data.data.data.totalItems);
+                setTotalItems(data.data.data.totalItems);
             })
             .catch((error) => {
                 console.error(error);
@@ -42,9 +41,14 @@ const WorkerDebt = () => {
     };
 
     const onCreate = (values) => {
+        console.log(values);
         setLoading(true);
         instance
-            .post("api/dry/fruit/debt/post", { ...values, lenderId: null })
+            .post("api/dry/fruit/debt/post", {
+                ...values,
+                outcomeDryFruitId: null,
+                incomeDryFruitId: null,
+            })
             .then(function (response) {
                 message.success("Ishchi qarzlari muvofaqiyatli qo'shildi");
                 getDebts(current - 1, pageSize);
@@ -61,17 +65,13 @@ const WorkerDebt = () => {
     const onEdit = (values, initial) => {
         const val = values.given === "true" ? true : false;
         setLoading(true);
-        const givenTime = moment(values.givenTime, "DD-MM-YYYY").toISOString();
-        const returnTime = moment(
-            values.returnTime,
-            "DD-MM-YYYY"
-        ).toISOString();
+        const deadline = moment(values.deadline, "DD-MM-YYYY").toISOString();
         instance
             .put(`api/dry/fruit/debt/update${initial.id}`, {
                 ...values,
-                lenderId: null,
-                givenTime: givenTime,
-                returnTime: returnTime,
+                outcomeDryFruitId: null,
+                incomeDryFruitId: null,
+                deadline: deadline,
                 given: val,
             })
             .then(function (response) {
@@ -95,6 +95,7 @@ const WorkerDebt = () => {
                 .then((data) => {
                     message.success("Ishchi qarzi muvofaqiyatli o'chirildi");
                     getDebts(current - 1, pageSize);
+                    setLoading(false);
                 })
                 .catch((error) => {
                     console.error(error);
@@ -102,29 +103,14 @@ const WorkerDebt = () => {
                 });
             return null;
         });
-        setLoading(false);
     };
 
     const columns = [
         {
             title: "Qarzdor",
-            dataIndex: "borrowerName",
-            key: "borrowerName",
-            width: "20%",
-            search: false,
-        },
-        {
-            title: "Qarz miqdori",
-            dataIndex: "borrowAmount",
-            key: "borrowAmount",
-            width: "10%",
-            search: false,
-        },
-        {
-            title: "Qarz beruvchi",
-            dataIndex: "lenderOrBorrowerId",
-            key: "lenderOrBorrowerId",
-            width: "20%",
+            dataIndex: "workerId",
+            key: "workerId",
+            width: "25%",
             search: false,
             render: (record) => {
                 const name = workerData?.filter((item) => item.id === record);
@@ -132,24 +118,44 @@ const WorkerDebt = () => {
             },
         },
         {
-            title: "Berilgan vaqt",
-            dataIndex: "date",
-            key: "date",
-            width: "20%",
+            title: "Qarz miqdori",
+            dataIndex: "borrowAmount",
+            key: "borrowAmount",
+            width: "15%",
             search: false,
+            sorter: (a, b) => {
+                if (a.borrowAmount < b.borrowAmount) {
+                    return -1;
+                }
+                if (a.borrowAmount > b.borrowAmount) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
-            title: "Qarizdor telefon no'mer",
-            dataIndex: "borrowerNumber",
-            key: "borrowerNumber",
-            width: "15%",
+            title: "Qarz beruvchi",
+            dataIndex: "createdBy",
+            key: "createdBy",
+            width: "25%",
+            search: false,
+            render: (record) => {
+                const name = usersData?.filter((item) => item.id === record);
+                return name[0]?.fio;
+            },
+        },
+        {
+            title: "Berilgan vaqt",
+            dataIndex: "deadline",
+            key: "deadline",
+            width: "20%",
             search: false,
         },
         {
             title: "To'liq uzilganmi",
             dataIndex: "given",
             key: "given",
-            width: "15%",
+            width: "14%",
             search: false,
             sorter: (a, b) => {
                 if (a.given < b.given) {

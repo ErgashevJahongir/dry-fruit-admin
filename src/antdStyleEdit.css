@@ -1,0 +1,189 @@
+.ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-content
+    > table
+    > thead
+    > tr
+    > th,
+.ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-header
+    > table
+    > thead
+    > tr
+    > th,
+.ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-body
+    > table
+    > thead
+    > tr
+    > th,
+.ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-summary
+    > table
+    > thead
+    > tr
+    > th,
+.ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-content
+    > table
+    > tbody
+    > tr
+    > td,
+.ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-header
+    > table
+    > tbody
+    > tr
+    > td,
+.ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-body
+    > table
+    > tbody
+    > tr
+    > td,
+.ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-summary
+    > table
+    > tbody
+    > tr
+    > td,
+.ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-content
+    > table
+    > tfoot
+    > tr
+    > th,
+.ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-header
+    > table
+    > tfoot
+    > tr
+    > th,
+.ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-body
+    > table
+    > tfoot
+    > tr
+    > th,
+.ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-summary
+    > table
+    > tfoot
+    > tr
+    > th,
+.ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-content
+    > table
+    > tfoot
+    > tr
+    > td,
+.ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-header
+    > table
+    > tfoot
+    > tr
+    > td,
+.ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-body
+    > table
+    > tfoot
+    > tr
+    > td,
+.ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-summary
+    > table
+    > tfoot
+    > tr
+    > td {
+    text-align: center;
+    padding: 10px;
+}
+
+.ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-content
+    > table
+    > thead
+    > tr
+    > th {
+    font-weight: 600;
+}
+
+.ant-drawer-body {
+    padding: 0 !important;
+}
+
+.ant-drawer-content-wrapper {
+    width: 250px !important;
+}
+
+.ant-layout-header {
+    padding: 0 25px !important;
+}
+
+.ant-form-vertical .ant-form-item-label {
+    padding: 0 0 3px;
+}
+
+.ant-form-item {
+    margin-bottom: 7px;
+}
+
+.ant-btn {
+    padding: 4px 8px;
+}
+
+@media screen and (max-width: 767px) {
+    .inline-navber {
+        display: none !important;
+    }
+
+    .ant-space-align-center {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0 !important;
+    }
+
+    .ant-card-body {
+        padding: 5px;
+    }
+
+    .ant-statistic-content {
+        font-size: 16px !important;
+    }
+
+    .ant-table-tbody > tr > td {
+        padding: 10px 5px;
+    }
+
+    .ant-statistic-title {
+        font-size: 13px !important;
+    }
+
+    .statistic .ant-col-8 {
+        padding: 0 1px !important;
+    }
+
+    .statistic .ant-col-12 {
+        padding: 0 1px !important;
+    }
+
+    .ant-table-pagination-right {
+        justify-content: center;
+    }
+}
