@@ -209,7 +209,7 @@ function Navbar() {
                             ),
                             children: [
                                 {
-                                    label: "Ichki qarzlar",
+                                    label: "Qarzga olingan mahsulotlar",
                                     key: "/indebts",
                                     icon: (
                                         <Link to="/indebts">
@@ -220,7 +220,7 @@ function Navbar() {
                                     ),
                                 },
                                 {
-                                    label: "Tashqi qarzlar",
+                                    label: "Klientlar qarzlari",
                                     key: "/outdebts",
                                     icon: (
                                         <Link to="/outdebts">
@@ -231,7 +231,7 @@ function Navbar() {
                                     ),
                                 },
                                 {
-                                    label: "Ishchilar qarzlar",
+                                    label: "Ishchilar qarzlari",
                                     key: "/worker-debts",
                                     icon: (
                                         <Link to="/worker-debts">

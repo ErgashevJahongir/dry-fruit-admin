@@ -26,12 +26,12 @@ const CategoryVsMeasurement = () => {
                 `/api/dry/fruit/category/page?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                setCategory(data.data.data.categories);
-                setTotalItemsCategory(data.data.data.totalItems);
+                setCategory(data.data.data?.categories);
+                setTotalItemsCategory(data.data.data?.totalItems);
             })
             .catch((error) => {
                 console.error(error);
-                if (error.response.status === 500) navigate("/server-error");
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("Kategoriyalarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoadingCategory(false));
@@ -42,13 +42,13 @@ const CategoryVsMeasurement = () => {
         instance
             .post(`api/dry/fruit/category?name=${values.name}`)
             .then(function (response) {
+                message.success("Kategoriya muvaffaqiyatli qo'shildi");
                 getCategory(currentCategory - 1, pageSizeCategory);
                 getCategoryData();
-                message.success("Kategoriya muvaffaqiyatli qo'shildi");
             })
             .catch(function (error) {
                 console.error(error);
-                if (error.response.status === 500) navigate("/server-error");
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("Kategoriyani qo'shishda muammo bo'ldi");
             })
             .finally(() => {
@@ -61,13 +61,13 @@ const CategoryVsMeasurement = () => {
         instance
             .put(`api/dry/fruit/category?id=${initial.id}&name=${values.name}`)
             .then(function (response) {
+                message.success("Kategoriya muvaffaqiyatli qo'shildi");
                 getCategory(currentCategory - 1, pageSizeCategory);
                 getCategoryData();
-                message.success("Kategoriya muvaffaqiyatli qo'shildi");
             })
             .catch(function (error) {
                 console.error(error);
-                if (error.response.status === 500) navigate("/server-error");
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("Kategoriyani qo'shishda muammo bo'ldi");
             })
             .finally(() => {
@@ -81,13 +81,13 @@ const CategoryVsMeasurement = () => {
             instance
                 .delete(`api/dry/fruit/category?id=${item}`)
                 .then((data) => {
-                    getCategoryData();
-                    getCategory(currentCategory - 1, pageSizeCategory);
                     message.success("Kategoriya muvaffaqiyatli o'chirildi");
+                    getCategory(currentCategory - 1, pageSizeCategory);
+                    getCategoryData();
                 })
                 .catch((error) => {
                     console.error(error);
-                    if (error.response.status === 500)
+                    if (error.response?.status === 500)
                         navigate("/server-error");
                     message.error("Kategoriyani o'chirishda muammo bo'ldi");
                 });
@@ -115,7 +115,7 @@ const CategoryVsMeasurement = () => {
             })
             .catch((error) => {
                 console.error(error);
-                if (error.response.status === 500) navigate("/server-error");
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("O'lchov birligilarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoading(false));
@@ -128,13 +128,13 @@ const CategoryVsMeasurement = () => {
                 ...values,
             })
             .then(function (response) {
+                message.success("O'lchov birligi muvaffaqiyatli qo'shildi");
                 getMeasurment();
                 getMeasurementData();
-                message.success("O'lchov birligi muvaffaqiyatli qo'shildi");
             })
             .catch(function (error) {
                 console.error(error);
-                if (error.response.status === 500) navigate("/server-error");
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("O'lchov birligini qo'shishda muammo bo'ldi");
             })
             .finally(() => {
@@ -147,9 +147,9 @@ const CategoryVsMeasurement = () => {
         instance
             .put(`api/dry/fruit/measurement/update${initial.id}`, { values })
             .then(function (response) {
+                message.success("O'lchov birligi muvofaqiyatli taxrirlandi");
                 getMeasurment();
                 getMeasurementData();
-                message.success("O'lchov birligi muvofaqiyatli taxrirlandi");
             })
             .catch(function (error) {
                 console.error(error);
@@ -167,13 +167,13 @@ const CategoryVsMeasurement = () => {
             instance
                 .delete(`api/dry/fruit/measurement/delete${item}`)
                 .then((data) => {
+                    message.success("O'lchov birligi muvofaqiyatli o'chirildi");
                     getMeasurment();
                     getMeasurementData();
-                    message.success("O'lchov birligi muvofaqiyatli o'chirildi");
                 })
                 .catch((error) => {
                     console.error(error);
-                    if (error.response.status === 500)
+                    if (error.response?.status === 500)
                         navigate("/server-error");
                     message.error(
                         "O'lchov birligini o'chirishda muammo bo'ldi"
@@ -200,38 +200,38 @@ const CategoryVsMeasurement = () => {
                 <div>
                     <h3>Kategoriya</h3>
                     <CustomTable
-                        onEdit={onEditCategory}
-                        onCreate={onCreateCategory}
                         getData={getCategory}
-                        onDelete={handleDeleteCategory}
                         columns={columnsCategory}
                         tableData={category}
                         current={currentCategory}
                         pageSize={pageSizeCategory}
                         totalItems={totalItemsCategory}
                         loading={loadingCategory}
+                        pageSizeOptions={[10, 20]}
+                        onEdit={onEditCategory}
+                        onCreate={onCreateCategory}
+                        onDelete={handleDeleteCategory}
                         setLoading={setLoadingCategory}
                         setCurrent={setCurrentCategory}
                         setPageSize={setPageSizeCategory}
-                        pageSizeOptions={[10, 20]}
                     />
                 </div>
                 <div>
                     <h3>O'lchov birligi</h3>
                     <CustomTable
-                        setCurrent={setCurrent}
-                        current={current}
-                        setPageSize={setPageSize}
-                        pageSize={pageSize}
-                        onEdit={onEdit}
-                        onCreate={onCreate}
                         getData={getMeasurment}
-                        onDelete={handleDelete}
+                        current={current}
+                        pageSize={pageSize}
                         columns={columns}
                         tableData={measurement}
                         loading={loading}
-                        setLoading={setLoading}
                         pageSizeOptions={[10, 20]}
+                        setCurrent={setCurrent}
+                        setPageSize={setPageSize}
+                        onEdit={onEdit}
+                        onCreate={onCreate}
+                        onDelete={handleDelete}
+                        setLoading={setLoading}
                     />
                 </div>
             </div>

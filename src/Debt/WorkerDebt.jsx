@@ -87,24 +87,6 @@ const WorkerDebt = () => {
             });
     };
 
-    const handleDelete = (arr) => {
-        setLoading(true);
-        arr.map((item) => {
-            instance
-                .delete(`api/oil/station/debt/delete${item}`)
-                .then((data) => {
-                    message.success("Ishchi qarzi muvofaqiyatli o'chirildi");
-                    getDebts(current - 1, pageSize);
-                    setLoading(false);
-                })
-                .catch((error) => {
-                    console.error(error);
-                    message.error("Ishchi qarzni o'chirishda muammo bo'ldi");
-                });
-            return null;
-        });
-    };
-
     const columns = [
         {
             title: "Qarzdor",
@@ -145,7 +127,7 @@ const WorkerDebt = () => {
             },
         },
         {
-            title: "Berilgan vaqt",
+            title: "Qaytarish vaqti",
             dataIndex: "deadline",
             key: "deadline",
             width: "20%",
@@ -179,7 +161,6 @@ const WorkerDebt = () => {
                 onEdit={onEdit}
                 onCreate={onCreate}
                 getData={getDebts}
-                onDelete={handleDelete}
                 columns={columns}
                 tableData={debts}
                 current={current}

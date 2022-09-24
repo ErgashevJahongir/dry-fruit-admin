@@ -13,6 +13,7 @@ export const DataProvider = ({ children }) => {
     const [user, setUser] = useState({});
     const [usersData, setUsersData] = useState([]);
     const [clientData, setClientData] = useState([]);
+    const [outcomeDryfruitData, setOutcomeDryfruitData] = useState([]);
     const [userLoading, setUserLoading] = useState(true);
     const [workerData, setWorkerData] = useState([]);
     const [measurementData, setMeasurementData] = useState([]);
@@ -336,7 +337,7 @@ export const DataProvider = ({ children }) => {
             input: (
                 <Radio.Group>
                     <Radio value="false"> Yo'q </Radio>
-                    <Radio value="true"> Bor </Radio>
+                    <Radio value="true"> Ha </Radio>
                 </Radio.Group>
             ),
         },
@@ -414,7 +415,7 @@ export const DataProvider = ({ children }) => {
             input: (
                 <Radio.Group>
                     <Radio value="false"> Yo'q </Radio>
-                    <Radio value="true"> Bor </Radio>
+                    <Radio value="true"> Ha </Radio>
                 </Radio.Group>
             ),
         },
@@ -758,16 +759,6 @@ export const DataProvider = ({ children }) => {
                       />
                   ),
               },
-        {
-            name: "block",
-            label: "Bloklanganligi",
-            input: (
-                <Radio.Group>
-                    <Radio value="false"> Yo'q </Radio>
-                    <Radio value="true"> Ha </Radio>
-                </Radio.Group>
-            ),
-        },
     ];
 
     const editUsersFormData = [
@@ -1042,14 +1033,19 @@ export const DataProvider = ({ children }) => {
     ];
     const editOutdebtFormData = [
         {
-            name: "incomeDryFruitId",
+            name: "outcomeDryFruitId",
             label: "Qarzga olingan mahsulot",
             inputSelect: (defaultId = null) => {
                 return (
                     <CustomSelect
                         backValue={"id"}
                         placeholder={"Quruq mevani tanlang"}
-                        selectData={dryfruitData}
+                        selectData={outcomeDryfruitData?.map((item) => {
+                            const name = dryFruitData.filter(
+                                (qism) => qism?.id === item?.dryFruitId
+                            );
+                            return { ...item, name: name?.name };
+                        })}
                         DValue={defaultId}
                     />
                 );
@@ -1059,6 +1055,11 @@ export const DataProvider = ({ children }) => {
             name: "borrowAmount",
             label: "Qarz miqdori",
             input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "deadline",
+            label: "Qarz berilgan vaqt",
+            input: <Input />,
         },
         {
             name: "given",
@@ -1118,6 +1119,24 @@ export const DataProvider = ({ children }) => {
             .catch((err) => console.error(err));
     };
 
+    const getOutcomeDryfruitData = () => {
+        instance
+            .get("api/dry/fruit/outcomeFruit/getAll")
+            .then((data) => {
+                setOutcomeDryfruitData(data.data.data);
+            })
+            .catch((err) => console.error(err));
+    };
+
+    const getIncomeDryfruitData = () => {
+        instance
+            .get("api/dry/fruit/outcomeFruit/getAll")
+            .then((data) => {
+                setOutcomeDryfruitData(data.data.data);
+            })
+            .catch((err) => console.error(err));
+    };
+
     const getCategoryData = () => {
         instance
             .get("api/dry/fruit/category")
@@ -1173,6 +1192,7 @@ export const DataProvider = ({ children }) => {
         getDryfruitData();
         getRoleData();
         getClientData();
+        getOutcomeDryfruitData();
     }, []);
 
     let formData = {};
@@ -1259,7 +1279,22 @@ export const DataProvider = ({ children }) => {
                 editFormData: editIndebtFormData,
                 branchData: false,
                 timeFilterInfo: false,
-                deleteInfo: true,
+                deleteInfo: false,
+                createInfo: true,
+                editInfo: true,
+                timelyInfo: false,
+                editModalTitle: "Ichki qarzni o'zgartirish",
+                modalTitle: "Ichki qarz qo'shish",
+            };
+            break;
+        }
+        case "/outdebts": {
+            formData = {
+                formData: outdebtFormData,
+                editFormData: editOutdebtFormData,
+                branchData: false,
+                timeFilterInfo: false,
+                deleteInfo: false,
                 createInfo: true,
                 editInfo: true,
                 timelyInfo: false,
@@ -1287,7 +1322,7 @@ export const DataProvider = ({ children }) => {
             formData = {
                 formData: workersFormData,
                 editFormData: editWorkersFormData,
-                branchData: false,
+                branchData: user?.roleId === 1 ? true : false,
                 timeFilterInfo: false,
                 deleteInfo: true,
                 createInfo: true,
@@ -1302,7 +1337,7 @@ export const DataProvider = ({ children }) => {
             formData = {
                 formData: usersFormData,
                 editFormData: editUsersFormData,
-                branchData: false,
+                branchData: user?.roleId === 1 ? true : false,
                 timeFilterInfo: false,
                 deleteInfo: true,
                 createInfo: true,
@@ -1355,6 +1390,8 @@ export const DataProvider = ({ children }) => {
         getCategoryData,
         getBranchData,
         getUserData,
+        getWorkerData,
+        getUsersData,
         setUser,
         setQarzValue,
         setDeadlineValue,

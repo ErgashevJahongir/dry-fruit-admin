@@ -29,20 +29,16 @@ const Dashboard = () => {
                         message: item.title,
                         description: item.text,
                         duration: 0,
-                        onClick: () => {
-                            console.log("Notification Clicked!");
-                        },
                         onClose: () => {
                             instance
                                 .put(
                                     `api/oil/station/notification/update?id=${item.id}`
                                 )
                                 .then((data) => null)
-                                .catch((err) => console.log(err));
+                                .catch((err) => console.error(err));
                         },
                     };
                     son = 2;
-                    console.log(notificationn);
                     notification.warning(args);
                     return null;
                 })}

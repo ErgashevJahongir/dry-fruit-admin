@@ -85,25 +85,6 @@ const InDebt = () => {
                 setLoading(false);
             });
     };
-
-    const handleDelete = (arr) => {
-        setLoading(true);
-        arr.map((item) => {
-            instance
-                .delete(`api/oil/station/debt/delete${item}`)
-                .then((data) => {
-                    message.success("Ichki qarz muvofaqiyatli o'chirildi");
-                    getDebts(current - 1, pageSize);
-                })
-                .catch((error) => {
-                    console.error(error);
-                    message.error("Ichki qarzni o'chirishda muammo bo'ldi");
-                });
-            return null;
-        });
-        setLoading(false);
-    };
-
     const columns = [
         {
             title: "Qarzdor filial",
@@ -180,7 +161,6 @@ const InDebt = () => {
                 onEdit={onEdit}
                 onCreate={onCreate}
                 getData={getDebts}
-                onDelete={handleDelete}
                 columns={columns}
                 tableData={debts}
                 current={current}

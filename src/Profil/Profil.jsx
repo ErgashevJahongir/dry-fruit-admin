@@ -1,9 +1,9 @@
-import { Button, Col, Form, Input, message, Row, Space } from "antd";
 import { useEffect, useState } from "react";
-import CustomSelect from "../Module/Select/Select";
-import Loading from "../Components/Loading";
-import { useData } from "../Hook/UseData";
 import instance from "../Api/Axios";
+import CustomSelect from "../Module/Select/Select";
+import { useData } from "../Hook/UseData";
+import { Button, Col, Form, Input, message, Row, Space } from "antd";
+import Loading from "../Components/Loading";
 
 const Profil = () => {
     const [loading, setLoading] = useState(true);
@@ -28,9 +28,9 @@ const Profil = () => {
         instance
             .put(`api/dry/fruit/limit?limit=${values.limit}`)
             .then((data) => {
+                message.success("Limit muvofaqiyatli taxrirlandi");
                 getLimit();
                 setLimit(values);
-                message.success("Limit muvofaqiyatli taxrirlandi");
             })
             .catch((err) => {
                 console.error(err);
@@ -46,7 +46,7 @@ const Profil = () => {
                 formLimit.resetFields();
             })
             .catch((info) => {
-                console.log("Validate Failed:", info);
+                console.error("Validate Failed:", info);
                 setLoading(false);
             });
     };
@@ -88,7 +88,7 @@ const Profil = () => {
                 }
             })
             .catch((info) => {
-                console.log("Validate Failed:", info);
+                console.error("Validate Failed:", info);
                 setLoading(false);
             });
     };
@@ -100,8 +100,8 @@ const Profil = () => {
                 ...values,
             })
             .then(function (response) {
-                getUserData();
                 message.success("Foydalanuvchi muvofaqiyatli taxrirlandi");
+                getUserData();
             })
             .catch(function (error) {
                 console.error(error);
