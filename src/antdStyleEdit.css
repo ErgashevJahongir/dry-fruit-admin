@@ -124,6 +124,20 @@
     font-weight: 600;
 }
 
+tr:hover,
+thead:hover {
+    background: rgb(203, 227, 247) !important;
+}
+
+.ant-table-tbody > tr.ant-table-row:hover > td {
+    background: none !important;
+}
+
+.ant-table-tbody > tr.ant-table-row-selected > td {
+    background: #e6f7ff;
+    border-color: rgba(0, 0, 0, 0.03);
+}
+
 .ant-drawer-body {
     padding: 0 !important;
 }
@@ -138,6 +152,11 @@
 
 .ant-form-vertical .ant-form-item-label {
     padding: 0 0 3px;
+}
+
+.ant-menu-dark.ant-menu-horizontal > .ant-menu-item,
+.ant-menu-dark.ant-menu-horizontal > .ant-menu-submenu {
+    padding: 0 10px;
 }
 
 .ant-form-item {

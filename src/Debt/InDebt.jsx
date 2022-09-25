@@ -11,7 +11,10 @@ const InDebt = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { usersData, branchData, dryfruitData } = useData();
+    const { usersData, branchData, dryfruitData, getNewIncomeDryfruitData } =
+        useData();
+
+    const yul = () => getNewIncomeDryfruitData();
 
     const getDebts = (current, pageSize) => {
         setLoading(true);
@@ -20,14 +23,15 @@ const InDebt = () => {
                 `api/dry/fruit/debt/get-income?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                console.log(data);
-                const value = data.data.data.debts.map((item) => {
+                const value = data.data.data?.debts?.map((item) => {
                     return {
                         ...item,
+                        deadline: moment(item?.deadline).format("DD-MM-YYYY"),
                     };
                 });
                 setDebts(value);
-                setTotalItems(data.data.data.totalItems);
+                setTotalItems(data.data.data?.totalItems);
+                getNewIncomeDryfruitData();
             })
             .catch((error) => {
                 console.error(error);
@@ -60,17 +64,11 @@ const InDebt = () => {
     const onEdit = (values, initial) => {
         const val = values.given === "true" ? true : false;
         setLoading(true);
-        const givenTime = moment(values.givenTime, "DD-MM-YYYY").toISOString();
-        const returnTime = moment(
-            values.returnTime,
-            "DD-MM-YYYY"
-        ).toISOString();
+        const deadline = moment(values.deadline, "DD-MM-YYYY").toISOString();
         instance
             .put(`api/dry/fruit/debt/update${initial.id}`, {
                 ...values,
-                lenderId: null,
-                givenTime: givenTime,
-                returnTime: returnTime,
+                deadline: deadline,
                 given: val,
             })
             .then(function (response) {
@@ -128,8 +126,8 @@ const InDebt = () => {
         },
         {
             title: "Berilgan vaqt",
-            dataIndex: "givenTime",
-            key: "givenTime",
+            dataIndex: "deadline",
+            key: "deadline",
             width: "20%",
             search: false,
         },

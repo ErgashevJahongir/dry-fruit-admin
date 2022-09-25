@@ -1,8 +1,9 @@
 import { useState } from "react";
-import instance from "../Api/Axios";
-import { message } from "antd";
-import CustomTable from "../Module/Table/Table";
 import { useNavigate } from "react-router-dom";
+import instance from "../Api/Axios";
+import { useData } from "../Hook/UseData";
+import CustomTable from "../Module/Table/Table";
+import { message } from "antd";
 
 const Clients = () => {
     const [clients, setClients] = useState([]);
@@ -10,6 +11,7 @@ const Clients = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
+    const { getClientData } = useData();
     const navigate = useNavigate();
 
     const getClients = (current, pageSize) => {
@@ -19,8 +21,8 @@ const Clients = () => {
                 `api/dry/fruit/api/dry/fruit/client/pageable?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                setClients(data.data.data.fuelReports);
-                setTotalItems(data.data.data.totalItems);
+                setClients(data.data.data?.fuelReports);
+                setTotalItems(data.data.data?.totalItems);
             })
             .catch((error) => {
                 console.error(error);
@@ -28,6 +30,69 @@ const Clients = () => {
                 message.error("Klientlarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoading(false));
+    };
+
+    const onCreate = (values) => {
+        setLoading(true);
+        instance
+            .post(
+                `api/dry/fruit/api/dry/fruit/client?fio=${values.fio}&phoneNumber=${values.phoneNumber}&address=${values.address}`
+            )
+            .then(function (response) {
+                message.success("Klient muvaffaqiyatli qo'shildi");
+                getClients(current - 1, pageSize);
+                getClientData();
+            })
+            .catch(function (error) {
+                console.error(error);
+                if (error.response?.status === 500) navigate("/server-error");
+                message.error("Klientni qo'shishda muammo bo'ldi");
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
+
+    const onEdit = (values, initial) => {
+        setLoading(true);
+        instance
+            .put(
+                `api/dry/fruit/api/dry/fruit/client?id=${initial.id}&fio=${values.fio}&phoneNumber=${values.phoneNumber}&address=${values.address}&deleted=false`
+            )
+            .then((res) => {
+                message.success("Klient muvaffaqiyatli taxrirlandi");
+                getClients(current - 1, pageSize);
+                getClientData();
+            })
+            .catch(function (error) {
+                console.error("Error in edit: ", error);
+                if (error?.response?.status === 500) navigate("/server-error");
+                message.error("Klientni taxrirlashda muammo bo'ldi");
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
+
+    const handleDelete = (arr) => {
+        setLoading(true);
+        arr.map((item) => {
+            instance
+                .delete(`api/dry/fruit/api/dry/fruit/client/${item}`)
+                .then((data) => {
+                    getClients(current - 1, pageSize);
+                    message.success("Klient muvaffaqiyatli o'chirildi");
+                    getClientData();
+                })
+                .catch((error) => {
+                    console.error(error);
+                    if (error?.response?.status === 500)
+                        navigate("/server-error");
+                    message.error("Klientni o'chirishda muammo bo'ldi");
+                })
+                .finally(() => setLoading(false));
+            return null;
+        });
     };
 
     const columns = [
@@ -63,72 +128,9 @@ const Clients = () => {
         },
     ];
 
-    const onCreate = (values) => {
-        setLoading(true);
-        instance
-            .post(
-                `api/dry/fruit/api/dry/fruit/client?fio=${values.fio}&phoneNumber=${values.phoneNumber}&address=${values.address}`
-            )
-            .then(function (response) {
-                message.success("Klient muvaffaqiyatli qo'shildi");
-                getClients(current - 1, pageSize);
-            })
-            .catch(function (error) {
-                console.error(error);
-                if (error.response.status === 500) navigate("/server-error");
-                message.error("Klientni qo'shishda muammo bo'ldi");
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    };
-
-    const onEdit = (values, initial) => {
-        setLoading(true);
-        instance
-            .put(
-                `api/dry/fruit/api/dry/fruit/client?id=${initial.id}&fio=${values.fio}&phoneNumber=${values.phoneNumber}&address=${values.address}&deleted=false`
-            )
-            .then((res) => {
-                message.success("Klient muvaffaqiyatli taxrirlandi");
-                getClients(current - 1, pageSize);
-            })
-            .catch(function (error) {
-                console.error("Error in edit: ", error);
-                if (error?.response?.status === 500) navigate("/server-error");
-                message.error("Klientni taxrirlashda muammo bo'ldi");
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    };
-
-    const handleDelete = (arr) => {
-        setLoading(true);
-        arr.map((item) => {
-            instance
-                .delete(`api/dry/fruit/api/dry/fruit/client/${item}`)
-                .then((data) => {
-                    getClients(current - 1, pageSize);
-                    message.success("Klient muvaffaqiyatli o'chirildi");
-                })
-                .catch((error) => {
-                    console.error(error);
-                    if (error?.response?.status === 500)
-                        navigate("/server-error");
-                    message.error("Klientni o'chirishda muammo bo'ldi");
-                })
-                .finally(() => setLoading(false));
-            return null;
-        });
-    };
-
     return (
         <>
             <CustomTable
-                onEdit={onEdit}
-                onCreate={onCreate}
-                onDelete={handleDelete}
                 getData={getClients}
                 columns={columns}
                 tableData={clients}
@@ -136,10 +138,13 @@ const Clients = () => {
                 pageSize={pageSize}
                 totalItems={totalItems}
                 loading={loading}
+                pageSizeOptions={[10, 20]}
+                onEdit={onEdit}
+                onCreate={onCreate}
+                onDelete={handleDelete}
                 setLoading={setLoading}
                 setCurrent={setCurrent}
                 setPageSize={setPageSize}
-                pageSizeOptions={[10, 20]}
             />
         </>
     );

@@ -57,17 +57,15 @@ const OutDebt = () => {
 
     const onEdit = (values, initial) => {
         setLoading(true);
-        const givenTime = moment(values.givenTime, "DD-MM-YYYY").toISOString();
-        const returnTime = moment(
-            values.returnTime,
-            "DD-MM-YYYY"
-        ).toISOString();
+        const val = values.given === "true" ? true : false;
+        const deadline = moment(values.deadline, "DD-MM-YYYY").toISOString();
         instance
             .put(`api/dry/fruit/debt/update${initial.id}`, {
                 ...values,
-                givenTime: givenTime,
-                returnTime: returnTime,
-                borrower: null,
+                deadline: deadline,
+                given: val,
+                workerId: null,
+                incomeDryFruitId: null,
             })
             .then(function (response) {
                 message.success("Tashqi qarz muvofaqiyatli qo'shildi");

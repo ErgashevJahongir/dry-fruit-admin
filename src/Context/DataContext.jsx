@@ -14,6 +14,8 @@ export const DataProvider = ({ children }) => {
     const [usersData, setUsersData] = useState([]);
     const [clientData, setClientData] = useState([]);
     const [outcomeDryfruitData, setOutcomeDryfruitData] = useState([]);
+    const [incomeDryfruitData, setIncomeDryfruitData] = useState([]);
+    const [newIncomeDryfruitData, setNewIncomeDryfruitData] = useState([]);
     const [userLoading, setUserLoading] = useState(true);
     const [workerData, setWorkerData] = useState([]);
     const [measurementData, setMeasurementData] = useState([]);
@@ -34,6 +36,18 @@ export const DataProvider = ({ children }) => {
 
     const onChangeDeadline = (e) => {
         setDeadlineValue(moment(e).toISOString());
+    };
+
+    const getNewIncomeDryfruitData = () => {
+        setNewIncomeDryfruitData(
+            incomeDryfruitData.map((item) => {
+                const name = dryfruitData?.filter(
+                    (data) => data.id === item.dryFruitId
+                );
+                const time = moment(item?.date).format("DD-MM-YYYY");
+                return { ...item, name: `${name[0]?.name}  ${time}` };
+            })
+        );
     };
 
     const incomeFuelsData = [
@@ -100,17 +114,36 @@ export const DataProvider = ({ children }) => {
                         {" "}
                         <p>Bor</p>
                         {valueDebt === "true" ? (
-                            <div style={{ width: "120%", marginLeft: "-20px" }}>
-                                Qancha pul to'langan
-                                <InputNumber
-                                    value={qarzValue}
-                                    placeholder="Qancha pul to'langan"
-                                    onChange={(e) => setQarzValue(e)}
+                            <>
+                                <div
                                     style={{
-                                        width: "100%",
+                                        width: "115%",
+                                        marginLeft: "-25px",
                                     }}
-                                />
-                            </div>
+                                >
+                                    Qancha pul to'langan
+                                    <InputNumber
+                                        value={qarzValue}
+                                        placeholder="Qancha pul to'langan"
+                                        onChange={(e) => setQarzValue(e)}
+                                        style={{
+                                            width: "100%",
+                                        }}
+                                    />
+                                </div>
+                                <div
+                                    style={{
+                                        width: "115%",
+                                        marginLeft: "-25px",
+                                    }}
+                                >
+                                    Qaytarish vaqti
+                                    <DatePicker
+                                        style={{ width: "100%" }}
+                                        onChange={onChangeDeadline}
+                                    />
+                                </div>
+                            </>
                         ) : null}{" "}
                     </Radio>
                 </Radio.Group>
@@ -190,17 +223,36 @@ export const DataProvider = ({ children }) => {
                         {" "}
                         <p>Bor</p>
                         {valueDebt === "true" ? (
-                            <div style={{ width: "120%", marginLeft: "-20px" }}>
-                                Qancha pul to'langan
-                                <InputNumber
-                                    value={qarzValue}
-                                    placeholder="Qancha pul to'langan"
-                                    onChange={(e) => setQarzValue(e)}
+                            <>
+                                <div
                                     style={{
-                                        width: "100%",
+                                        width: "115%",
+                                        marginLeft: "-25px",
                                     }}
-                                />
-                            </div>
+                                >
+                                    Qancha pul to'langan
+                                    <InputNumber
+                                        value={qarzValue}
+                                        placeholder="Qancha pul to'langan"
+                                        onChange={(e) => setQarzValue(e)}
+                                        style={{
+                                            width: "100%",
+                                        }}
+                                    />
+                                </div>
+                                <div
+                                    style={{
+                                        width: "115%",
+                                        marginLeft: "-25px",
+                                    }}
+                                >
+                                    Qaytarish vaqti
+                                    <DatePicker
+                                        style={{ width: "100%" }}
+                                        onChange={onChangeDeadline}
+                                    />
+                                </div>
+                            </>
                         ) : null}{" "}
                     </Radio>
                 </Radio.Group>
@@ -393,17 +445,36 @@ export const DataProvider = ({ children }) => {
                         {" "}
                         <p>Bor</p>
                         {valueDebt === "true" ? (
-                            <div style={{ width: "115%", marginLeft: "-25px" }}>
-                                Qancha pul to'langan
-                                <InputNumber
-                                    value={qarzValue}
-                                    placeholder="Qancha pul to'langan"
-                                    onChange={(e) => setQarzValue(e)}
+                            <>
+                                <div
                                     style={{
-                                        width: "100%",
+                                        width: "115%",
+                                        marginLeft: "-25px",
                                     }}
-                                />
-                            </div>
+                                >
+                                    Qancha pul to'langan
+                                    <InputNumber
+                                        value={qarzValue}
+                                        placeholder="Qancha pul to'langan"
+                                        onChange={(e) => setQarzValue(e)}
+                                        style={{
+                                            width: "100%",
+                                        }}
+                                    />
+                                </div>
+                                <div
+                                    style={{
+                                        width: "115%",
+                                        marginLeft: "-25px",
+                                    }}
+                                >
+                                    Qaytarish vaqti
+                                    <DatePicker
+                                        style={{ width: "100%" }}
+                                        onChange={onChangeDeadline}
+                                    />
+                                </div>
+                            </>
                         ) : null}{" "}
                     </Radio>
                 </Radio.Group>
@@ -468,7 +539,7 @@ export const DataProvider = ({ children }) => {
         },
     ];
 
-    const dryFruitData = [
+    const dryFruitFormData = [
         {
             name: "name",
             label: "Quruq meva nomi",
@@ -849,58 +920,22 @@ export const DataProvider = ({ children }) => {
               },
     ];
 
-    const indebtFormData = [
-        {
-            name: "borrowerName",
-            label: "Qarzdor ismi",
-            input: <Input />,
-        },
-        {
-            name: "borrowAmount",
-            label: "Qarz miqdori",
-            input: <InputNumber style={{ width: "100%" }} />,
-        },
-        {
-            name: "Name",
-            label: "Qarz beruvchi ismi",
-            input: <Input style={{ width: "100%" }} />,
-        },
-        {
-            name: "deadline",
-            label: "Qarz berilgan vaqt",
-            input: (
-                <DatePicker
-                    style={{ width: "100%" }}
-                    value={moment().format()}
-                />
-            ),
-        },
-        {
-            name: "borrowerNumber",
-            label: "Qarzdor telefon no'mer",
-            input: <InputNumber style={{ width: "100%" }} />,
-        },
-        {
-            name: "given",
-            label: "Qarz uzilganmi",
-            input: (
-                <Radio.Group>
-                    <Radio value="false"> Yo'q </Radio>
-                    <Radio value="true"> Ha </Radio>
-                </Radio.Group>
-            ),
-        },
-    ];
-
     const editIndebtFormData = [
         {
-            name: "borrowerName",
+            name: "incomeDryFruitId",
             label: "Qarzdor ismi",
-            input: (
+            inputSelect: (defaultId = null) => (
                 <CustomSelect
                     backValue={"id"}
-                    placeholder={"Kategoriyani tanlang"}
-                    selectData={categoryData}
+                    placeholder={"Kelgan mahsuotni tanlang"}
+                    selectData={incomeDryfruitData.map((item) => {
+                        const name = dryfruitData?.filter(
+                            (data) => data.id === item.dryFruitId
+                        );
+                        const time = moment(item?.date).format("DD-MM-YYYY");
+                        return { ...item, name: `${name[0]?.name}  ${time}` };
+                    })}
+                    DValue={defaultId}
                 />
             ),
         },
@@ -966,6 +1001,7 @@ export const DataProvider = ({ children }) => {
             ),
         },
     ];
+
     const editWorkerdebtFormData = [
         {
             name: "workerId",
@@ -1003,34 +1039,6 @@ export const DataProvider = ({ children }) => {
         },
     ];
 
-    const outdebtFormData = [
-        {
-            name: "outcomeDryFruitId",
-            label: "Qarzga olingan mahsulot",
-            input: (
-                <CustomSelect
-                    backValue={"id"}
-                    placeholder={"Quruq mevani tanlang"}
-                    selectData={dryfruitData}
-                />
-            ),
-        },
-        {
-            name: "borrowAmount",
-            label: "Qarz miqdori",
-            input: <InputNumber style={{ width: "100%" }} />,
-        },
-        {
-            name: "given",
-            label: "Qarz uzilganmi",
-            input: (
-                <Radio.Group>
-                    <Radio value="false"> Yo'q </Radio>
-                    <Radio value="true"> Ha </Radio>
-                </Radio.Group>
-            ),
-        },
-    ];
     const editOutdebtFormData = [
         {
             name: "outcomeDryFruitId",
@@ -1041,10 +1049,16 @@ export const DataProvider = ({ children }) => {
                         backValue={"id"}
                         placeholder={"Quruq mevani tanlang"}
                         selectData={outcomeDryfruitData?.map((item) => {
-                            const name = dryFruitData.filter(
-                                (qism) => qism?.id === item?.dryFruitId
+                            const name = dryfruitData?.filter(
+                                (data) => data.id === item.dryFruitId
                             );
-                            return { ...item, name: name?.name };
+                            const time = moment(item?.date).format(
+                                "DD-MM-YYYY"
+                            );
+                            return {
+                                ...item,
+                                name: `${name[0]?.name}  ${time}`,
+                            };
                         })}
                         DValue={defaultId}
                     />
@@ -1130,9 +1144,9 @@ export const DataProvider = ({ children }) => {
 
     const getIncomeDryfruitData = () => {
         instance
-            .get("api/dry/fruit/outcomeFruit/getAll")
+            .get("api/dry/fruit/incomeDryFruit/getAllIncomeDryFruit")
             .then((data) => {
-                setOutcomeDryfruitData(data.data.data);
+                setIncomeDryfruitData(data.data.data);
             })
             .catch((err) => console.error(err));
     };
@@ -1193,6 +1207,7 @@ export const DataProvider = ({ children }) => {
         getRoleData();
         getClientData();
         getOutcomeDryfruitData();
+        getIncomeDryfruitData();
     }, []);
 
     let formData = {};
@@ -1230,7 +1245,7 @@ export const DataProvider = ({ children }) => {
         }
         case "/dryfruit": {
             formData = {
-                formData: dryFruitData,
+                formData: dryFruitFormData,
                 editFormData: editdryFruitData,
                 branchData: false,
                 timeFilterInfo: false,
@@ -1275,31 +1290,31 @@ export const DataProvider = ({ children }) => {
         }
         case "/indebts": {
             formData = {
-                formData: indebtFormData,
+                formData: editIndebtFormData,
                 editFormData: editIndebtFormData,
                 branchData: false,
                 timeFilterInfo: false,
                 deleteInfo: false,
-                createInfo: true,
+                createInfo: false,
                 editInfo: true,
                 timelyInfo: false,
-                editModalTitle: "Ichki qarzni o'zgartirish",
+                editModalTitle: "Qarzga olingan mahsulotni o'zgartirish",
                 modalTitle: "Ichki qarz qo'shish",
             };
             break;
         }
         case "/outdebts": {
             formData = {
-                formData: outdebtFormData,
+                formData: editOutdebtFormData,
                 editFormData: editOutdebtFormData,
                 branchData: false,
                 timeFilterInfo: false,
                 deleteInfo: false,
-                createInfo: true,
+                createInfo: false,
                 editInfo: true,
                 timelyInfo: false,
-                editModalTitle: "Ichki qarzni o'zgartirish",
-                modalTitle: "Ichki qarz qo'shish",
+                editModalTitle: "Klient qarzini o'zgartirish",
+                modalTitle: "Klientga qarz qo'shish",
             };
             break;
         }
@@ -1387,9 +1402,12 @@ export const DataProvider = ({ children }) => {
         formData,
         getDryfruitData,
         getMeasurementData,
+        getIncomeDryfruitData,
+        getNewIncomeDryfruitData,
         getCategoryData,
         getBranchData,
         getUserData,
+        getClientData,
         getWorkerData,
         getUsersData,
         setUser,

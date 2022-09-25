@@ -1,11 +1,13 @@
 import { message, notification } from "antd";
 import { useEffect, useState } from "react";
 import instance from "../Api/Axios";
+import { useData } from "../Hook/UseData";
 
 let son = 1;
 
 const Dashboard = () => {
     const [notificationn, setNotificationn] = useState([]);
+    const { getNewIncomeDryfruitData } = useData();
     const getNotification = () => {
         instance
             .get(`api/dry/fruit/notification`)
@@ -19,6 +21,7 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
+        getNewIncomeDryfruitData();
         getNotification();
     }, []);
     return (
