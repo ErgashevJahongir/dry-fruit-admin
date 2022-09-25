@@ -80,7 +80,7 @@ function DrapdownMenu({ onClose, isVisible }) {
                         key: "/income-dryfruit",
                         icon: (
                             <Link to="/income-dryfruit">
-                                <CloudDownloadOutlined 
+                                <CloudDownloadOutlined
                                     style={{ fontSize: "18px" }}
                                 />
                             </Link>
@@ -107,7 +107,7 @@ function DrapdownMenu({ onClose, isVisible }) {
                         ),
                         children: [
                             {
-                                label: "Ichki qarzlar",
+                                label: "Qarzga olingan mahsulotlar",
                                 key: "/indebts",
                                 icon: (
                                     <Link to="/indebts">
@@ -118,7 +118,7 @@ function DrapdownMenu({ onClose, isVisible }) {
                                 ),
                             },
                             {
-                                label: "Tashqi qarzlar",
+                                label: "Klientlar qarzlari",
                                 key: "/outdebts",
                                 icon: (
                                     <Link to="/outdebts">
@@ -129,7 +129,7 @@ function DrapdownMenu({ onClose, isVisible }) {
                                 ),
                             },
                             {
-                                label: "Ishchilar qarzlar",
+                                label: "Ishchilar qarzlari",
                                 key: "/worker-debts",
                                 icon: (
                                     <Link to="/worker-debts">

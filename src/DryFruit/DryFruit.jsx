@@ -1,34 +1,33 @@
 import { useState } from "react";
 import instance from "../Api/Axios";
-import { message } from "antd";
+import { useNavigate } from "react-router-dom";
 import CustomTable from "../Module/Table/Table";
 import { useData } from "../Hook/UseData";
-import { useNavigate } from "react-router-dom";
+import { message } from "antd";
 
 const DryFruit = () => {
-    const [incomeDryFruits, setIncomeDryFruits] = useState([]);
+    const [dryFruits, setDryFruits] = useState([]);
     const [loading, setLoading] = useState(true);
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { categoryData } = useData();
+    const { categoryData, getDryfruitData } = useData();
     const navigate = useNavigate();
 
-    const getIncomeDryFruits = (current, pageSize) => {
+    const getDryFruits = (current, pageSize) => {
         setLoading(true);
         instance
             .get(
                 `api/dry/fruit/dryFruit/getAllPageable?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                console.log(data);
-                setIncomeDryFruits(data.data.data.dryFruit);
-                setTotalItems(data.data.data.totalItems);
+                setDryFruits(data.data.data?.dryFruit);
+                setTotalItems(data.data.data?.totalItems);
             })
             .catch((error) => {
                 console.error(error);
-                if (error.response.status === 500) navigate("/server-error");
-                message.error("Kelgan quruq mevalarni yuklashda muammo bo'ldi");
+                if (error.response?.status === 500) navigate("/server-error");
+                message.error("Quruq mevalarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoading(false));
     };
@@ -116,13 +115,14 @@ const DryFruit = () => {
         instance
             .post("api/dry/fruit/dryFruit/add", { ...values })
             .then(function (response) {
-                message.success("Kelgan quruq meva muvaffaqiyatli qo'shildi");
-                getIncomeDryFruits(current - 1, pageSize);
+                message.success("Quruq meva muvaffaqiyatli qo'shildi");
+                getDryFruits(current - 1, pageSize);
+                getDryfruitData();
             })
             .catch(function (error) {
                 console.error(error);
                 if (error.response.status === 500) navigate("/server-error");
-                message.error("Kelgan quruq mevani qo'shishda muammo bo'ldi");
+                message.error("Quruq mevani qo'shishda muammo bo'ldi");
             })
             .finally(() => {
                 setLoading(false);
@@ -134,13 +134,14 @@ const DryFruit = () => {
         instance
             .put(`api/dry/fruit/dryFruit/update${initial.id}`, { ...values })
             .then((res) => {
-                message.success("Kelgan quruq meva muvaffaqiyatli taxrirlandi");
-                getIncomeDryFruits(current - 1, pageSize);
+                message.success("Quruq meva muvaffaqiyatli taxrirlandi");
+                getDryFruits(current - 1, pageSize);
+                getDryfruitData();
             })
             .catch(function (error) {
                 console.error("Error in edit: ", error);
                 if (error.response.status === 500) navigate("/server-error");
-                message.error("Kelgan quruq mevani taxrirlashda muammo bo'ldi");
+                message.error("Quruq mevani taxrirlashda muammo bo'ldi");
             })
             .finally(() => {
                 setLoading(false);
@@ -153,18 +154,15 @@ const DryFruit = () => {
             instance
                 .delete(`api/dry/fruit/dryFruit/delete${item}`)
                 .then((data) => {
-                    getIncomeDryFruits(current - 1, pageSize);
-                    message.success(
-                        "Kelgan quruq meva muvaffaqiyatli o'chirildi"
-                    );
+                    getDryFruits(current - 1, pageSize);
+                    getDryfruitData();
+                    message.success("Quruq meva muvaffaqiyatli o'chirildi");
                 })
                 .catch((error) => {
                     console.error(error);
                     if (error.response.status === 500)
                         navigate("/server-error");
-                    message.error(
-                        "Kelgan quruq mevani o'chirishda muammo bo'ldi"
-                    );
+                    message.error("Quruq mevani o'chirishda muammo bo'ldi");
                 });
             return null;
         });
@@ -177,9 +175,9 @@ const DryFruit = () => {
                 onEdit={onEdit}
                 onCreate={onCreate}
                 onDelete={handleDelete}
-                getData={getIncomeDryFruits}
+                getData={getDryFruits}
                 columns={columns}
-                tableData={incomeDryFruits}
+                tableData={dryFruits}
                 current={current}
                 pageSize={pageSize}
                 totalItems={totalItems}

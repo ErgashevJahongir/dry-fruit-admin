@@ -1,11 +1,13 @@
 import { message, notification } from "antd";
 import { useEffect, useState } from "react";
 import instance from "../Api/Axios";
+import { useData } from "../Hook/UseData";
 
 let son = 1;
 
 const Dashboard = () => {
     const [notificationn, setNotificationn] = useState([]);
+    const { getNewIncomeDryfruitData } = useData();
     const getNotification = () => {
         instance
             .get(`api/dry/fruit/notification`)
@@ -19,6 +21,7 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
+        getNewIncomeDryfruitData();
         getNotification();
     }, []);
     return (
@@ -29,20 +32,16 @@ const Dashboard = () => {
                         message: item.title,
                         description: item.text,
                         duration: 0,
-                        onClick: () => {
-                            console.log("Notification Clicked!");
-                        },
                         onClose: () => {
                             instance
                                 .put(
                                     `api/oil/station/notification/update?id=${item.id}`
                                 )
                                 .then((data) => null)
-                                .catch((err) => console.log(err));
+                                .catch((err) => console.error(err));
                         },
                     };
                     son = 2;
-                    console.log(notificationn);
                     notification.warning(args);
                     return null;
                 })}

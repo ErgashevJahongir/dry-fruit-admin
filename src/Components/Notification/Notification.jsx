@@ -1,7 +1,7 @@
-import { List, Row } from "antd";
-import moment from "moment";
 import { useEffect, useState } from "react";
 import instance from "../../Api/Axios";
+import moment from "moment";
+import { List, Row } from "antd";
 
 const Notification = () => {
     const [data, setData] = useState([]);
@@ -17,8 +17,8 @@ const Notification = () => {
                 `api/dry/fruit/notification/all?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                setData(data.data.data.notifications);
-                setTotalItems(data.data.data.totalItems);
+                setData(data.data.data?.notifications);
+                setTotalItems(data.data.data?.totalItems);
             })
             .catch((err) => {
                 console.error(err);
@@ -63,16 +63,15 @@ const Notification = () => {
                 }}
                 dataSource={data}
                 renderItem={(item) => {
-                    console.log(item);
                     return (
                         <List.Item style={{ borderBottom: "1px solid #000" }}>
                             <Row justify="space-between">
                                 <List.Item.Meta
-                                    title={item.title}
-                                    description={item.text}
+                                    title={item?.title}
+                                    description={item?.text}
                                 />
                                 <div>
-                                    {moment(item.createdDate).format(
+                                    {moment(item?.createdDate).format(
                                         "DD-MM-YYYY"
                                     )}
                                 </div>

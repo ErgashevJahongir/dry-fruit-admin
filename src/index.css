@@ -109,26 +109,6 @@ li {
     margin: 0 auto;
 }
 
-.ant-drawer-body {
-    padding: 0 !important;
-}
-
-.ant-drawer-content-wrapper {
-    width: 250px !important;
-}
-
-.ant-layout-header {
-    padding: 0 25px !important;
-}
-
-.ant-form-vertical .ant-form-item-label {
-    padding: 0 0 3px;
-}
-
-.ant-form-item {
-    margin-bottom: 7px;
-}
-
 .burger-menu {
     display: none;
 }
@@ -202,12 +182,6 @@ li {
         justify-content: center;
     }
 
-    .ant-space-align-center {
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 0 !important;
-    }
-
     .new-buttons {
         gap: 10px !important;
     }
@@ -222,33 +196,5 @@ li {
 
     .select-add {
         margin-bottom: 8px;
-    }
-
-    .ant-card-body {
-        padding: 5px;
-    }
-
-    .ant-statistic-content {
-        font-size: 16px !important;
-    }
-
-    .ant-table-tbody > tr > td {
-        padding: 10px 5px;
-    }
-
-    .ant-statistic-title {
-        font-size: 13px !important;
-    }
-
-    .statistic .ant-col-8 {
-        padding: 0 1px !important;
-    }
-
-    .statistic .ant-col-12 {
-        padding: 0 1px !important;
-    }
-
-    .ant-table-pagination-right {
-        justify-content: center;
     }
 }

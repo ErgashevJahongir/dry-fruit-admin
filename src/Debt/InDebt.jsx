@@ -11,7 +11,10 @@ const InDebt = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { usersData } = useData();
+    const { usersData, branchData, dryfruitData, getNewIncomeDryfruitData } =
+        useData();
+
+    const yul = () => getNewIncomeDryfruitData();
 
     const getDebts = (current, pageSize) => {
         setLoading(true);
@@ -20,14 +23,15 @@ const InDebt = () => {
                 `api/dry/fruit/debt/get-income?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                console.log(data);
-                const value = data.data.data.debts.map((item) => {
+                const value = data.data.data?.debts?.map((item) => {
                     return {
                         ...item,
+                        deadline: moment(item?.deadline).format("DD-MM-YYYY"),
                     };
                 });
-                setDebts();
-                setTotalItems(data.data.data.totalItems);
+                setDebts(value);
+                setTotalItems(data.data.data?.totalItems);
+                getNewIncomeDryfruitData();
             })
             .catch((error) => {
                 console.error(error);
@@ -35,8 +39,6 @@ const InDebt = () => {
             })
             .finally(() => setLoading(false));
     };
-
-    console.log("salom");
 
     const onCreate = (values) => {
         setLoading(true);
@@ -62,17 +64,11 @@ const InDebt = () => {
     const onEdit = (values, initial) => {
         const val = values.given === "true" ? true : false;
         setLoading(true);
-        const givenTime = moment(values.givenTime, "DD-MM-YYYY").toISOString();
-        const returnTime = moment(
-            values.returnTime,
-            "DD-MM-YYYY"
-        ).toISOString();
+        const deadline = moment(values.deadline, "DD-MM-YYYY").toISOString();
         instance
             .put(`api/dry/fruit/debt/update${initial.id}`, {
                 ...values,
-                lenderId: null,
-                givenTime: givenTime,
-                returnTime: returnTime,
+                deadline: deadline,
                 given: val,
             })
             .then(function (response) {
@@ -87,45 +83,23 @@ const InDebt = () => {
                 setLoading(false);
             });
     };
-
-    const handleDelete = (arr) => {
-        setLoading(true);
-        arr.map((item) => {
-            instance
-                .delete(`api/oil/station/debt/delete${item}`)
-                .then((data) => {
-                    message.success("Ichki qarz muvofaqiyatli o'chirildi");
-                    getDebts(current - 1, pageSize);
-                })
-                .catch((error) => {
-                    console.error(error);
-                    message.error("Ichki qarzni o'chirishda muammo bo'ldi");
-                });
-            return null;
-        });
-        setLoading(false);
-    };
-
     const columns = [
         {
-            title: "Qarzdor",
-            dataIndex: "borrower",
-            key: "borrower",
+            title: "Qarzdor filial",
+            dataIndex: "branchId",
+            key: "branchId",
             width: "20%",
             search: false,
+            render: (record) => {
+                const name = branchData?.filter((item) => item.id === record);
+                return name[0]?.name;
+            },
         },
         {
-            title: "Qarz miqdori",
-            dataIndex: "amount",
-            key: "amount",
-            width: "10%",
-            search: false,
-        },
-        {
-            title: "Qarz beruvchi",
-            dataIndex: "lenderOrBorrowerId",
-            key: "lenderOrBorrowerId",
-            width: "20%",
+            title: "Qarz oluvchi",
+            dataIndex: "createdBy",
+            key: "createdBy",
+            width: "15%",
             search: false,
             render: (record) => {
                 const name = usersData?.filter((item) => item.id === record);
@@ -133,17 +107,28 @@ const InDebt = () => {
             },
         },
         {
-            title: "Berilgan vaqt",
-            dataIndex: "givenTime",
-            key: "givenTime",
-            width: "20%",
+            title: "Qarz olingan mahsulot",
+            dataIndex: "dryFruitId",
+            key: "dryFruitId",
+            width: "15%",
+            search: false,
+            render: (record) => {
+                const name = dryfruitData?.filter((item) => item.id === record);
+                return name[0]?.name;
+            },
+        },
+        {
+            title: "Qarz miqdori",
+            dataIndex: "borrowAmount",
+            key: "borrowAmount",
+            width: "15%",
             search: false,
         },
         {
-            title: "To'liq qaytarilish vaqti",
-            dataIndex: "returnTime",
-            key: "returnTime",
-            width: "15%",
+            title: "Berilgan vaqt",
+            dataIndex: "deadline",
+            key: "deadline",
+            width: "20%",
             search: false,
         },
         {
@@ -174,7 +159,6 @@ const InDebt = () => {
                 onEdit={onEdit}
                 onCreate={onCreate}
                 getData={getDebts}
-                onDelete={handleDelete}
                 columns={columns}
                 tableData={debts}
                 current={current}

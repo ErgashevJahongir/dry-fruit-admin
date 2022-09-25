@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import instance from "../../Api/Axios";
-import { message } from "antd";
 import CustomTable from "../../Module/Table/Table";
 import { useData } from "../../Hook/UseData";
+import { message } from "antd";
 import "./Branch.css";
 
 const Branch = () => {
@@ -22,12 +22,12 @@ const Branch = () => {
                 `/api/dry/fruit/api/dry/fruit/branch/page?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                setBranches(data.data.data.fuelReports);
-                setTotalItems(data.data.data.totalItems);
+                setBranches(data.data.data?.fuelReports);
+                setTotalItems(data.data.data?.totalItems);
             })
             .catch((error) => {
                 console.error(error);
-                if (error.response.status === 500) navigate("/server-error");
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("Filiallarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoading(false));
@@ -40,13 +40,13 @@ const Branch = () => {
                 `api/dry/fruit/api/dry/fruit/branch?name=${values.name}&main=${values.main}`
             )
             .then(function (response) {
+                message.success("Filial muvaffaqiyatli qo'shildi");
                 getBranches(current - 1, pageSize);
                 getBranchData();
-                message.success("Filial muvaffaqiyatli qo'shildi");
             })
             .catch(function (error) {
                 console.error(error);
-                if (error.response.status === 500) navigate("/server-error");
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("Filialni qo'shishda muammo bo'ldi");
             })
             .finally(() => {
@@ -67,13 +67,13 @@ const Branch = () => {
                 }
             )
             .then(function (response) {
+                message.success("Filial muvaffaqiyatli qo'shildi");
                 getBranches(current - 1, pageSize);
                 getBranchData();
-                message.success("Filial muvaffaqiyatli qo'shildi");
             })
             .catch(function (error) {
                 console.error(error);
-                if (error.response.status === 500) navigate("/server-error");
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("Filialni taxrirlashda muammo bo'ldi");
             })
             .finally(() => {
@@ -87,13 +87,13 @@ const Branch = () => {
             instance
                 .delete(`api/dry/fruit/api/dry/fruit/branch/${item}`)
                 .then((data) => {
+                    message.success("Filial muvaffaqiyatli o'chirildi");
                     getBranches(current - 1, pageSize);
                     getBranchData();
-                    message.success("Filial muvaffaqiyatli o'chirildi");
                 })
                 .catch((error) => {
                     console.error(error);
-                    if (error.response.status === 500)
+                    if (error.response?.status === 500)
                         navigate("/server-error");
                     message.error("Filialni o'chirishda muammo bo'ldi");
                 });
@@ -114,7 +114,7 @@ const Branch = () => {
             title: "Bu filial asosiymi",
             dataIndex: "main",
             key: "main",
-            width: "50%",
+            width: "49%",
             search: false,
             render: (record) => {
                 return record ? "Ha" : "Yo'q";
@@ -127,20 +127,20 @@ const Branch = () => {
             <div>
                 <h3>Filiallar</h3>
                 <CustomTable
-                    onEdit={onEdit}
-                    onCreate={onCreate}
                     getData={getBranches}
-                    onDelete={handleDelete}
                     columns={columns}
                     tableData={branches}
                     current={current}
                     pageSize={pageSize}
                     totalItems={totalItems}
                     loading={loading}
+                    pageSizeOptions={[10, 20]}
+                    onEdit={onEdit}
+                    onCreate={onCreate}
+                    onDelete={handleDelete}
                     setLoading={setLoading}
                     setCurrent={setCurrent}
                     setPageSize={setPageSize}
-                    pageSizeOptions={[10, 20]}
                 />
             </div>
         </div>

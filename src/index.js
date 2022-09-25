@@ -7,16 +7,17 @@ import { DataProvider } from "./Context/DataContext";
 import App from "./App";
 import "antd/dist/antd.css";
 import "./index.css";
+import "./antdStyleEdit.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <React.StrictMode>
         <BrowserRouter>
-            <AxiosInterceptor>
-                <DataProvider>
-                    <App />
-                </DataProvider>
-            </AxiosInterceptor>
+            {/* <DataProvider>
+                <AxiosInterceptor> */}
+            <App />
+            {/* </AxiosInterceptor>
+            </DataProvider> */}
         </BrowserRouter>
     </React.StrictMode>
 );

@@ -8,17 +8,19 @@ import { useData } from "../Hook/UseData";
 import { ArrowDownOutlined } from "@ant-design/icons";
 
 const IncomeDryFruit = () => {
-    const [incomeFuel, setIncomeFuel] = useState([]);
+    const [incomeDryFruit, setIncomeDryFruit] = useState([]);
     const [totalsum, setTotalsum] = useState();
     const [loading, setLoading] = useState(true);
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
     const {
-        newDryFruitData,
+        dryfruitData,
         measurementData,
-        newDryFruitWerehouseData,
+        branchData,
         qarzValue,
+        setQarzValue,
+        deadlineValue,
     } = useData();
     const navigate = useNavigate();
 
@@ -26,26 +28,35 @@ const IncomeDryFruit = () => {
         setLoading(true);
         instance
             .get(
-                `api/dry/fruit/incomeDryFruit/getAllPageable?page=${current}&size=${pageSize}`
+                `api/dry/fruit/incomeDryFruit/getAll?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                console.log(data);
-                // const fuel =
-                //     data.data.data[0].totalIncomeDryFruit.incomeDryFruitGetDtoList.map(
-                //         (item) => {
-                //             return {
-                //                 ...item,
-                //                 date: moment(item.date).format("DD-MM-YYYY"),
-                //             };
-                //         }
-                //     );
-                // setTotalsum(data.data.data[0].totalIncomeDryFruit.totalSumma);
-                // setIncomeFuel(fuel);
-                // setTotalItems(data.data.data[0].totalItems);
+                const incomeDryfruit =
+                    data.data.data.incomeDryFruit?.incomeDryFruitGetDtoList?.map(
+                        (item) => {
+                            return {
+                                ...item,
+                                date: moment(item?.date).format("DD-MM-YYYY"),
+                            };
+                        }
+                    );
+                const index = data.data.data?.incomeDryFruit?.totalDollar
+                    ?.toString()
+                    .indexOf(".");
+                setTotalsum({
+                    totalSumma: data.data.data?.incomeDryFruit?.totalSumma,
+                    totalPlastic: data.data.data?.incomeDryFruit?.totalPlastic,
+                    totalDollar: data.data.data?.incomeDryFruit?.totalDollar
+                        ?.toString()
+                        .slice(0, index + 3),
+                    totalCash: data.data.data?.incomeDryFruit?.totalCash,
+                });
+                setIncomeDryFruit(incomeDryfruit);
+                setTotalItems(data.data.data?.totalItems);
             })
             .catch((error) => {
                 console.error(error);
-                if (error.response.status === 500) navigate("/server-error");
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("Kelgan quruq mevalarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoading(false));
@@ -53,14 +64,12 @@ const IncomeDryFruit = () => {
 
     const columns = [
         {
-            title: "Ombordagi quruq meva",
-            dataIndex: "dryFruitWarehouseId",
-            key: "dryFruitWarehouseId",
+            title: "Ombor",
+            dataIndex: "branchId",
+            key: "branchId",
             width: "20%",
             render: (record) => {
-                const data = newDryFruitWerehouseData.filter(
-                    (item) => item.id === record
-                );
+                const data = branchData?.filter((item) => item.id === record);
                 return data[0]?.name;
             },
             search: false,
@@ -71,9 +80,7 @@ const IncomeDryFruit = () => {
             key: "dryFruitId",
             width: "15%",
             render: (record) => {
-                const data = newDryFruitData.filter(
-                    (item) => item.id === record
-                );
+                const data = dryfruitData?.filter((item) => item.id === record);
                 return data[0]?.name;
             },
             search: false,
@@ -82,9 +89,9 @@ const IncomeDryFruit = () => {
             title: "O'lchovi",
             dataIndex: "measurementId",
             key: "measurementId",
-            width: "15%",
+            width: "11%",
             render: (record) => {
-                const data = measurementData.filter(
+                const data = measurementData?.filter(
                     (item) => item.id === record
                 );
                 return data[0]?.name;
@@ -125,10 +132,20 @@ const IncomeDryFruit = () => {
             title: "Qarzdorlik",
             dataIndex: "debt",
             key: "debt",
-            width: "10%",
+            width: "7%",
             search: false,
             render: (record) => {
                 return record ? "Bor" : "Yo'q";
+            },
+        },
+        {
+            title: "Naqtmi",
+            dataIndex: "cash",
+            key: "cash",
+            width: "7%",
+            search: false,
+            render: (record) => {
+                return record ? "Ha" : "Yo'q";
             },
         },
     ];
@@ -137,30 +154,34 @@ const IncomeDryFruit = () => {
         setLoading(true);
         const value = {
             ...values,
-            date: values.date.toISOString(),
-            debt: values.debt.target.value === "false" ? false : true,
+            date: moment(values.date, "DD-MM-YYYY").toISOString(),
+            cash: values.cash === "true" ? true : false,
+            debt: values.debt?.target?.value === "false" ? false : true,
         };
         instance
             .post("api/dry/fruit/incomeDryFruit/add", { ...value })
             .then(function (response) {
                 message.success("Kelgan quruq meva muvofaqiyatli qo'shildi");
-                instance
-                    .post("api/dry/fruit/debt/post", {
-                        incomeDryFruitId: response.data.data,
-                        workerId: null,
-                        outcomeDryFruitId: null,
-                        given: false,
-                        borrowAmount: values.price * values.amount - qarzValue,
-                    })
-                    .then((res) => {
-                        console.log(res);
-                    })
-                    .catch((err) => console.error(err));
+                response.data.data &&
+                    instance
+                        .post("api/dry/fruit/debt/post", {
+                            incomeDryFruitId: response.data?.data,
+                            workerId: null,
+                            outcomeDryFruitId: null,
+                            given: false,
+                            deadline: deadlineValue,
+                            borrowAmount:
+                                values.price * values.amount - qarzValue,
+                        })
+                        .then((res) => {
+                            setQarzValue(null);
+                        })
+                        .catch((err) => console.error(err));
                 getIncomeDryFruits(current - 1, pageSize);
             })
             .catch(function (error) {
                 console.error(error);
-                if (error.response.status === 500) navigate("/server-error");
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("Kelgan quruq mevani qo'shishda muammo bo'ldi");
             })
             .finally(() => {
@@ -173,7 +194,8 @@ const IncomeDryFruit = () => {
         const time = moment(values.date, "DD-MM-YYYY").toISOString();
         const data = {
             ...values,
-            debt: values.debt.target.value,
+            debt: values.debt?.target?.value === "true" ? true : false,
+            cash: values?.cash === "true" ? true : false,
             date: time,
         };
         instance
@@ -183,10 +205,25 @@ const IncomeDryFruit = () => {
             .then((res) => {
                 message.success("Kelgan quruq meva muvaffaqiyatli taxrirlandi");
                 getIncomeDryFruits(current - 1, pageSize);
+                res.data?.data &&
+                    instance
+                        .post("api/dry/fruit/debt/post", {
+                            incomeDryFruitId: res.data?.data,
+                            workerId: null,
+                            outcomeDryFruitId: null,
+                            given: false,
+                            deadline: deadlineValue,
+                            borrowAmount:
+                                values.price * values.amount - qarzValue,
+                        })
+                        .then((res) => {
+                            setQarzValue(null);
+                        })
+                        .catch((err) => console.error(err));
             })
             .catch(function (error) {
                 console.error("Error in edit: ", error);
-                if (error.response.status === 500) navigate("/server-error");
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("Kelgan quruq mevani taxrirlashda muammo bo'ldi");
             })
             .finally(() => {
@@ -207,7 +244,7 @@ const IncomeDryFruit = () => {
                 })
                 .catch((error) => {
                     console.error(error);
-                    if (error.response.status === 500)
+                    if (error.response?.status === 500)
                         navigate("/server-error");
                     message.error(
                         "Kelgan quruq mevani o'chirishda muammo bo'ldi"
@@ -218,21 +255,196 @@ const IncomeDryFruit = () => {
         setLoading(false);
     };
 
+    const getIncomeDryFruitsBranches = (value, current, pageSize) => {
+        setLoading(true);
+        instance
+            .get(
+                `api/dry/fruit/incomeDryFruit/getAllPageable?page=${current}&size=${pageSize}`
+            )
+            .then((item) => {
+                const branchItemData = item.data.data?.filter(
+                    (data) => data.id === value
+                );
+                const incomeDryfruit =
+                    branchItemData[0]?.totalIncomeDryFruit?.incomeDryFruitGetDtoList?.map(
+                        (item) => {
+                            return {
+                                ...item,
+                                date: moment(item?.date).format("DD-MM-YYYY"),
+                            };
+                        }
+                    );
+                const index =
+                    branchItemData[0]?.totalIncomeDryFruit?.totalDollar
+                        ?.toString()
+                        ?.indexOf(".");
+                setTotalsum({
+                    totalSumma:
+                        branchItemData[0]?.totalIncomeDryFruit?.totalSumma,
+                    totalPlastic:
+                        branchItemData[0]?.totalIncomeDryFruit?.totalPlastic,
+                    totalDollar:
+                        branchItemData[0]?.totalIncomeDryFruit?.totalDollar
+                            ?.toString()
+                            .slice(0, index + 3),
+                    totalCash:
+                        branchItemData[0]?.totalIncomeDryFruit?.totalCash,
+                });
+                setIncomeDryFruit(incomeDryfruit);
+                setTotalItems(branchItemData[0]?.totalItems);
+            })
+            .catch((err) => {
+                console.error(err);
+                if (err.response?.status === 500) navigate("/server-error");
+                message.error("Kelgan quruq mevalarni yuklashda muammo bo'ldi");
+            })
+            .finally(() => setLoading(false));
+    };
+
+    const getIncomeDryFruitsTimely = (value, current, pageSize) => {
+        setLoading(true);
+        instance
+            .get(
+                `api/dry/fruit/incomeDryFruit/getAllPageable/${value}?page=${current}&size=${pageSize}`
+            )
+            .then((data) => {
+                const incomeDryfruit =
+                    data.data.data?.incomeDryFruit?.incomeDryFruitGetDtoList?.map(
+                        (item) => {
+                            return {
+                                ...item,
+                                date: moment(item?.date).format("DD-MM-YYYY"),
+                            };
+                        }
+                    );
+                const index = data.data.data?.incomeDryFruit?.totalDollar
+                    ?.toString()
+                    .indexOf(".");
+                setTotalsum({
+                    totalSumma: data.data.data?.incomeDryFruit?.totalSumma,
+                    totalPlastic: data.data.data?.incomeDryFruit?.totalPlastic,
+                    totalDollar: data.data.data?.incomeDryFruit?.totalDollar
+                        ?.toString()
+                        .slice(0, index + 3),
+                    totalCash: data.data.data?.incomeDryFruit?.totalCash,
+                });
+                setIncomeDryFruit(incomeDryfruit);
+                setTotalItems(data.data.data?.totalItems);
+            })
+            .catch((error) => {
+                console.error(error);
+                if (error.response?.status === 500) navigate("/server-error");
+                message.error("Kelgan quruq mevalarni yuklashda muammo bo'ldi");
+            })
+            .finally(() => setLoading(false));
+    };
+
+    const dateFilter = (date, current, pageSize) => {
+        setLoading(true);
+        instance
+            .get(
+                `api/dry/fruit/incomeDryFruit/getAllPageable/dates?page=${current}&size=${pageSize}&startDate=${moment(
+                    date[0]
+                ).format("YYYY-MM-DD HH:MM:SS")}&endDate=${moment(
+                    date[1]
+                ).format("YYYY-MM-DD HH:MM:SS")}`
+            )
+            .then((data) => {
+                const incomeDryfruit =
+                    data.data.data.incomeDryFruit.incomeDryFruitGetDtoList.map(
+                        (item) => {
+                            return {
+                                ...item,
+                                date: moment(item?.date).format("DD-MM-YYYY"),
+                            };
+                        }
+                    );
+                const index = data.data.data?.incomeDryFruit?.totalDollar
+                    ?.toString()
+                    .indexOf(".");
+                setTotalsum({
+                    totalSumma: data.data.data?.incomeDryFruit?.totalSumma,
+                    totalPlastic: data.data.data?.incomeDryFruit?.totalPlastic,
+                    totalDollar: data.data.data?.incomeDryFruit?.totalDollar
+                        ?.toString()
+                        .slice(0, index + 3),
+                    totalCash: data.data.data?.incomeDryFruit?.totalCash,
+                });
+                setIncomeDryFruit(incomeDryfruit);
+                setTotalItems(data.data.data?.totalItems);
+            })
+            .catch((err) => {
+                console.error(err);
+                if (err.response?.status === 500) navigate("/server-error");
+                message.error("Kelgan quruq mevalarni yuklashda muammo bo'ldi");
+            })
+            .finally(() => setLoading(false));
+    };
+
+    const timelySelect = [
+        { title: "Kunlik", value: "daily" },
+        { title: "Haftalik", value: "weekly" },
+        { title: "Oylik", value: "monthly" },
+        { title: "Yillik", value: "yearly" },
+    ];
+
     return (
         <>
             {totalsum ? (
-                <div className="site-statistic-demo-card">
+                <div
+                    style={{ marginBottom: "20px" }}
+                    className="site-statistic-demo-card"
+                >
                     <Row gutter={16}>
-                        <Col span={12}>
+                        <Col span={6}>
                             <Card>
                                 <Statistic
-                                    title="Jami sarflangan pul"
-                                    value={totalsum}
+                                    title="Jami sarflangan summa"
+                                    value={totalsum?.totalSumma}
                                     valueStyle={{
                                         color: "#cf1322",
                                     }}
                                     prefix={<ArrowDownOutlined />}
-                                    suffix="so'm"
+                                    suffix="tenge"
+                                />
+                            </Card>
+                        </Col>
+                        <Col span={6}>
+                            <Card>
+                                <Statistic
+                                    title="Jami sarflangan summa dollarda"
+                                    value={totalsum?.totalDollar}
+                                    valueStyle={{
+                                        color: "#cf1322",
+                                    }}
+                                    prefix={<ArrowDownOutlined />}
+                                    suffix="$"
+                                />
+                            </Card>
+                        </Col>
+                        <Col span={6}>
+                            <Card>
+                                <Statistic
+                                    title="Plastikdagi sarflangan summa"
+                                    value={totalsum?.totalPlastic}
+                                    valueStyle={{
+                                        color: "#cf1322",
+                                    }}
+                                    prefix={<ArrowDownOutlined />}
+                                    suffix="tenge"
+                                />
+                            </Card>
+                        </Col>
+                        <Col span={6}>
+                            <Card>
+                                <Statistic
+                                    title="Naqtdagi sarflangan summa"
+                                    value={totalsum?.totalCash}
+                                    valueStyle={{
+                                        color: "#cf1322",
+                                    }}
+                                    prefix={<ArrowDownOutlined />}
+                                    suffix="tenge"
                                 />
                             </Card>
                         </Col>
@@ -240,20 +452,24 @@ const IncomeDryFruit = () => {
                 </div>
             ) : null}
             <CustomTable
-                onEdit={onEdit}
-                onCreate={onCreate}
-                onDelete={handleDelete}
                 getData={getIncomeDryFruits}
                 columns={columns}
-                tableData={incomeFuel}
+                tableData={incomeDryFruit}
                 current={current}
                 pageSize={pageSize}
                 totalItems={totalItems}
                 loading={loading}
+                timelySelect={timelySelect}
+                pageSizeOptions={[10, 20]}
+                onEdit={onEdit}
+                onCreate={onCreate}
+                dateFilter={dateFilter}
+                onDelete={handleDelete}
+                getDataBranch={getIncomeDryFruitsBranches}
+                getDataTimely={getIncomeDryFruitsTimely}
                 setLoading={setLoading}
                 setCurrent={setCurrent}
                 setPageSize={setPageSize}
-                pageSizeOptions={[10, 20]}
             />
         </>
     );

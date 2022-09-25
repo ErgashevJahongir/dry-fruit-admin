@@ -1,25 +1,26 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { Button, Checkbox, Form, Input, notification } from "antd";
 import useToken from "../Hook/UseToken";
-import { useData } from "../Hook/UseData";
-import instance from "../Api/Axios";
 import Loading from "../Components/Loading";
 import "./Login.css";
 import rasm from "./loginPicture.jpg";
 import { FrownOutlined } from "@ant-design/icons";
 
-const Login = () => {
+const Login = ({ setUser }) => {
     const [loading, setLoading] = useState(false);
     const { token, setToken } = useToken();
-    const { setUser } = useData();
     let navigate = useNavigate();
 
     const getUser = (token) => {
-        instance
-            .get("api/dry/fruit/api/dry/fruit/user", {
-                headers: { Authorization: `Bearer ${token}` },
-            })
+        axios
+            .get(
+                "https://app-dry-fruits.herokuapp.com/api/dry/fruit/api/dry/fruit/user",
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            )
             .then((data) => {
                 setUser(data.data.data);
                 navigate("/", { replace: true });
@@ -35,11 +36,14 @@ const Login = () => {
     const onFinish = (values) => {
         setLoading(true);
         console.log(values);
-        instance
-            .post("api/dry/fruit/auth/login", {
-                password: values.password,
-                phoneNumber: values.phoneNumber,
-            })
+        axios
+            .post(
+                "https://app-dry-fruits.herokuapp.com/api/dry/fruit/auth/login",
+                {
+                    password: values.password,
+                    phoneNumber: values.phoneNumber,
+                }
+            )
             .then((data) => {
                 getUser(data.data.data);
                 setToken(data.data.data, values.remember);

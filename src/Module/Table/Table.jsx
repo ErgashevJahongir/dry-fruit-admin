@@ -42,24 +42,39 @@ const CustomTable = (props) => {
     const [searchedColumn, setSearchedColumn] = useState("");
     const searchInput = useRef(null);
     const [dateFilt, setDateFilt] = useState(false);
+    const [branchFilt, setBranchFilt] = useState(false);
+    const [timelyFilt, setTimelyFilt] = useState(false);
+    const [itemValue, setItemValue] = useState(null);
     const [date, setDate] = useState([null, null]);
-    const { formData, user, branch } = useData();
+    const { formData, user, branchData } = useData();
 
     const onChange = (pageNumber, page) => {
         setPageSize(page);
         setCurrent(pageNumber);
         dateFilt
             ? dateFilter(date, pageNumber - 1, page)
+            : branchFilt
+            ? getDataBranch(itemValue, pageNumber - 1, page)
+            : timelyFilt
+            ? getDataTimely(itemValue, pageNumber - 1, page)
             : getData(pageNumber - 1, page);
     };
 
     const handleChange = (value) => {
         setCurrent(1);
+        setBranchFilt(false);
+        setDateFilt(false);
+        setTimelyFilt(true);
+        setItemValue(value);
         getDataTimely(value, 0, pageSize);
     };
 
     const handleBranchChange = (value) => {
         setCurrent(1);
+        setTimelyFilt(false);
+        setDateFilt(false);
+        setBranchFilt(true);
+        setItemValue(value);
         getDataBranch(value, 0, pageSize);
     };
 
@@ -216,7 +231,7 @@ const CustomTable = (props) => {
         <>
             <Space className="buttons" size="middle">
                 <Space align="center" size={0}>
-                    {user?.roleGetDTO?.name === "ROLE_ADMIN" ? (
+                    {user?.roleId === 1 ? (
                         formData?.branchData ? (
                             <Select
                                 showSearch
@@ -224,8 +239,8 @@ const CustomTable = (props) => {
                                 optionFilterProp="children"
                                 filterOption={(input, option) =>
                                     option.children
-                                        .toLowerCase()
-                                        .includes(input.toLowerCase())
+                                        ?.toLowerCase()
+                                        ?.includes(input.toLowerCase())
                                 }
                                 style={{
                                     width: 120,
@@ -234,9 +249,9 @@ const CustomTable = (props) => {
                                 className="select-add"
                                 onChange={handleBranchChange}
                             >
-                                {branch.map((item) => (
-                                    <Option key={item.id} value={item.id}>
-                                        {item.name}
+                                {branchData?.map((item) => (
+                                    <Option key={item?.id} value={item?.id}>
+                                        {item?.name}
                                     </Option>
                                 ))}
                             </Select>
@@ -249,8 +264,8 @@ const CustomTable = (props) => {
                             optionFilterProp="children"
                             filterOption={(input, option) =>
                                 option.children
-                                    .toLowerCase()
-                                    .includes(input.toLowerCase())
+                                    ?.toLowerCase()
+                                    ?.includes(input.toLowerCase())
                             }
                             style={{
                                 width: 120,
@@ -269,14 +284,14 @@ const CustomTable = (props) => {
                     {formData?.timeFilterInfo ? (
                         <>
                             <RangePicker
-                                style={{ marginRight: "10px" }}
+                                style={{ marginRight: "10px", width: "220px" }}
                                 className="select-add"
                                 disabledDate={disabledDate}
                                 onChange={(val) =>
                                     val
                                         ? setDate([
-                                              val[0].toISOString(),
-                                              val[1].toISOString(),
+                                              val[0]?.toISOString(),
+                                              val[1]?.toISOString(),
                                           ])
                                         : null
                                 }
@@ -290,6 +305,8 @@ const CustomTable = (props) => {
                                     className="add-button"
                                     onClick={() => {
                                         setDateFilt(true);
+                                        setBranchFilt(false);
+                                        setTimelyFilt(false);
                                         dateFilter(date, 0, pageSize);
                                     }}
                                     type="primary"
@@ -301,6 +318,9 @@ const CustomTable = (props) => {
                                     className="add-button"
                                     onClick={() => {
                                         setDateFilt(false);
+                                        setBranchFilt(false);
+                                        setTimelyFilt(false);
+                                        setItemValue(null);
                                         getData(0, pageSize);
                                     }}
                                     type="primary"
@@ -316,7 +336,7 @@ const CustomTable = (props) => {
                 </Space>
                 <Space align="center" size="middle" className="new-buttons">
                     {formData?.editInfo ? (
-                        selectedRowKeys[0].length === 1 ? (
+                        selectedRowKeys[0]?.length === 1 ? (
                             <EditData
                                 selectedRowKeys={{ ...selectedRowKeys[1][0] }}
                                 onEdit={onEdit}
