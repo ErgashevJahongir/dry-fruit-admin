@@ -1367,12 +1367,12 @@ export const DataProvider = ({ children }) => {
             formData = {
                 formData: outcomeDryFruitData,
                 editFormData: editOutcomeDryFruitData,
-                branchData: false,
-                timeFilterInfo: false,
+                branchData: user?.roleId === 1 ? true : false,
+                timeFilterInfo: user?.roleId === 1 ? true : false,
                 deleteInfo: true,
                 createInfo: true,
                 editInfo: true,
-                timelyInfo: false,
+                timelyInfo: user?.roleId === 1 ? true : false,
                 editModalTitle: "Sotilgan quruq mevani o'zgartirish",
                 modalTitle: "Sotilgan quruq mevani qo'shish",
             };

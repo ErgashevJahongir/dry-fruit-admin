@@ -10,7 +10,7 @@ const Dashboard = () => {
     const { getNewIncomeDryfruitData } = useData();
     const getNotification = () => {
         instance
-            .get(`api/dry/fruit/notification`)
+            .get(`api/dry/fruit/notification/get`)
             .then((data) => {
                 setNotificationn(data.data.data);
             })
@@ -35,7 +35,7 @@ const Dashboard = () => {
                         onClose: () => {
                             instance
                                 .put(
-                                    `api/oil/station/notification/update?id=${item.id}`
+                                    `api/dry/fruit/notification/update?id=${item.id}`
                                 )
                                 .then((data) => null)
                                 .catch((err) => console.error(err));
