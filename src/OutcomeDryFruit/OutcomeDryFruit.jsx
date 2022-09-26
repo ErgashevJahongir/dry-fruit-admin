@@ -350,15 +350,11 @@ const IncomeDryFruit = () => {
         setLoading(true);
         instance
             .get(
-                `api/dry/fruit/outcomeFruit/getAllPageable?page=${current}&size=${pageSize}`
+                `api/dry/fruit/outcomeFruit/getAllByBranchId${value}?page=${current}&size=${pageSize}`
             )
-            .then((item) => {
-                const branchItemData = item.data.data.filter(
-                    (data) => data.id === value
-                );
-                console.log(branchItemData);
+            .then((data) => {
                 const incomeDryfruit =
-                    branchItemData[0]?.totalIncomeDryFruit?.incomeDryFruitGetDtoList.map(
+                    data.data.data.dryFruits.outcomeDryFruitGetDtoList.map(
                         (item) => {
                             return {
                                 ...item,
@@ -366,24 +362,19 @@ const IncomeDryFruit = () => {
                             };
                         }
                     );
-                const index =
-                    branchItemData[0]?.totalIncomeDryFruit?.totalDollar
-                        ?.toString()
-                        ?.indexOf(".");
+                const index = data.data.data?.dryFruits.totalDollar
+                    ?.toString()
+                    .indexOf(".");
                 setTotalsum({
-                    totalSumma:
-                        branchItemData[0]?.totalIncomeDryFruit?.totalSumma,
-                    totalPlastic:
-                        branchItemData[0]?.totalIncomeDryFruit?.totalPlastic,
-                    totalDollar:
-                        branchItemData[0]?.totalIncomeDryFruit?.totalDollar
-                            ?.toString()
-                            .slice(0, index + 3),
-                    totalCash:
-                        branchItemData[0]?.totalIncomeDryFruit?.totalCash,
+                    totalSumma: data.data.data?.dryFruits.totalSumma,
+                    totalPlastic: data.data.data?.dryFruits.totalPlastic,
+                    totalDollar: data.data.data?.dryFruits.totalDollar
+                        ?.toString()
+                        .slice(0, index + 3),
+                    totalCash: data.data.data?.dryFruits.totalCash,
                 });
                 setOutcomeFuel(incomeDryfruit);
-                setTotalItems(branchItemData[0]?.totalItems);
+                setTotalItems(data.data.data?.totalItems);
             })
             .catch((err) => console.error(err))
             .finally(() => setLoading(false));
@@ -393,11 +384,11 @@ const IncomeDryFruit = () => {
         setLoading(true);
         instance
             .get(
-                `api/dry/fruit/incomeDryFruit/getAllPageable/${value}?page=${current}&size=${pageSize}`
+                `api/dry/fruit/outcomeFruit/getAllPageable/${value}?page=${current}&size=${pageSize}`
             )
             .then((data) => {
                 const incomeDryfruit =
-                    data.data.data.incomeDryFruit.incomeDryFruitGetDtoList.map(
+                    data.data.data.dryFruits.outcomeDryFruitGetDtoList.map(
                         (item) => {
                             return {
                                 ...item,
@@ -405,16 +396,16 @@ const IncomeDryFruit = () => {
                             };
                         }
                     );
-                const index = data.data.data?.incomeDryFruit.totalDollar
+                const index = data.data.data?.dryFruits.totalDollar
                     ?.toString()
                     .indexOf(".");
                 setTotalsum({
-                    totalSumma: data.data.data?.incomeDryFruit.totalSumma,
-                    totalPlastic: data.data.data?.incomeDryFruit.totalPlastic,
-                    totalDollar: data.data.data?.incomeDryFruit.totalDollar
+                    totalSumma: data.data.data?.dryFruits.totalSumma,
+                    totalPlastic: data.data.data?.dryFruits.totalPlastic,
+                    totalDollar: data.data.data?.dryFruits.totalDollar
                         ?.toString()
                         .slice(0, index + 3),
-                    totalCash: data.data.data?.incomeDryFruit.totalCash,
+                    totalCash: data.data.data?.dryFruits.totalCash,
                 });
                 setOutcomeFuel(incomeDryfruit);
                 setTotalItems(data.data.data?.totalItems);
@@ -430,11 +421,15 @@ const IncomeDryFruit = () => {
         setLoading(true);
         instance
             .get(
-                `api/dry/fruit/incomeDryFruit/getAllPageable/dates?page=${current}&size=${pageSize}&startDate=${date[0]}&endDate=${date[1]}`
+                `api/dry/fruit/outcomeFruit/getAllPageable/between?page=${current}&size=${pageSize}&startDate=${moment(
+                    date[0]
+                ).format("YYYY-MM-DD HH:MM:SS")}&endDate=${moment(
+                    date[1]
+                ).format("YYYY-MM-DD HH:MM:SS")}`
             )
             .then((data) => {
                 const incomeDryfruit =
-                    data.data.data.incomeDryFruit.incomeDryFruitGetDtoList.map(
+                    data.data.data.dryFruits.outcomeDryFruitGetDtoList.map(
                         (item) => {
                             return {
                                 ...item,
@@ -442,16 +437,16 @@ const IncomeDryFruit = () => {
                             };
                         }
                     );
-                const index = data.data.data?.incomeDryFruit.totalDollar
+                const index = data.data.data?.dryFruits.totalDollar
                     ?.toString()
                     .indexOf(".");
                 setTotalsum({
-                    totalSumma: data.data.data?.incomeDryFruit.totalSumma,
-                    totalPlastic: data.data.data?.incomeDryFruit.totalPlastic,
-                    totalDollar: data.data.data?.incomeDryFruit.totalDollar
+                    totalSumma: data.data.data?.dryFruits.totalSumma,
+                    totalPlastic: data.data.data?.dryFruits.totalPlastic,
+                    totalDollar: data.data.data?.dryFruits.totalDollar
                         ?.toString()
                         .slice(0, index + 3),
-                    totalCash: data.data.data?.incomeDryFruit.totalCash,
+                    totalCash: data.data.data?.dryFruits.totalCash,
                 });
                 setOutcomeFuel(incomeDryfruit);
                 setTotalItems(data.data.data?.totalItems);
@@ -462,6 +457,13 @@ const IncomeDryFruit = () => {
             })
             .finally(() => setLoading(false));
     };
+
+    const timelySelect = [
+        { title: "Kunlik", value: "daily" },
+        { title: "Haftalik", value: "weekly" },
+        { title: "Oylik", value: "monthly" },
+        { title: "Yillik", value: "annual" },
+    ];
 
     return (
         <>
@@ -531,12 +533,16 @@ const IncomeDryFruit = () => {
                 onCreate={onCreate}
                 onDelete={handleDelete}
                 getData={getOutcomeDryFruits}
+                getDataBranch={getOutcomeDryFruitsBranches}
+                getDataTimely={getOutcomeDryFruitsTimely}
+                dateFilter={dateFilter}
                 columns={columns}
                 tableData={outcomeFuel}
                 current={current}
                 pageSize={pageSize}
                 totalItems={totalItems}
                 loading={loading}
+                timelySelect={timelySelect}
                 setLoading={setLoading}
                 setCurrent={setCurrent}
                 setPageSize={setPageSize}
