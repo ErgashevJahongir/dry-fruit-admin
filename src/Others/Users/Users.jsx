@@ -11,7 +11,7 @@ const Users = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { roleData, branchData, getUsersData } = useData();
+    const { roleData, branchData, getUsersData, getWorkerData } = useData();
     const navigate = useNavigate();
 
     const getWorkers = (current, pageSize) => {
@@ -23,6 +23,8 @@ const Users = () => {
             .then((data) => {
                 setWorkers(data.data.data?.fuelReports);
                 setTotalItems(data.data.data?.totalItems);
+                getUsersData();
+                getWorkerData();
             })
             .catch((error) => {
                 console.error(error);
@@ -43,7 +45,6 @@ const Users = () => {
             .then(function (response) {
                 message.success("Foydalanuvchi muvaffaqiyatli qo'shildi");
                 getWorkers(current - 1, pageSize);
-                getUsersData();
             })
             .catch(function (error) {
                 console.error(error);
@@ -68,7 +69,6 @@ const Users = () => {
             .then((res) => {
                 message.success("Foydalanuvchi muvaffaqiyatli taxrirlandi");
                 getWorkers(current - 1, pageSize);
-                getUsersData();
             })
             .catch(function (error) {
                 console.error("Error in edit: ", error);
@@ -88,7 +88,6 @@ const Users = () => {
                 .then((data) => {
                     getWorkers(current - 1, pageSize);
                     message.success("Foydalanuvchi muvaffaqiyatli o'chirildi");
-                    getUsersData();
                 })
                 .catch((error) => {
                     console.error(error);

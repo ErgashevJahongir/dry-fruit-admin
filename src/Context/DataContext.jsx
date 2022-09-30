@@ -1,9 +1,9 @@
-import { DatePicker, Input, InputNumber, Radio } from "antd";
-import moment from "moment";
 import { createContext, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import instance from "../Api/Axios";
 import useToken from "../Hook/UseToken";
+import { useLocation, useNavigate } from "react-router-dom";
+import moment from "moment";
+import { DatePicker, Input, InputNumber, Radio } from "antd";
 import CustomSelect from "../Module/Select/Select";
 
 export const DataContext = createContext();
@@ -15,12 +15,12 @@ export const DataProvider = ({ children }) => {
     const [clientData, setClientData] = useState([]);
     const [outcomeDryfruitData, setOutcomeDryfruitData] = useState([]);
     const [incomeDryfruitData, setIncomeDryfruitData] = useState([]);
-    const [newIncomeDryfruitData, setNewIncomeDryfruitData] = useState([]);
     const [userLoading, setUserLoading] = useState(true);
     const [workerData, setWorkerData] = useState([]);
     const [measurementData, setMeasurementData] = useState([]);
     const [categoryData, setCategoryData] = useState([]);
     const [dryfruitData, setDryfruitData] = useState([]);
+    const [dryfruitWareData, setDryfruitWareData] = useState([]);
     const [roleData, setRoleData] = useState([]);
     const [branchData, setBranchData] = useState([]);
     const [qarzValue, setQarzValue] = useState("");
@@ -38,16 +38,20 @@ export const DataProvider = ({ children }) => {
         setDeadlineValue(moment(e).toISOString());
     };
 
-    const getNewIncomeDryfruitData = () => {
-        setNewIncomeDryfruitData(
-            incomeDryfruitData.map((item) => {
-                const name = dryfruitData?.filter(
-                    (data) => data.id === item.dryFruitId
-                );
-                const time = moment(item?.date).format("DD-MM-YYYY");
-                return { ...item, name: `${name[0]?.name}  ${time}` };
-            })
+    const fiter = () => {
+        const array = [];
+        const branch = dryfruitWareData.filter(
+            (item) => item.branchId === user.branchid
         );
+        console.log(branch, dryfruitWareData, user, dryfruitData);
+        for (let son = 0; son < branch.length; son++) {
+            for (let qism = 0; qism < dryfruitData.length; qism++) {
+                if (dryfruitData[qism].id === branch[son].dryFruitId)
+                    array.push(dryfruitData[qism]);
+            }
+        }
+        console.log(array);
+        return array;
     };
 
     const incomeFuelsData = [
@@ -58,7 +62,13 @@ export const DataProvider = ({ children }) => {
                 <CustomSelect
                     backValue={"id"}
                     placeholder={"Quruq meva kiritilayotgan filial"}
-                    selectData={branchData}
+                    selectData={
+                        user?.roleId === 1
+                            ? branchData
+                            : branchData.filter(
+                                  (item) => item.id === user.branchId
+                              )
+                    }
                 />
             ),
         },
@@ -169,7 +179,13 @@ export const DataProvider = ({ children }) => {
                 <CustomSelect
                     backValue={"id"}
                     placeholder={"Quruq meva kiritilayotgan filial"}
-                    selectData={branchData}
+                    selectData={
+                        user?.roleId === 1
+                            ? branchData
+                            : branchData.filter(
+                                  (item) => item.id === user.branchId
+                              )
+                    }
                     DValue={defaultId}
                 />
             ),
@@ -292,7 +308,13 @@ export const DataProvider = ({ children }) => {
                 <CustomSelect
                     backValue={"id"}
                     placeholder={"Quruq meva kiritilayotgan filial"}
-                    selectData={branchData}
+                    selectData={
+                        user?.roleId === 1
+                            ? branchData
+                            : branchData.filter(
+                                  (item) => item.id === user.branchId
+                              )
+                    }
                 />
             ),
         },
@@ -303,7 +325,38 @@ export const DataProvider = ({ children }) => {
                 <CustomSelect
                     backValue={"id"}
                     placeholder={"Quruq mevani tanlang"}
-                    selectData={dryfruitData}
+                    selectData={
+                        user.roleId === 1
+                            ? dryfruitData.filter((item) => {
+                                  if (dryfruitWareData.length === 0)
+                                      return null;
+                                  for (
+                                      let index = 0;
+                                      index < dryfruitWareData.length;
+                                      index++
+                                  ) {
+                                      if (
+                                          item.id ===
+                                          dryfruitWareData[index].dryFruitId
+                                      )
+                                          return item;
+                                  }
+                              })
+                            : dryfruitData.filter((item) => {
+                                  const branch = dryfruitWareData.filter(
+                                      (qism) => qism.branchId === user.branchId
+                                  );
+                                  if (branch.length === 0) return null;
+                                  for (
+                                      let index = 0;
+                                      index < branch.length;
+                                      index++
+                                  ) {
+                                      if (item.id === branch[index].dryFruitId)
+                                          return item;
+                                  }
+                              })
+                    }
                 />
             ),
         },
@@ -403,7 +456,38 @@ export const DataProvider = ({ children }) => {
                 <CustomSelect
                     backValue={"id"}
                     placeholder={"Quruq mevani tanlang"}
-                    selectData={dryfruitData}
+                    selectData={
+                        user.roleId === 1
+                            ? dryfruitData.filter((item) => {
+                                  if (dryfruitWareData.length === 0)
+                                      return null;
+                                  for (
+                                      let index = 0;
+                                      index < dryfruitWareData.length;
+                                      index++
+                                  ) {
+                                      if (
+                                          item.id ===
+                                          dryfruitWareData[index].dryFruitId
+                                      )
+                                          return item;
+                                  }
+                              })
+                            : dryfruitData.filter((item) => {
+                                  const branch = dryfruitWareData.filter(
+                                      (qism) => qism.branchId === user.branchId
+                                  );
+                                  if (branch.length === 0) return null;
+                                  for (
+                                      let index = 0;
+                                      index < branch.length;
+                                      index++
+                                  ) {
+                                      if (item.id === branch[index].dryFruitId)
+                                          return item;
+                                  }
+                              })
+                    }
                     DValue={defaultId}
                 />
             ),
@@ -618,7 +702,13 @@ export const DataProvider = ({ children }) => {
                 <CustomSelect
                     backValue={"id"}
                     placeholder={"Filialni tanlang"}
-                    selectData={branchData}
+                    selectData={
+                        user?.roleId === 1
+                            ? branchData
+                            : branchData.filter(
+                                  (item) => item.id === user.branchId
+                              )
+                    }
                 />
             ),
         },
@@ -643,7 +733,13 @@ export const DataProvider = ({ children }) => {
                 <CustomSelect
                     backValue={"id"}
                     placeholder={"Filialni tanlang"}
-                    selectData={branchData}
+                    selectData={
+                        user?.roleId === 1
+                            ? branchData
+                            : branchData.filter(
+                                  (item) => item.id === user.branchId
+                              )
+                    }
                     DValue={initial}
                 />
             ),
@@ -967,9 +1063,19 @@ export const DataProvider = ({ children }) => {
             label: "Qarzdor ismi",
             input: (
                 <CustomSelect
-                    selectData={workerData?.map((item) => {
-                        return { ...item, name: item?.fio };
-                    })}
+                    selectData={
+                        user?.roleId === 1
+                            ? workerData?.map((item) => {
+                                  return { ...item, name: item?.fio };
+                              })
+                            : workerData
+                                  ?.filter(
+                                      (data) => data.branchId === user.branchId
+                                  )
+                                  ?.map((item) => {
+                                      return { ...item, name: item?.fio };
+                                  })
+                    }
                     backValue={"id"}
                     placeholder={"Qarzdorni ismini tanlang"}
                 />
@@ -1169,6 +1275,15 @@ export const DataProvider = ({ children }) => {
             .catch((err) => console.error(err));
     };
 
+    const getDryfruitWareData = () => {
+        instance
+            .get("api/dry/fruit/dryFruitWarehouse/getAll")
+            .then((data) => {
+                setDryfruitWareData(data.data.data);
+            })
+            .catch((err) => console.error(err));
+    };
+
     const getBranchData = () => {
         instance
             .get("api/dry/fruit/api/dry/fruit/branch")
@@ -1204,6 +1319,7 @@ export const DataProvider = ({ children }) => {
         getCategoryData();
         getBranchData();
         getDryfruitData();
+        getDryfruitWareData();
         getRoleData();
         getClientData();
         getOutcomeDryfruitData();
@@ -1262,7 +1378,7 @@ export const DataProvider = ({ children }) => {
             formData = {
                 formData: incomeFuelsData,
                 editFormData: editIncomeFuelsData,
-                branchData: true,
+                branchData: user?.roleId === 1 ? true : false,
                 timeFilterInfo: true,
                 deleteInfo: true,
                 createInfo: true,
@@ -1403,7 +1519,6 @@ export const DataProvider = ({ children }) => {
         getDryfruitData,
         getMeasurementData,
         getIncomeDryfruitData,
-        getNewIncomeDryfruitData,
         getCategoryData,
         getBranchData,
         getUserData,

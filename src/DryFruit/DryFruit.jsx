@@ -21,6 +21,7 @@ const DryFruit = () => {
                 `api/dry/fruit/dryFruit/getAllPageable?page=${current}&size=${pageSize}`
             )
             .then((data) => {
+                console.log(data);
                 setDryFruits(data.data.data?.dryFruit);
                 setTotalItems(data.data.data?.totalItems);
             })

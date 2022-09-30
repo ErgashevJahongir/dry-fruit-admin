@@ -1,6 +1,7 @@
 import { message } from "antd";
 import moment from "moment";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import instance from "../Api/Axios";
 import { useData } from "../Hook/UseData";
 import CustomTable from "../Module/Table/Table";
@@ -11,7 +12,8 @@ const WorkerDebt = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { workerData, usersData } = useData();
+    const { workerData, usersData, getWorkerData } = useData();
+    const navigate = useNavigate();
 
     const getDebts = (current, pageSize) => {
         setLoading(true);
@@ -32,9 +34,11 @@ const WorkerDebt = () => {
                 ];
                 setDebts(value);
                 setTotalItems(data.data.data.totalItems);
+                getWorkerData();
             })
             .catch((error) => {
                 console.error(error);
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("Ishchi qarzlarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoading(false));
@@ -55,6 +59,7 @@ const WorkerDebt = () => {
             })
             .catch(function (error) {
                 console.error(error);
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("Ishchi qarzini qo'shishda muammo bo'ldi");
             })
             .finally(() => {
@@ -80,6 +85,7 @@ const WorkerDebt = () => {
             })
             .catch(function (error) {
                 console.error(error);
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("Ishchi qarzni qo'shishda muammo bo'ldi");
             })
             .finally(() => {

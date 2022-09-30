@@ -19,47 +19,107 @@ const IncomeDryFruit = () => {
         measurementData,
         branchData,
         qarzValue,
+        user,
         setQarzValue,
         deadlineValue,
+        setDeadlineValue,
     } = useData();
     const navigate = useNavigate();
 
     const getIncomeDryFruits = (current, pageSize) => {
         setLoading(true);
-        instance
-            .get(
-                `api/dry/fruit/incomeDryFruit/getAll?page=${current}&size=${pageSize}`
-            )
-            .then((data) => {
-                const incomeDryfruit =
-                    data.data.data.incomeDryFruit?.incomeDryFruitGetDtoList?.map(
-                        (item) => {
-                            return {
-                                ...item,
-                                date: moment(item?.date).format("DD-MM-YYYY"),
-                            };
-                        }
-                    );
-                const index = data.data.data?.incomeDryFruit?.totalDollar
-                    ?.toString()
-                    .indexOf(".");
-                setTotalsum({
-                    totalSumma: data.data.data?.incomeDryFruit?.totalSumma,
-                    totalPlastic: data.data.data?.incomeDryFruit?.totalPlastic,
-                    totalDollar: data.data.data?.incomeDryFruit?.totalDollar
-                        ?.toString()
-                        .slice(0, index + 3),
-                    totalCash: data.data.data?.incomeDryFruit?.totalCash,
-                });
-                setIncomeDryFruit(incomeDryfruit);
-                setTotalItems(data.data.data?.totalItems);
-            })
-            .catch((error) => {
-                console.error(error);
-                if (error.response?.status === 500) navigate("/server-error");
-                message.error("Kelgan quruq mevalarni yuklashda muammo bo'ldi");
-            })
-            .finally(() => setLoading(false));
+        user?.roleId === 1
+            ? instance
+                  .get(
+                      `api/dry/fruit/incomeDryFruit/getAll?page=${current}&size=${pageSize}`
+                  )
+                  .then((data) => {
+                      const incomeDryfruit =
+                          data.data.data?.incomeDryFruit?.incomeDryFruitGetDtoList?.map(
+                              (item) => {
+                                  return {
+                                      ...item,
+                                      date: moment(item?.date).format(
+                                          "DD-MM-YYYY"
+                                      ),
+                                  };
+                              }
+                          );
+                      const index = data.data.data?.incomeDryFruit?.totalDollar
+                          ?.toString()
+                          .indexOf(".");
+                      setTotalsum({
+                          totalSumma:
+                              data.data.data?.incomeDryFruit?.totalSumma,
+                          totalPlastic:
+                              data.data.data?.incomeDryFruit?.totalPlastic,
+                          totalDollar:
+                              data.data.data?.incomeDryFruit?.totalDollar
+                                  ?.toString()
+                                  .slice(0, index + 3),
+                          totalCash: data.data.data?.incomeDryFruit?.totalCash,
+                      });
+                      setIncomeDryFruit(incomeDryfruit);
+                      setTotalItems(data.data.data?.totalItems);
+                  })
+                  .catch((error) => {
+                      console.error(error);
+                      if (error.response?.status === 500)
+                          navigate("/server-error");
+                      message.error(
+                          "Kelgan quruq mevalarni yuklashda muammo bo'ldi"
+                      );
+                  })
+                  .finally(() => setLoading(false))
+            : instance
+                  .get(
+                      `api/dry/fruit/incomeDryFruit/getAllPageable?page=${current}&size=${pageSize}`
+                  )
+                  .then((item) => {
+                      const branchItemData = item.data.data?.filter(
+                          (data) => data.id === user.branchId
+                      );
+                      const incomeDryfruit =
+                          branchItemData[0]?.totalIncomeDryFruit?.incomeDryFruitGetDtoList?.map(
+                              (item) => {
+                                  return {
+                                      ...item,
+                                      date: moment(item?.date).format(
+                                          "DD-MM-YYYY"
+                                      ),
+                                  };
+                              }
+                          );
+                      const index =
+                          branchItemData[0]?.totalIncomeDryFruit?.totalDollar
+                              ?.toString()
+                              ?.indexOf(".");
+                      setTotalsum({
+                          totalSumma:
+                              branchItemData[0]?.totalIncomeDryFruit
+                                  ?.totalSumma,
+                          totalPlastic:
+                              branchItemData[0]?.totalIncomeDryFruit
+                                  ?.totalPlastic,
+                          totalDollar:
+                              branchItemData[0]?.totalIncomeDryFruit?.totalDollar
+                                  ?.toString()
+                                  .slice(0, index + 3),
+                          totalCash:
+                              branchItemData[0]?.totalIncomeDryFruit?.totalCash,
+                      });
+                      setIncomeDryFruit(incomeDryfruit);
+                      setTotalItems(branchItemData[0]?.totalItems);
+                  })
+                  .catch((err) => {
+                      console.error(err);
+                      if (err.response?.status === 500)
+                          navigate("/server-error");
+                      message.error(
+                          "Kelgan quruq mevalarni yuklashda muammo bo'ldi"
+                      );
+                  })
+                  .finally(() => setLoading(false));
     };
 
     const columns = [
@@ -162,6 +222,15 @@ const IncomeDryFruit = () => {
             .post("api/dry/fruit/incomeDryFruit/add", { ...value })
             .then(function (response) {
                 message.success("Kelgan quruq meva muvofaqiyatli qo'shildi");
+                const ulchov = measurementData.filter(
+                    (item) => item.id === values.measurementId
+                );
+                const amount =
+                    ulchov[0].name.toLowerCase() === "tonna"
+                        ? 1000
+                        : ulchov[0].name.toLowerCase() === "gramm"
+                        ? 0.001
+                        : 1;
                 response.data.data &&
                     instance
                         .post("api/dry/fruit/debt/post", {
@@ -171,12 +240,22 @@ const IncomeDryFruit = () => {
                             given: false,
                             deadline: deadlineValue,
                             borrowAmount:
-                                values.price * values.amount - qarzValue,
+                                values.price * values.amount * amount -
+                                qarzValue,
                         })
                         .then((res) => {
+                            message.success(
+                                "Qarzga olingan mahsulot muvofaqiyatli qo'shildi"
+                            );
+                            setDeadlineValue(null);
                             setQarzValue(null);
                         })
-                        .catch((err) => console.error(err));
+                        .catch((err) => {
+                            message.error(
+                                "Qarzga olingan mahsulotni qo'shishda muammo bo'ldi"
+                            );
+                            console.error(err);
+                        });
                 getIncomeDryFruits(current - 1, pageSize);
             })
             .catch(function (error) {
@@ -186,6 +265,8 @@ const IncomeDryFruit = () => {
             })
             .finally(() => {
                 setLoading(false);
+                setDeadlineValue(null);
+                setQarzValue(null);
             });
     };
 
@@ -205,6 +286,15 @@ const IncomeDryFruit = () => {
             .then((res) => {
                 message.success("Kelgan quruq meva muvaffaqiyatli taxrirlandi");
                 getIncomeDryFruits(current - 1, pageSize);
+                const ulchov = measurementData.filter(
+                    (item) => item.id === values.measurementId
+                );
+                const amount =
+                    ulchov[0].name.toLowerCase() === "tonna"
+                        ? 1000
+                        : ulchov[0].name.toLowerCase() === "gramm"
+                        ? 0.001
+                        : 1;
                 res.data?.data &&
                     instance
                         .post("api/dry/fruit/debt/post", {
@@ -214,9 +304,11 @@ const IncomeDryFruit = () => {
                             given: false,
                             deadline: deadlineValue,
                             borrowAmount:
-                                values.price * values.amount - qarzValue,
+                                values.price * values.amount * amount -
+                                qarzValue,
                         })
                         .then((res) => {
+                            setDeadlineValue(null);
                             setQarzValue(null);
                         })
                         .catch((err) => console.error(err));
@@ -228,6 +320,8 @@ const IncomeDryFruit = () => {
             })
             .finally(() => {
                 setLoading(false);
+                setDeadlineValue(null);
+                setQarzValue(null);
             });
     };
 
