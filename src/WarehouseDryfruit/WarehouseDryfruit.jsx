@@ -11,25 +11,49 @@ const WarehouseDryfruit = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { dryfruitData, branchData } = useData();
+    const { dryfruitData, branchData, user } = useData();
     const navigate = useNavigate();
 
     const getWerehouseDryFruit = (current, pageSize) => {
         setLoading(true);
-        instance
-            .get(
-                `api/dry/fruit/dryFruitWarehouse/getAllPageable?page=${current}&size=${pageSize}`
-            )
-            .then((data) => {
-                setDryfruitWarehouseData(data.data.data?.fuelReports);
-                setTotalItems(data.data.data?.totalItems);
-            })
-            .catch((error) => {
-                console.error(error);
-                message.error("Ombordagi Mevalarni yuklashda muammo bo'ldi");
-                if (error.response?.status === 500) navigate("/server-error");
-            })
-            .finally(() => setLoading(false));
+        user?.roleId === 1
+            ? instance
+                  .get(
+                      `api/dry/fruit/dryFruitWarehouse/getAllPageable?page=${current}&size=${pageSize}`
+                  )
+                  .then((data) => {
+                      setDryfruitWarehouseData(data.data.data?.fuelReports);
+                      setTotalItems(data.data.data?.totalItems);
+                  })
+                  .catch((error) => {
+                      console.error(error);
+                      message.error(
+                          "Ombordagi Mevalarni yuklashda muammo bo'ldi"
+                      );
+                      if (error.response?.status === 500)
+                          navigate("/server-error");
+                  })
+                  .finally(() => setLoading(false))
+            : instance
+                  .get(
+                      `api/dry/fruit/dryFruitWarehouse/getAllByBranchId${user.branchId}?page=${current}&size=${pageSize}`
+                  )
+                  .then((data) => {
+                      console.log(data);
+                      setDryfruitWarehouseData(
+                          data.data.data?.dryFruitWarehouse
+                      );
+                      setTotalItems(data.data.data?.totalItems);
+                  })
+                  .catch((error) => {
+                      console.error(error);
+                      if (error.response?.status === 500)
+                          navigate("/server-error");
+                      message.error(
+                          "Sotilgan yoqilg'ilarni yuklashda muammo bo'ldi"
+                      );
+                  })
+                  .finally(() => setLoading(false));
     };
 
     const columns = [
@@ -144,7 +168,6 @@ const WarehouseDryfruit = () => {
                 `api/dry/fruit/dryFruitWarehouse/getAllByBranchId${value}?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                console.log(data);
                 setDryfruitWarehouseData(data.data.data?.dryFruitWarehouse);
                 setTotalItems(data.data.data?.totalItems);
             })

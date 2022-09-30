@@ -1,6 +1,7 @@
 import { useState } from "react";
 import instance from "../Api/Axios";
 import { message } from "antd";
+import { useNavigate } from "react-router-dom";
 import CustomTable from "../Module/Table/Table";
 import moment from "moment/moment";
 import { useData } from "../Hook/UseData";
@@ -11,10 +12,8 @@ const InDebt = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { usersData, branchData, dryfruitData, getNewIncomeDryfruitData } =
-        useData();
-
-    const yul = () => getNewIncomeDryfruitData();
+    const { usersData, branchData, dryfruitData } = useData();
+    const navigate = useNavigate();
 
     const getDebts = (current, pageSize) => {
         setLoading(true);
@@ -31,10 +30,10 @@ const InDebt = () => {
                 });
                 setDebts(value);
                 setTotalItems(data.data.data?.totalItems);
-                getNewIncomeDryfruitData();
             })
             .catch((error) => {
                 console.error(error);
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("Ichki qarzlarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoading(false));
@@ -54,6 +53,7 @@ const InDebt = () => {
             })
             .catch(function (error) {
                 console.error(error);
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("Ichki qarzni qo'shishda muammo bo'ldi");
             })
             .finally(() => {
@@ -77,6 +77,7 @@ const InDebt = () => {
             })
             .catch(function (error) {
                 console.error(error);
+                if (error.response?.status === 500) navigate("/server-error");
                 message.error("Ichki qarzni qo'shishda muammo bo'ldi");
             })
             .finally(() => {
@@ -125,7 +126,7 @@ const InDebt = () => {
             search: false,
         },
         {
-            title: "Berilgan vaqt",
+            title: "Qaytarish vaqti",
             dataIndex: "deadline",
             key: "deadline",
             width: "20%",
@@ -154,7 +155,7 @@ const InDebt = () => {
 
     return (
         <>
-            <h3>Ichki qarzlari</h3>
+            <h3>Qarzga olingan mahsulotlar</h3>
             <CustomTable
                 onEdit={onEdit}
                 onCreate={onCreate}

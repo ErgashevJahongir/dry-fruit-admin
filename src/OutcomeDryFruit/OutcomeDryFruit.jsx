@@ -3,7 +3,7 @@ import instance from "../Api/Axios";
 import moment from "moment";
 import { Button, Card, Col, message, notification, Row, Statistic } from "antd";
 import CustomTable from "../Module/Table/Table";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useData } from "../Hook/UseData";
 import { ArrowUpOutlined, FrownOutlined } from "@ant-design/icons";
 
@@ -190,6 +190,15 @@ const IncomeDryFruit = () => {
             .post("api/dry/fruit/outcomeFruit/add", { ...value })
             .then(function (response) {
                 message.success("Sotilgan quruq meva muvaffaqiyatli qo'shildi");
+                const ulchov = measurementData.filter(
+                    (item) => item.id === values.measurementId
+                );
+                const amount =
+                    ulchov[0].name.toLowerCase() === "tonna"
+                        ? 1000
+                        : ulchov[0].name.toLowerCase() === "gramm"
+                        ? 0.001
+                        : 1;
                 response.data.data &&
                     instance
                         .post("api/dry/fruit/debt/post", {
@@ -199,7 +208,8 @@ const IncomeDryFruit = () => {
                             deadline: deadlineValue,
                             given: false,
                             borrowAmount:
-                                values.price * values.amount - qarzValue,
+                                values.price * values.amount * amount -
+                                qarzValue,
                         })
                         .then((res) =>
                             message.success(
@@ -264,6 +274,15 @@ const IncomeDryFruit = () => {
                     "Sotilgan quruq meva muvaffaqiyatli taxrirlandi"
                 );
                 getOutcomeDryFruits(current - 1, pageSize);
+                const ulchov = measurementData.filter(
+                    (item) => item.id === values.measurementId
+                );
+                const amount =
+                    ulchov[0].name.toLowerCase() === "tonna"
+                        ? 1000
+                        : ulchov[0].name.toLowerCase() === "gramm"
+                        ? 0.001
+                        : 1;
                 res.data.data &&
                     instance
                         .post("api/dry/fruit/debt/post", {
@@ -273,7 +292,8 @@ const IncomeDryFruit = () => {
                             deadline: deadlineValue,
                             given: false,
                             borrowAmount:
-                                values.price * values.amount - qarzValue,
+                                values.price * values.amount * amount -
+                                qarzValue,
                         })
                         .then((res) =>
                             message.success(

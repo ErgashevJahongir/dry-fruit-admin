@@ -35,7 +35,11 @@ const AxiosInterceptor = ({ children }) => {
         const resErrInterceptor = (error) => {
             console.log("resErrInterceptor", error);
             if (error?.response?.status === 401) {
-                console.log(error);
+                if (sessionStorage.getItem("dry-fruit"))
+                    sessionStorage.removeItem("dry-fruit", token1);
+                if (localStorage.getItem("dry-fruit")) {
+                    localStorage.removeItem("dry-fruit", token2);
+                }
                 navigate("/login");
             }
 
