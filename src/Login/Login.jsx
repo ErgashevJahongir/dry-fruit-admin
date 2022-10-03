@@ -8,7 +8,7 @@ import "./Login.css";
 import rasm from "./loginPicture.jpg";
 import { FrownOutlined } from "@ant-design/icons";
 
-const Login = ({ setUser }) => {
+const Login = () => {
     const [loading, setLoading] = useState(false);
     const { token, setToken } = useToken();
     let navigate = useNavigate();
@@ -22,7 +22,6 @@ const Login = ({ setUser }) => {
                 }
             )
             .then((data) => {
-                setUser(data.data.data);
                 navigate("/", { replace: true });
                 window.location.href = "/";
             })

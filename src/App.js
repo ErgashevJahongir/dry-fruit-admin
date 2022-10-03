@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Clients from "./Clients/Clients";
 import useToken from "./Hook/UseToken";
-// import { useData } from "./Hook/UseData";
 import LayoutMenu from "./Components/Layout/Layout";
 import Dashboard from "./Dashboard/Dashboard";
 import WorkerDebt from "./Debt/WorkerDebt";
@@ -24,22 +23,45 @@ import Notification from "./Components/Notification/Notification";
 import Loading from "./Components/Loading";
 import { DataProvider } from "./Context/DataContext";
 import { AxiosInterceptor } from "./Api/Axios";
+import axios from "axios";
 
 function App() {
     const { token } = useToken();
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
-    // const { userLoading } = useData();
+    const [userLoading, setUserLoading] = useState(true);
+
+    const getUserData = () => {
+        axios
+            .get(
+                "https://app-dry-fruits.herokuapp.com/api/dry/fruit/api/dry/fruit/user",
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            )
+            .then((data) => {
+                setUser(data.data.data);
+                setTimeout(() => {
+                    setUserLoading(false);
+                }, 2000);
+            })
+            .catch((err) => {
+                setUserLoading(false);
+                console.error(err);
+                navigate("/login");
+            });
+    };
 
     useEffect(() => {
+        getUserData();
         if (!token) {
             return navigate("/login", { replace: true });
         }
-    }, []);
+    }, [token]);
 
-    // if (userLoading) {
-    //     return <Loading />;
-    // }
+    if (userLoading && user) {
+        return <Loading />;
+    }
 
     return (
         <>
@@ -63,36 +85,52 @@ function App() {
                                     path="outcome-dryfruit"
                                     element={<OutcomeDryFruit />}
                                 />
-                                <Route
-                                    path="worker-debts"
-                                    element={<WorkerDebt />}
-                                />
                                 <Route path="indebts" element={<InDebt />} />
                                 <Route path="outdebts" element={<OutDebt />} />
                                 <Route path="clients" element={<Clients />} />
-                                <Route path="users" element={<Users />} />
-                                <Route path="worker" element={<Worker />} />
-                                <Route path="others" element={<Others />} />
-                                <Route path="branchs" element={<Branch />} />
                                 <Route path="profil" element={<Profil />} />
-                                <Route
-                                    path="notification"
-                                    element={<Notification />}
-                                />
+                                {user?.roleId === 1 && (
+                                    <Route
+                                        path="branchs"
+                                        element={<Branch />}
+                                    />
+                                )}
+                                {user?.roleId === 1 || user?.roleId === 2 ? (
+                                    <>
+                                        <Route
+                                            path="worker-debts"
+                                            element={<WorkerDebt />}
+                                        />
+                                        <Route
+                                            path="users"
+                                            element={<Users />}
+                                        />
+                                        <Route
+                                            path="worker"
+                                            element={<Worker />}
+                                        />
+                                        <Route
+                                            path="others"
+                                            element={<Others />}
+                                        />
+                                        <Route
+                                            path="notification"
+                                            element={<Notification />}
+                                        />
+                                    </>
+                                ) : null}
                             </Route>
                             <Route path="*" element={<Error404 />} />
+                            <Route path="error-404" element={<Error404 />} />
                             <Route path="server-error" element={<Error500 />} />
-                            <Route
-                                path="login"
-                                element={<Login setUser={setUser} />}
-                            />
+                            <Route path="login" element={<Login />} />
                         </Routes>
                     </AxiosInterceptor>
                 </DataProvider>
             ) : null}
             {token ? null : (
                 <Routes>
-                    <Route path="login" element={<Login setUser={setUser} />} />
+                    <Route path="login" element={<Login />} />
                 </Routes>
             )}
         </>

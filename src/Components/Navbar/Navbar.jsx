@@ -1,4 +1,4 @@
-import { Avatar, Dropdown, Layout, Menu } from "antd";
+import { Avatar, Badge, Dropdown, Layout, List, Menu } from "antd";
 import React, { useState } from "react";
 import {
     DashboardOutlined,
@@ -15,11 +15,13 @@ import {
     AppstoreOutlined,
     BranchesOutlined,
     BellOutlined,
+    BellFilled,
 } from "@ant-design/icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useData } from "../../Hook/UseData";
 import useToken from "../../Hook/UseToken";
 import DrapdownMenu from "../DrapdownMenu/DrapdownMenu";
+import "./Navbar.css";
 
 const { Header } = Layout;
 
@@ -48,6 +50,38 @@ function Navbar() {
         setIsVisible(false);
     };
 
+    const data = [
+        {
+            title: "New message from Sophie",
+            description: <>salom 2 days ago</>,
+        },
+        {
+            title: "New album by Travis Scott",
+            description: <>salom 2 days ago</>,
+        },
+        {
+            title: "Payment completed",
+            description: <>salom 2 days ago</>,
+        },
+    ];
+
+    const menuBell = (
+        <List
+            min-width="100%"
+            className="header-notifications-dropdown "
+            itemLayout="horizontal"
+            dataSource={data}
+            renderItem={(item) => (
+                <List.Item>
+                    <List.Item.Meta
+                        title={item.title}
+                        description={item.description}
+                    />
+                </List.Item>
+            )}
+        />
+    );
+
     const menu = (
         <Menu
             items={[
@@ -63,21 +97,23 @@ function Navbar() {
                         </Link>
                     ),
                 },
-                {
-                    key: "/notification",
-                    icon: <BellOutlined />,
-                    label: (
-                        <Link
-                            to="/notification"
-                            style={{
-                                width: "100px",
-                                display: "inline-block",
-                            }}
-                        >
-                            Eslatmalar
-                        </Link>
-                    ),
-                },
+                user?.roleId === 1 || user?.roleId === 2
+                    ? {
+                          key: "/notification",
+                          icon: <BellOutlined />,
+                          label: (
+                              <Link
+                                  to="/notification"
+                                  style={{
+                                      width: "100px",
+                                      display: "inline-block",
+                                  }}
+                              >
+                                  Eslatmalar
+                              </Link>
+                          ),
+                      }
+                    : null,
                 {
                     key: "3",
                     danger: true,
@@ -230,17 +266,21 @@ function Navbar() {
                                         </Link>
                                     ),
                                 },
-                                {
-                                    label: "Ishchilar qarzlari",
-                                    key: "/worker-debts",
-                                    icon: (
-                                        <Link to="/worker-debts">
-                                            <DollarCircleOutlined
-                                                style={{ fontSize: "18px" }}
-                                            />
-                                        </Link>
-                                    ),
-                                },
+                                user?.roleId === 1 || user?.roleId === 2
+                                    ? {
+                                          label: "Ishchilar qarzlari",
+                                          key: "/worker-debts",
+                                          icon: (
+                                              <Link to="/worker-debts">
+                                                  <DollarCircleOutlined
+                                                      style={{
+                                                          fontSize: "18px",
+                                                      }}
+                                                  />
+                                              </Link>
+                                          ),
+                                      }
+                                    : null,
                             ],
                         },
                         {
@@ -263,50 +303,66 @@ function Navbar() {
                                         </Link>
                                     ),
                                 },
-                                {
-                                    label: "Ishchilar",
-                                    key: "/worker",
-                                    icon: (
-                                        <Link to="/worker">
-                                            <TeamOutlined
-                                                style={{ fontSize: "18px" }}
-                                            />
-                                        </Link>
-                                    ),
-                                },
-                                {
-                                    label: "Foydalanuvchilar",
-                                    key: "/users",
-                                    icon: (
-                                        <Link to="/users">
-                                            <UserOutlined
-                                                style={{ fontSize: "18px" }}
-                                            />
-                                        </Link>
-                                    ),
-                                },
-                                {
-                                    label: "Filiallar",
-                                    key: "/branchs",
-                                    icon: (
-                                        <Link to="/branchs">
-                                            <BranchesOutlined
-                                                style={{ fontSize: "18px" }}
-                                            />
-                                        </Link>
-                                    ),
-                                },
-                                {
-                                    label: "Boshqalar",
-                                    key: "/others",
-                                    icon: (
-                                        <Link to="/others">
-                                            <AppstoreOutlined
-                                                style={{ fontSize: "18px" }}
-                                            />
-                                        </Link>
-                                    ),
-                                },
+                                user?.roleId === 1
+                                    ? {
+                                          label: "Filiallar",
+                                          key: "/branchs",
+                                          icon: (
+                                              <Link to="/branchs">
+                                                  <BranchesOutlined
+                                                      style={{
+                                                          fontSize: "18px",
+                                                      }}
+                                                  />
+                                              </Link>
+                                          ),
+                                      }
+                                    : null,
+                                user?.roleId === 1 || user?.roleId === 2
+                                    ? {
+                                          label: "Ishchilar",
+                                          key: "/worker",
+                                          icon: (
+                                              <Link to="/worker">
+                                                  <TeamOutlined
+                                                      style={{
+                                                          fontSize: "18px",
+                                                      }}
+                                                  />
+                                              </Link>
+                                          ),
+                                      }
+                                    : null,
+                                user?.roleId === 1 || user?.roleId === 2
+                                    ? {
+                                          label: "Foydalanuvchilar",
+                                          key: "/users",
+                                          icon: (
+                                              <Link to="/users">
+                                                  <UserOutlined
+                                                      style={{
+                                                          fontSize: "18px",
+                                                      }}
+                                                  />
+                                              </Link>
+                                          ),
+                                      }
+                                    : null,
+                                user?.roleId === 1 || user?.roleId === 2
+                                    ? {
+                                          label: "Boshqalar",
+                                          key: "/others",
+                                          icon: (
+                                              <Link to="/others">
+                                                  <AppstoreOutlined
+                                                      style={{
+                                                          fontSize: "18px",
+                                                      }}
+                                                  />
+                                              </Link>
+                                          ),
+                                      }
+                                    : null,
                             ],
                         },
                     ]}
@@ -315,6 +371,27 @@ function Navbar() {
                     className="user inline-navber"
                     style={{ marginLeft: "auto" }}
                 >
+                    <Badge
+                        size="small"
+                        count={4}
+                        style={{ marginRight: "15px" }}
+                    >
+                        <Dropdown overlay={menuBell} trigger={["click"]}>
+                            <a
+                                href="#pablo"
+                                className="ant-dropdown-link"
+                                onClick={(e) => e.preventDefault()}
+                            >
+                                <BellFilled
+                                    style={{
+                                        fontSize: "18px",
+                                        color: "#08c",
+                                        marginRight: "15px",
+                                    }}
+                                />
+                            </a>
+                        </Dropdown>
+                    </Badge>
                     <Dropdown overlay={menu} placement="bottomRight" arrow>
                         <Avatar
                             size="large"

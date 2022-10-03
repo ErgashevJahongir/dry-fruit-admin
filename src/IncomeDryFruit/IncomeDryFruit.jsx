@@ -489,8 +489,8 @@ const IncomeDryFruit = () => {
                     style={{ marginBottom: "20px" }}
                     className="site-statistic-demo-card"
                 >
-                    <Row gutter={16}>
-                        <Col span={6}>
+                    <Row>
+                        <Col xs={12} sm={12} md={12} lg={6} xl={6}>
                             <Card>
                                 <Statistic
                                     title="Jami sarflangan summa"
@@ -503,7 +503,7 @@ const IncomeDryFruit = () => {
                                 />
                             </Card>
                         </Col>
-                        <Col span={6}>
+                        <Col xs={12} sm={12} md={6} lg={6} xl={6}>
                             <Card>
                                 <Statistic
                                     title="Jami sarflangan summa dollarda"
@@ -516,7 +516,7 @@ const IncomeDryFruit = () => {
                                 />
                             </Card>
                         </Col>
-                        <Col span={6}>
+                        <Col xs={12} sm={12} md={6} lg={6} xl={6}>
                             <Card>
                                 <Statistic
                                     title="Plastikdagi sarflangan summa"
@@ -529,7 +529,7 @@ const IncomeDryFruit = () => {
                                 />
                             </Card>
                         </Col>
-                        <Col span={6}>
+                        <Col xs={12} sm={12} md={6} lg={6} xl={6}>
                             <Card>
                                 <Statistic
                                     title="Naqtdagi sarflangan summa"
