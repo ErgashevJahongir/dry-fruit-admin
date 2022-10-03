@@ -13,14 +13,15 @@ import {
     TeamOutlined,
     AppstoreOutlined,
     BranchesOutlined,
+    BellOutlined,
 } from "@ant-design/icons";
 import useToken from "../../Hook/UseToken";
-// import { useData } from "../../Hook/UseData";
+import { useData } from "../../Hook/UseData";
 
 function DrapdownMenu({ onClose, isVisible }) {
     const { token } = useToken();
     const navigate = useNavigate();
-    // const { user } = useData();
+    const { user } = useData();
     const location = useLocation();
 
     const handleLogOut = (e) => {
@@ -39,7 +40,7 @@ function DrapdownMenu({ onClose, isVisible }) {
         >
             <Menu
                 style={{
-                    height: "100%",
+                    height: "125vh",
                 }}
                 defaultSelectedKeys={[location.pathname]}
                 defaultOpenKeys={["others"]}
@@ -128,17 +129,19 @@ function DrapdownMenu({ onClose, isVisible }) {
                                     </Link>
                                 ),
                             },
-                            {
-                                label: "Ishchilar qarzlari",
-                                key: "/worker-debts",
-                                icon: (
-                                    <Link to="/worker-debts">
-                                        <DollarCircleOutlined
-                                            style={{ fontSize: "18px" }}
-                                        />
-                                    </Link>
-                                ),
-                            },
+                            user?.roleId === 1 || user?.roleId === 2
+                                ? {
+                                      label: "Ishchilar qarzlari",
+                                      key: "/worker-debts",
+                                      icon: (
+                                          <Link to="/worker-debts">
+                                              <DollarCircleOutlined
+                                                  style={{ fontSize: "18px" }}
+                                              />
+                                          </Link>
+                                      ),
+                                  }
+                                : null,
                         ],
                     },
                     {
@@ -159,50 +162,58 @@ function DrapdownMenu({ onClose, isVisible }) {
                                     </Link>
                                 ),
                             },
-                            {
-                                label: "Ishchilar",
-                                key: "/worker",
-                                icon: (
-                                    <Link to="/worker">
-                                        <TeamOutlined
-                                            style={{ fontSize: "18px" }}
-                                        />
-                                    </Link>
-                                ),
-                            },
-                            {
-                                label: "Foydalanuvchilar",
-                                key: "/users",
-                                icon: (
-                                    <Link to="/users">
-                                        <UserOutlined
-                                            style={{ fontSize: "18px" }}
-                                        />
-                                    </Link>
-                                ),
-                            },
-                            {
-                                label: "Filiallar",
-                                key: "/branchs",
-                                icon: (
-                                    <Link to="/branchs">
-                                        <BranchesOutlined
-                                            style={{ fontSize: "18px" }}
-                                        />
-                                    </Link>
-                                ),
-                            },
-                            {
-                                label: "Boshqalar",
-                                key: "/others",
-                                icon: (
-                                    <Link to="/others">
-                                        <AppstoreOutlined
-                                            style={{ fontSize: "18px" }}
-                                        />
-                                    </Link>
-                                ),
-                            },
+                            user?.roleId === 1 || user?.roleId === 2
+                                ? {
+                                      label: "Ishchilar",
+                                      key: "/worker",
+                                      icon: (
+                                          <Link to="/worker">
+                                              <TeamOutlined
+                                                  style={{ fontSize: "18px" }}
+                                              />
+                                          </Link>
+                                      ),
+                                  }
+                                : null,
+                            user?.roleId === 1 || user?.roleId === 2
+                                ? {
+                                      label: "Foydalanuvchilar",
+                                      key: "/users",
+                                      icon: (
+                                          <Link to="/users">
+                                              <UserOutlined
+                                                  style={{ fontSize: "18px" }}
+                                              />
+                                          </Link>
+                                      ),
+                                  }
+                                : null,
+                            user?.roleId === 1
+                                ? {
+                                      label: "Filiallar",
+                                      key: "/branchs",
+                                      icon: (
+                                          <Link to="/branchs">
+                                              <BranchesOutlined
+                                                  style={{ fontSize: "18px" }}
+                                              />
+                                          </Link>
+                                      ),
+                                  }
+                                : null,
+                            user?.roleId === 1 || user?.roleId === 2
+                                ? {
+                                      label: "Boshqalar",
+                                      key: "/others",
+                                      icon: (
+                                          <Link to="/others">
+                                              <AppstoreOutlined
+                                                  style={{ fontSize: "18px" }}
+                                              />
+                                          </Link>
+                                      ),
+                                  }
+                                : null,
                         ],
                     },
                     {
@@ -214,6 +225,23 @@ function DrapdownMenu({ onClose, isVisible }) {
                             </Link>
                         ),
                     },
+                    user?.roleId === 1 || user?.roleId === 2
+                        ? {
+                              key: "/notification",
+                              icon: <BellOutlined />,
+                              label: (
+                                  <Link
+                                      to="/notification"
+                                      style={{
+                                          width: "100px",
+                                          display: "inline-block",
+                                      }}
+                                  >
+                                      Eslatmalar
+                                  </Link>
+                              ),
+                          }
+                        : null,
                     {
                         label: "Chiqish",
                         key: "/logout",
