@@ -34,12 +34,9 @@ function App() {
 
     const getUserData = () => {
         axios
-            .get(
-                "https://app-dry-fruits.herokuapp.com/api/dry/fruit/api/dry/fruit/user",
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
-            )
+            .get("http://31.44.5.130:8080/api/dry/fruit/api/dry/fruit/user", {
+                headers: { Authorization: `Bearer ${token}` },
+            })
             .then((data) => {
                 setUser(data.data.data);
                 setTimeout(() => {
