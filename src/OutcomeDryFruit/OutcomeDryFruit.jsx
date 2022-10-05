@@ -78,6 +78,15 @@ const IncomeDryFruit = () => {
                 const data = clientData?.filter((item) => item.id === record);
                 return data[0]?.fio;
             },
+            sorter: (a, b) => {
+                if (a.clientId < b.clientId) {
+                    return -1;
+                }
+                if (a.clientId > b.clientId) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Meva sotilayotgan fuliall",
@@ -89,6 +98,15 @@ const IncomeDryFruit = () => {
                 return data[0]?.name;
             },
             search: false,
+            sorter: (a, b) => {
+                if (a.branchId < b.branchId) {
+                    return -1;
+                }
+                if (a.branchId > b.branchId) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Quruq meva nomi",
@@ -100,6 +118,15 @@ const IncomeDryFruit = () => {
                 return data[0]?.name;
             },
             search: false,
+            sorter: (a, b) => {
+                if (a.dryFruitId < b.dryFruitId) {
+                    return -1;
+                }
+                if (a.dryFruitId > b.dryFruitId) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Miqdori",
@@ -129,6 +156,15 @@ const IncomeDryFruit = () => {
                 return data[0]?.name;
             },
             search: false,
+            sorter: (a, b) => {
+                if (a.measurementId < b.measurementId) {
+                    return -1;
+                }
+                if (a.measurementId > b.measurementId) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Sotilgan narxi",
@@ -136,6 +172,15 @@ const IncomeDryFruit = () => {
             key: "price",
             width: "10%",
             search: false,
+            sorter: (a, b) => {
+                if (a.price < b.price) {
+                    return -1;
+                }
+                if (a.price > b.price) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Sotgan hodim",
@@ -147,6 +192,15 @@ const IncomeDryFruit = () => {
                 return data[0]?.fio;
             },
             search: false,
+            sorter: (a, b) => {
+                if (a.createdBy < b.createdBy) {
+                    return -1;
+                }
+                if (a.createdBy > b.createdBy) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Sotilgan vaqti",
@@ -154,6 +208,15 @@ const IncomeDryFruit = () => {
             key: "date",
             width: "10%",
             search: false,
+            sorter: (a, b) => {
+                if (a.date < b.date) {
+                    return -1;
+                }
+                if (a.date > b.date) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Naqd pul",
@@ -164,6 +227,15 @@ const IncomeDryFruit = () => {
             render: (record) => {
                 return record ? "Bor" : "Yo'q";
             },
+            sorter: (a, b) => {
+                if (a.cash < b.cash) {
+                    return -1;
+                }
+                if (a.cash > b.cash) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Qarzdorlik",
@@ -173,6 +245,15 @@ const IncomeDryFruit = () => {
             search: false,
             render: (record) => {
                 return record ? "Bor" : "Yo'q";
+            },
+            sorter: (a, b) => {
+                if (a.debt < b.debt) {
+                    return -1;
+                }
+                if (a.debt > b.debt) {
+                    return 1;
+                }
+                return 0;
             },
         },
     ];
@@ -492,8 +573,8 @@ const IncomeDryFruit = () => {
                     style={{ marginBottom: "20px" }}
                     className="site-statistic-demo-card"
                 >
-                    <Row gutter={16}>
-                        <Col span={6}>
+                    <Row gutter={[10, 10]}>
+                        <Col xs={12} sm={12} md={12} lg={6} xl={6}>
                             <Card>
                                 <Statistic
                                     title="Jami summa"
@@ -506,7 +587,7 @@ const IncomeDryFruit = () => {
                                 />
                             </Card>
                         </Col>
-                        <Col span={6}>
+                        <Col xs={12} sm={12} md={12} lg={6} xl={6}>
                             <Card>
                                 <Statistic
                                     title="Jami summa dollarda"
@@ -519,7 +600,7 @@ const IncomeDryFruit = () => {
                                 />
                             </Card>
                         </Col>
-                        <Col span={6}>
+                        <Col xs={12} sm={12} md={12} lg={6} xl={6}>
                             <Card>
                                 <Statistic
                                     title="Plastikdagi summa"
@@ -532,7 +613,7 @@ const IncomeDryFruit = () => {
                                 />
                             </Card>
                         </Col>
-                        <Col span={6}>
+                        <Col xs={12} sm={12} md={12} lg={6} xl={6}>
                             <Card>
                                 <Statistic
                                     title="Naqtdagi summa"

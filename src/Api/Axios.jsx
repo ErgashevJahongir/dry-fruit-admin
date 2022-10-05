@@ -41,6 +41,7 @@ const AxiosInterceptor = ({ children }) => {
                     localStorage.removeItem("dry-fruit", token2);
                 }
                 navigate("/login");
+                window.location.href = "/";
             }
 
             return Promise.reject(error);

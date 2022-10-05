@@ -26,9 +26,13 @@ function DrapdownMenu({ onClose, isVisible }) {
 
     const handleLogOut = (e) => {
         e.preventDefault();
-        sessionStorage.removeItem("dry-fruit", token);
-        localStorage.removeItem("dry-fruit", token);
+        if (sessionStorage.getItem("dry-fruit"))
+            sessionStorage.removeItem("dry-fruit", token);
+        if (localStorage.getItem("dry-fruit")) {
+            localStorage.removeItem("dry-fruit", token);
+        }
         navigate("/login", { replace: true });
+        window.location.href = "/";
     };
     return (
         <Drawer

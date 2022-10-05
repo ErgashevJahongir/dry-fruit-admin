@@ -108,7 +108,16 @@ const Branch = () => {
             dataIndex: "name",
             key: "name",
             width: "50%",
-            search: false,
+            search: true,
+            sorter: (a, b) => {
+                if (a.name < b.name) {
+                    return -1;
+                }
+                if (a.name > b.name) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Bu filial asosiymi",
@@ -118,6 +127,15 @@ const Branch = () => {
             search: false,
             render: (record) => {
                 return record ? "Ha" : "Yo'q";
+            },
+            sorter: (a, b) => {
+                if (a.main < b.main) {
+                    return -1;
+                }
+                if (a.main > b.main) {
+                    return 1;
+                }
+                return 0;
             },
         },
     ];

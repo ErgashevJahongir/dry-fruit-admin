@@ -1,5 +1,14 @@
-import { Avatar, Badge, Dropdown, Layout, List, Menu } from "antd";
-import React, { useState } from "react";
+import {
+    Avatar,
+    Badge,
+    Button,
+    Dropdown,
+    Layout,
+    List,
+    Menu,
+    Tooltip,
+} from "antd";
+import React, { useEffect, useState } from "react";
 import {
     DashboardOutlined,
     MenuOutlined,
@@ -16,21 +25,39 @@ import {
     BranchesOutlined,
     BellOutlined,
     BellFilled,
+    CloseOutlined,
 } from "@ant-design/icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useData } from "../../Hook/UseData";
 import useToken from "../../Hook/UseToken";
 import DrapdownMenu from "../DrapdownMenu/DrapdownMenu";
 import "./Navbar.css";
+import instance from "../../Api/Axios";
 
 const { Header } = Layout;
 
 function Navbar() {
     const [isVisible, setIsVisible] = useState(false);
+    const [notificationn, setNotificationn] = useState([]);
     const { user } = useData();
     const { token } = useToken();
     const navigate = useNavigate();
     const location = useLocation();
+
+    const getNotification = () => {
+        instance
+            .get(`api/dry/fruit/notification/get`)
+            .then((data) => {
+                setNotificationn(data.data.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
+    useEffect(() => {
+        getNotification();
+    }, []);
 
     const handleLogOut = (e) => {
         e.preventDefault();
@@ -40,6 +67,7 @@ function Navbar() {
             localStorage.removeItem("dry-fruit", token);
         }
         navigate("/login", { replace: true });
+        window.location.href = "/";
     };
 
     const showDrawer = () => {
@@ -50,33 +78,34 @@ function Navbar() {
         setIsVisible(false);
     };
 
-    const data = [
-        {
-            title: "New message from Sophie",
-            description: <>salom 2 days ago</>,
-        },
-        {
-            title: "New album by Travis Scott",
-            description: <>salom 2 days ago</>,
-        },
-        {
-            title: "Payment completed",
-            description: <>salom 2 days ago</>,
-        },
-    ];
-
     const menuBell = (
         <List
             min-width="100%"
             className="header-notifications-dropdown "
             itemLayout="horizontal"
-            dataSource={data}
+            dataSource={notificationn}
             renderItem={(item) => (
                 <List.Item>
                     <List.Item.Meta
                         title={item.title}
-                        description={item.description}
-                    />
+                        description={item.text}
+                        avatar={
+                            <Tooltip title="Yopish">
+                                <Button
+                                    shape="circle"
+                                    icon={<CloseOutlined />}
+                                    onClick={() => {
+                                        instance
+                                            .put(
+                                                `api/dry/fruit/notification/update?id=${item.id}`
+                                            )
+                                            .then((data) => getNotification())
+                                            .catch((err) => console.error(err));
+                                    }}
+                                />
+                            </Tooltip>
+                        }
+                    ></List.Item.Meta>
                 </List.Item>
             )}
         />
@@ -172,7 +201,7 @@ function Navbar() {
                     </Link>
                 </div>
                 <Menu
-                    style={{ width: "75%" }}
+                    style={{ width: "70%" }}
                     className="inline-navber"
                     theme="dark"
                     defaultSelectedKeys={[location.pathname]}
@@ -367,32 +396,36 @@ function Navbar() {
                         },
                     ]}
                 />
-                <span
-                    className="user inline-navber"
-                    style={{ marginLeft: "auto" }}
-                >
-                    <Badge
-                        size="small"
-                        count={4}
-                        style={{ marginRight: "15px" }}
+                <span className="user" style={{ marginLeft: "auto" }}>
+                    {user?.roleId !== 3 ? (
+                        <Badge
+                            size="small"
+                            count={notificationn?.length}
+                            style={{ marginRight: "15px" }}
+                        >
+                            <Dropdown overlay={menuBell} trigger={["click"]}>
+                                <a
+                                    href="#pablo"
+                                    className="ant-dropdown-link"
+                                    onClick={(e) => e.preventDefault()}
+                                >
+                                    <BellFilled
+                                        style={{
+                                            fontSize: "18px",
+                                            color: "#08c",
+                                            marginRight: "15px",
+                                        }}
+                                    />
+                                </a>
+                            </Dropdown>
+                        </Badge>
+                    ) : null}
+                    <Dropdown
+                        className="inline-navber"
+                        overlay={menu}
+                        placement="bottomRight"
+                        arrow
                     >
-                        <Dropdown overlay={menuBell} trigger={["click"]}>
-                            <a
-                                href="#pablo"
-                                className="ant-dropdown-link"
-                                onClick={(e) => e.preventDefault()}
-                            >
-                                <BellFilled
-                                    style={{
-                                        fontSize: "18px",
-                                        color: "#08c",
-                                        marginRight: "15px",
-                                    }}
-                                />
-                            </a>
-                        </Dropdown>
-                    </Badge>
-                    <Dropdown overlay={menu} placement="bottomRight" arrow>
                         <Avatar
                             size="large"
                             style={{

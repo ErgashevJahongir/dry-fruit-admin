@@ -124,6 +124,15 @@ const Users = () => {
             key: "fio",
             width: "20%",
             search: true,
+            sorter: (a, b) => {
+                if (a.fio < b.fio) {
+                    return -1;
+                }
+                if (a.fio > b.fio) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Foydalanuvchi nomeri",
@@ -131,6 +140,15 @@ const Users = () => {
             key: "phoneNumber",
             width: "20%",
             search: false,
+            sorter: (a, b) => {
+                if (a.phoneNumber < b.phoneNumber) {
+                    return -1;
+                }
+                if (a.phoneNumber > b.phoneNumber) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Ishlash filiali",
@@ -143,6 +161,15 @@ const Users = () => {
                     (item) => item?.id === initealValue
                 );
                 return branch[0]?.name;
+            },
+            sorter: (a, b) => {
+                if (a.branchId < b.branchId) {
+                    return -1;
+                }
+                if (a.branchId > b.branchId) {
+                    return 1;
+                }
+                return 0;
             },
         },
         {
@@ -157,6 +184,15 @@ const Users = () => {
                 );
                 return role[0]?.name;
             },
+            sorter: (a, b) => {
+                if (a.roleId < b.roleId) {
+                    return -1;
+                }
+                if (a.roleId > b.roleId) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Bloklangan",
@@ -166,6 +202,15 @@ const Users = () => {
             search: false,
             render: (record) => {
                 return record ? "Ha" : "Yo'q";
+            },
+            sorter: (a, b) => {
+                if (a.block < b.block) {
+                    return -1;
+                }
+                if (a.block > b.block) {
+                    return 1;
+                }
+                return 0;
             },
         },
     ];

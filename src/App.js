@@ -24,6 +24,7 @@ import Loading from "./Components/Loading";
 import { DataProvider } from "./Context/DataContext";
 import { AxiosInterceptor } from "./Api/Axios";
 import axios from "axios";
+import BlockPage from "./Module/ErrorPages/BlockPage";
 
 function App() {
     const { token } = useToken();
@@ -57,7 +58,7 @@ function App() {
         if (!token) {
             return navigate("/login", { replace: true });
         }
-    }, [token]);
+    }, []);
 
     if (userLoading && user) {
         return <Loading />;
@@ -68,63 +69,91 @@ function App() {
             {token ? (
                 <DataProvider>
                     <AxiosInterceptor>
-                        <Routes>
-                            <Route element={<LayoutMenu />}>
-                                <Route index element={<Dashboard />} />
-                                <Route path="home" element={<Dashboard />} />
-                                <Route path="dryfruit" element={<DryFruit />} />
-                                <Route
-                                    path="warehouse-dryfruit"
-                                    element={<WarehouseDryfruit />}
-                                />
-                                <Route
-                                    path="income-dryfruit"
-                                    element={<IncomeDryFruit />}
-                                />
-                                <Route
-                                    path="outcome-dryfruit"
-                                    element={<OutcomeDryFruit />}
-                                />
-                                <Route path="indebts" element={<InDebt />} />
-                                <Route path="outdebts" element={<OutDebt />} />
-                                <Route path="clients" element={<Clients />} />
-                                <Route path="profil" element={<Profil />} />
-                                {user?.roleId === 1 && (
+                        {user.block ? (
+                            <Routes>
+                                <Route path="/" element={<BlockPage />} />
+                            </Routes>
+                        ) : (
+                            <Routes>
+                                <Route element={<LayoutMenu />}>
+                                    <Route index element={<Dashboard />} />
                                     <Route
-                                        path="branchs"
-                                        element={<Branch />}
+                                        path="home"
+                                        element={<Dashboard />}
                                     />
-                                )}
-                                {user?.roleId === 1 || user?.roleId === 2 ? (
-                                    <>
+                                    <Route
+                                        path="dryfruit"
+                                        element={<DryFruit />}
+                                    />
+                                    <Route
+                                        path="warehouse-dryfruit"
+                                        element={<WarehouseDryfruit />}
+                                    />
+                                    <Route
+                                        path="income-dryfruit"
+                                        element={<IncomeDryFruit />}
+                                    />
+                                    <Route
+                                        path="outcome-dryfruit"
+                                        element={<OutcomeDryFruit />}
+                                    />
+                                    <Route
+                                        path="indebts"
+                                        element={<InDebt />}
+                                    />
+                                    <Route
+                                        path="outdebts"
+                                        element={<OutDebt />}
+                                    />
+                                    <Route
+                                        path="clients"
+                                        element={<Clients />}
+                                    />
+                                    <Route path="profil" element={<Profil />} />
+                                    {user?.roleId === 1 && (
                                         <Route
-                                            path="worker-debts"
-                                            element={<WorkerDebt />}
+                                            path="branchs"
+                                            element={<Branch />}
                                         />
-                                        <Route
-                                            path="users"
-                                            element={<Users />}
-                                        />
-                                        <Route
-                                            path="worker"
-                                            element={<Worker />}
-                                        />
-                                        <Route
-                                            path="others"
-                                            element={<Others />}
-                                        />
-                                        <Route
-                                            path="notification"
-                                            element={<Notification />}
-                                        />
-                                    </>
-                                ) : null}
-                            </Route>
-                            <Route path="*" element={<Error404 />} />
-                            <Route path="error-404" element={<Error404 />} />
-                            <Route path="server-error" element={<Error500 />} />
-                            <Route path="login" element={<Login />} />
-                        </Routes>
+                                    )}
+                                    {user?.roleId === 1 ||
+                                    user?.roleId === 2 ? (
+                                        <>
+                                            <Route
+                                                path="worker-debts"
+                                                element={<WorkerDebt />}
+                                            />
+                                            <Route
+                                                path="users"
+                                                element={<Users />}
+                                            />
+                                            <Route
+                                                path="worker"
+                                                element={<Worker />}
+                                            />
+                                            <Route
+                                                path="others"
+                                                element={<Others />}
+                                            />
+                                            <Route
+                                                path="notification"
+                                                element={<Notification />}
+                                            />
+                                        </>
+                                    ) : null}
+                                </Route>
+                                <Route path="*" element={<Error404 />} />
+                                <Route
+                                    path="error-404"
+                                    element={<Error404 />}
+                                />
+                                <Route
+                                    path="server-error"
+                                    element={<Error500 />}
+                                />
+                                <Route path="login" element={<Login />} />
+                            </Routes>
+                        )}
                     </AxiosInterceptor>
                 </DataProvider>
             ) : null}

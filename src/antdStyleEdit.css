@@ -142,6 +142,10 @@ thead:hover {
     padding: 0 !important;
 }
 
+.header-notifications-dropdown {
+    border-radius: 5px;
+}
+
 .ant-drawer-content-wrapper {
     width: 250px !important;
 }
@@ -180,6 +184,10 @@ thead:hover {
 
     .ant-card-body {
         padding: 5px;
+    }
+
+    .currency .ant-card-body {
+        padding: 24px;
     }
 
     .ant-statistic-content {

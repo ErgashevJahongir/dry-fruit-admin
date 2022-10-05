@@ -23,7 +23,7 @@ const WorkerDebt = () => {
             )
             .then((data) => {
                 const value = [
-                    ...data.data.data.debts.map((item) => {
+                    ...data.data?.data?.debts.map((item) => {
                         return {
                             ...item,
                             deadline: moment(item.deadline).format(
@@ -33,7 +33,7 @@ const WorkerDebt = () => {
                     }),
                 ];
                 setDebts(value);
-                setTotalItems(data.data.data.totalItems);
+                setTotalItems(data.data?.data?.totalItems);
                 getWorkerData();
             })
             .catch((error) => {
@@ -104,6 +104,15 @@ const WorkerDebt = () => {
                 const name = workerData?.filter((item) => item.id === record);
                 return name[0]?.fio;
             },
+            sorter: (a, b) => {
+                if (a.workerId < b.workerId) {
+                    return -1;
+                }
+                if (a.workerId > b.workerId) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Qarz miqdori",
@@ -131,6 +140,15 @@ const WorkerDebt = () => {
                 const name = usersData?.filter((item) => item.id === record);
                 return name[0]?.fio;
             },
+            sorter: (a, b) => {
+                if (a.createdBy < b.createdBy) {
+                    return -1;
+                }
+                if (a.createdBy > b.createdBy) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Qaytarish vaqti",
@@ -138,6 +156,15 @@ const WorkerDebt = () => {
             key: "deadline",
             width: "20%",
             search: false,
+            sorter: (a, b) => {
+                if (a.deadline < b.deadline) {
+                    return -1;
+                }
+                if (a.deadline > b.deadline) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "To'liq uzilganmi",
