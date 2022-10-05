@@ -13,38 +13,37 @@ const Login = () => {
     const { token, setToken } = useToken();
     let navigate = useNavigate();
 
-    const getUser = (token) => {
-        axios
-            .get(
-                "https://app-dry-fruits.herokuapp.com/api/dry/fruit/api/dry/fruit/user",
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
-            )
-            .then((data) => {
-                navigate("/", { replace: true });
-                window.location.href = "/";
-            })
-            .catch((err) => {
-                console.error(err);
-                navigate("/login");
-            })
-            .finally(() => setLoading(false));
-    };
+    // const getUser = (token) => {
+    //     axios
+    //         .get(
+    //             "http://31.44.5.130:8080/api/dry/fruit/api/dry/fruit/user",
+    //             {
+    //                 headers: { Authorization: `Bearer ${token}` },
+    //             }
+    //         )
+    //         .then((data) => {
+    //             navigate("/", { replace: true });
+    //             window.location.href = "/";
+    //         })
+    //         .catch((err) => {
+    //             console.error(err);
+    //             navigate("/login");
+    //         })
+    //         .finally(() => setLoading(false));
+    // };
 
     const onFinish = (values) => {
         setLoading(true);
         axios
-            .post(
-                "https://app-dry-fruits.herokuapp.com/api/dry/fruit/auth/login",
-                {
-                    password: values.password,
-                    phoneNumber: values.phoneNumber,
-                }
-            )
+            .post("http://31.44.5.130:8080/api/dry/fruit/auth/login", {
+                phoneNumber: values.phoneNumber,
+                password: values.password,
+            })
             .then((data) => {
-                getUser(data.data.data);
+                // getUser(data.data.data);
                 setToken(data.data.data, values.remember);
+                navigate("/", { replace: true });
+                window.location.href = "/";
             })
             .catch((err) => {
                 notification["error"]({
