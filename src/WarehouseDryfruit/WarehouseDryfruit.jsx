@@ -154,12 +154,10 @@ const WarehouseDryfruit = () => {
         });
     };
 
-    const getWarehouseDryfruitBranches = (value, current, pageSize) => {
+    const getWarehouseDryfruitBranches = (value) => {
         setLoading(true);
         instance
-            .get(
-                `api/dry/fruit/dryFruitWarehouse/getAllByBranchId${value}?page=${current}&size=${pageSize}`
-            )
+            .get(`api/dry/fruit/dryFruitWarehouse/byBranch?branchId=${value}`)
             .then((data) => {
                 setDryfruitWarehouseData(data.data.data?.dryFruitWarehouse);
                 setTotalItems(data.data.data?.totalItems);

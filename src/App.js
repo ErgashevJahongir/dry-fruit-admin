@@ -54,7 +54,9 @@ function App() {
     };
 
     useEffect(() => {
-        getUserData();
+        if (token) {
+            getUserData();
+        }
         if (!token) {
             return navigate("/login", { replace: true });
         }
