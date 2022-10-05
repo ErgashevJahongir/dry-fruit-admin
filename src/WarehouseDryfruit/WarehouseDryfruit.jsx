@@ -16,44 +16,20 @@ const WarehouseDryfruit = () => {
 
     const getWerehouseDryFruit = (current, pageSize) => {
         setLoading(true);
-        user?.roleId === 1
-            ? instance
-                  .get(
-                      `api/dry/fruit/dryFruitWarehouse/getAllPageable?page=${current}&size=${pageSize}`
-                  )
-                  .then((data) => {
-                      setDryfruitWarehouseData(data.data.data?.fuelReports);
-                      setTotalItems(data.data.data?.totalItems);
-                  })
-                  .catch((error) => {
-                      console.error(error);
-                      message.error(
-                          "Ombordagi Mevalarni yuklashda muammo bo'ldi"
-                      );
-                      if (error.response?.status === 500)
-                          navigate("/server-error");
-                  })
-                  .finally(() => setLoading(false))
-            : instance
-                  .get(
-                      `api/dry/fruit/dryFruitWarehouse/getAllByBranchId${user.branchId}?page=${current}&size=${pageSize}`
-                  )
-                  .then((data) => {
-                      console.log(data);
-                      setDryfruitWarehouseData(
-                          data.data.data?.dryFruitWarehouse
-                      );
-                      setTotalItems(data.data.data?.totalItems);
-                  })
-                  .catch((error) => {
-                      console.error(error);
-                      if (error.response?.status === 500)
-                          navigate("/server-error");
-                      message.error(
-                          "Sotilgan yoqilg'ilarni yuklashda muammo bo'ldi"
-                      );
-                  })
-                  .finally(() => setLoading(false));
+        instance
+            .get(
+                `api/dry/fruit/dryFruitWarehouse/getAllPageable?page=${current}&size=${pageSize}`
+            )
+            .then((data) => {
+                setDryfruitWarehouseData(data.data.data?.fuelReports);
+                setTotalItems(data.data.data?.totalItems);
+            })
+            .catch((error) => {
+                console.error(error);
+                message.error("Ombordagi Mevalarni yuklashda muammo bo'ldi");
+                if (error.response?.status === 500) navigate("/server-error");
+            })
+            .finally(() => setLoading(false));
     };
 
     const columns = [
@@ -63,6 +39,15 @@ const WarehouseDryfruit = () => {
             key: "branchId",
             width: "35%",
             search: false,
+            sorter: (a, b) => {
+                if (a.branchId < b.branchId) {
+                    return -1;
+                }
+                if (a.branchId > b.branchId) {
+                    return 1;
+                }
+                return 0;
+            },
             render: (initealValue) => {
                 const branch = branchData?.filter(
                     (item) => item?.id === initealValue
@@ -78,6 +63,15 @@ const WarehouseDryfruit = () => {
             render: (record) => {
                 const data = dryfruitData.filter((item) => item.id === record);
                 return data[0]?.name;
+            },
+            sorter: (a, b) => {
+                if (a.dryFruitId < b.dryFruitId) {
+                    return -1;
+                }
+                if (a.dryFruitId > b.dryFruitId) {
+                    return 1;
+                }
+                return 0;
             },
             search: false,
         },
@@ -136,7 +130,6 @@ const WarehouseDryfruit = () => {
                 setLoading(false);
             });
     };
-
     const handleDelete = (arr) => {
         setLoading(true);
         arr.map((item) => {
@@ -174,7 +167,7 @@ const WarehouseDryfruit = () => {
             .catch((error) => {
                 console.error(error);
                 if (error.response?.status === 500) navigate("/server-error");
-                message.error("Sotilgan yoqilg'ilarni yuklashda muammo bo'ldi");
+                message.error("Ombordagi Mevalarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoading(false));
     };

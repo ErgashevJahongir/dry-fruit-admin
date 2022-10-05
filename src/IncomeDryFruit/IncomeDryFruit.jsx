@@ -23,6 +23,7 @@ const IncomeDryFruit = () => {
         setQarzValue,
         deadlineValue,
         setDeadlineValue,
+        setValueDebt,
     } = useData();
     const navigate = useNavigate();
 
@@ -133,6 +134,15 @@ const IncomeDryFruit = () => {
                 return data[0]?.name;
             },
             search: false,
+            sorter: (a, b) => {
+                if (a.branchId < b.branchId) {
+                    return -1;
+                }
+                if (a.branchId > b.branchId) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Quruq meva turi",
@@ -144,6 +154,15 @@ const IncomeDryFruit = () => {
                 return data[0]?.name;
             },
             search: false,
+            sorter: (a, b) => {
+                if (a.dryFruitId < b.dryFruitId) {
+                    return -1;
+                }
+                if (a.dryFruitId > b.dryFruitId) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "O'lchovi",
@@ -157,6 +176,15 @@ const IncomeDryFruit = () => {
                 return data[0]?.name;
             },
             search: false,
+            sorter: (a, b) => {
+                if (a.measurementId < b.measurementId) {
+                    return -1;
+                }
+                if (a.measurementId > b.measurementId) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Miqdori",
@@ -180,6 +208,15 @@ const IncomeDryFruit = () => {
             key: "price",
             width: "15%",
             search: false,
+            sorter: (a, b) => {
+                if (a.price < b.price) {
+                    return -1;
+                }
+                if (a.price > b.price) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Kelish vaqti",
@@ -187,6 +224,15 @@ const IncomeDryFruit = () => {
             key: "date",
             width: "15%",
             search: false,
+            sorter: (a, b) => {
+                if (a.date < b.date) {
+                    return -1;
+                }
+                if (a.date > b.date) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Qarzdorlik",
@@ -197,6 +243,15 @@ const IncomeDryFruit = () => {
             render: (record) => {
                 return record ? "Bor" : "Yo'q";
             },
+            sorter: (a, b) => {
+                if (a.debt < b.debt) {
+                    return -1;
+                }
+                if (a.debt > b.debt) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Naqtmi",
@@ -206,6 +261,15 @@ const IncomeDryFruit = () => {
             search: false,
             render: (record) => {
                 return record ? "Ha" : "Yo'q";
+            },
+            sorter: (a, b) => {
+                if (a.cash < b.cash) {
+                    return -1;
+                }
+                if (a.cash > b.cash) {
+                    return 1;
+                }
+                return 0;
             },
         },
     ];
@@ -249,6 +313,7 @@ const IncomeDryFruit = () => {
                             );
                             setDeadlineValue(null);
                             setQarzValue(null);
+                            setValueDebt(null);
                         })
                         .catch((err) => {
                             message.error(
@@ -267,6 +332,7 @@ const IncomeDryFruit = () => {
                 setLoading(false);
                 setDeadlineValue(null);
                 setQarzValue(null);
+                setValueDebt(null);
             });
     };
 
@@ -310,6 +376,7 @@ const IncomeDryFruit = () => {
                         .then((res) => {
                             setDeadlineValue(null);
                             setQarzValue(null);
+                            setValueDebt(null);
                         })
                         .catch((err) => console.error(err));
             })
@@ -322,6 +389,7 @@ const IncomeDryFruit = () => {
                 setLoading(false);
                 setDeadlineValue(null);
                 setQarzValue(null);
+                setValueDebt(null);
             });
     };
 
@@ -489,7 +557,7 @@ const IncomeDryFruit = () => {
                     style={{ marginBottom: "20px" }}
                     className="site-statistic-demo-card"
                 >
-                    <Row>
+                    <Row gutter={[10, 10]}>
                         <Col xs={12} sm={12} md={12} lg={6} xl={6}>
                             <Card>
                                 <Statistic

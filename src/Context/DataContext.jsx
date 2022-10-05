@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import instance from "../Api/Axios";
 import useToken from "../Hook/UseToken";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import moment from "moment";
 import { DatePicker, Input, InputNumber, Radio } from "antd";
 import CustomSelect from "../Module/Select/Select";
@@ -26,8 +26,6 @@ export const DataProvider = ({ children }) => {
     const [qarzValue, setQarzValue] = useState("");
     const [deadlineValue, setDeadlineValue] = useState("");
     const { token } = useToken();
-    let navigate = useNavigate();
-
     let location = useLocation();
 
     const onChangeDebt = (e) => {
@@ -36,22 +34,6 @@ export const DataProvider = ({ children }) => {
 
     const onChangeDeadline = (e) => {
         setDeadlineValue(moment(e).toISOString());
-    };
-
-    const fiter = () => {
-        const array = [];
-        const branch = dryfruitWareData.filter(
-            (item) => item.branchId === user.branchid
-        );
-        console.log(branch, dryfruitWareData, user, dryfruitData);
-        for (let son = 0; son < branch.length; son++) {
-            for (let qism = 0; qism < dryfruitData.length; qism++) {
-                if (dryfruitData[qism].id === branch[son].dryFruitId)
-                    array.push(dryfruitData[qism]);
-            }
-        }
-        console.log(array);
-        return array;
     };
 
     const incomeFuelsData = [
@@ -65,8 +47,8 @@ export const DataProvider = ({ children }) => {
                     selectData={
                         user?.roleId === 1
                             ? branchData
-                            : branchData.filter(
-                                  (item) => item.id === user.branchId
+                            : branchData?.filter(
+                                  (item) => item.id === user?.branchId
                               )
                     }
                 />
@@ -612,9 +594,8 @@ export const DataProvider = ({ children }) => {
             name: "main",
             label: "Bu filial asosiymi",
             inputSelect: (defaultId = null) => {
-                const str = defaultId?.toString();
                 return (
-                    <Radio.Group defaultValue={str}>
+                    <Radio.Group>
                         <Radio value="false"> Yo'q </Radio>
                         <Radio value="true"> Ha </Radio>
                     </Radio.Group>
@@ -1185,9 +1166,8 @@ export const DataProvider = ({ children }) => {
             name: "given",
             label: "Qarz uzilganmi",
             inputSelect: (defaultId = null) => {
-                const str = defaultId?.toString();
                 return (
-                    <Radio.Group defaultValue={str}>
+                    <Radio.Group>
                         <Radio value="false"> Yo'q </Radio>
                         <Radio value="true"> Ha </Radio>
                     </Radio.Group>
@@ -1196,7 +1176,7 @@ export const DataProvider = ({ children }) => {
         },
     ];
 
-    const getUserData = () => {
+    const getUserData = (token) => {
         instance
             .get("api/dry/fruit/api/dry/fruit/user", {
                 headers: { Authorization: `Bearer ${token}` },
@@ -1208,7 +1188,6 @@ export const DataProvider = ({ children }) => {
             .catch((err) => {
                 setUserLoading(false);
                 console.error(err);
-                navigate("/login");
             });
     };
 
@@ -1312,7 +1291,7 @@ export const DataProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        getUserData();
+        getUserData(token);
         getUsersData();
         getWorkerData();
         getMeasurementData();
@@ -1335,7 +1314,7 @@ export const DataProvider = ({ children }) => {
                 editFormData: othersData,
                 branchData: false,
                 timeFilterInfo: false,
-                deleteInfo: true,
+                deleteInfo: user?.roleId === 1 ? true : false,
                 createInfo: true,
                 editInfo: true,
                 timelyInfo: false,
@@ -1415,7 +1394,7 @@ export const DataProvider = ({ children }) => {
                 editInfo: true,
                 timelyInfo: false,
                 editModalTitle: "Qarzga olingan mahsulotni o'zgartirish",
-                modalTitle: "Ichki qarz qo'shish",
+                modalTitle: "Qarzga olingan mahsulotni qo'shish",
             };
             break;
         }
@@ -1484,11 +1463,11 @@ export const DataProvider = ({ children }) => {
                 formData: outcomeDryFruitData,
                 editFormData: editOutcomeDryFruitData,
                 branchData: user?.roleId === 1 ? true : false,
-                timeFilterInfo: user?.roleId === 1 ? true : false,
+                timeFilterInfo: true,
                 deleteInfo: true,
                 createInfo: true,
                 editInfo: true,
-                timelyInfo: user?.roleId === 1 ? true : false,
+                timelyInfo: true,
                 editModalTitle: "Sotilgan quruq mevani o'zgartirish",
                 modalTitle: "Sotilgan quruq mevani qo'shish",
             };
@@ -1531,6 +1510,8 @@ export const DataProvider = ({ children }) => {
         categoryData,
         measurementData,
         branchData,
+        dryfruitWareData,
+        setValueDebt,
         dryfruitData,
         usersData,
         clientData,

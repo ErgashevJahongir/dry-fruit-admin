@@ -95,6 +95,15 @@ const InDebt = () => {
                 const name = branchData?.filter((item) => item.id === record);
                 return name[0]?.name;
             },
+            sorter: (a, b) => {
+                if (a.branchId < b.branchId) {
+                    return -1;
+                }
+                if (a.branchId > b.branchId) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Qarz oluvchi",
@@ -105,6 +114,15 @@ const InDebt = () => {
             render: (record) => {
                 const name = usersData?.filter((item) => item.id === record);
                 return name[0]?.fio;
+            },
+            sorter: (a, b) => {
+                if (a.createdBy < b.createdBy) {
+                    return -1;
+                }
+                if (a.createdBy > b.createdBy) {
+                    return 1;
+                }
+                return 0;
             },
         },
         {
@@ -117,6 +135,15 @@ const InDebt = () => {
                 const name = dryfruitData?.filter((item) => item.id === record);
                 return name[0]?.name;
             },
+            sorter: (a, b) => {
+                if (a.dryFruitId < b.dryFruitId) {
+                    return -1;
+                }
+                if (a.dryFruitId > b.dryFruitId) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Qarz miqdori",
@@ -124,6 +151,15 @@ const InDebt = () => {
             key: "borrowAmount",
             width: "15%",
             search: false,
+            sorter: (a, b) => {
+                if (a.borrowAmount < b.borrowAmount) {
+                    return -1;
+                }
+                if (a.borrowAmount > b.borrowAmount) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Qaytarish vaqti",
@@ -131,6 +167,15 @@ const InDebt = () => {
             key: "deadline",
             width: "20%",
             search: false,
+            sorter: (a, b) => {
+                if (a.deadline < b.deadline) {
+                    return -1;
+                }
+                if (a.deadline > b.deadline) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "To'liq uzilganmi",

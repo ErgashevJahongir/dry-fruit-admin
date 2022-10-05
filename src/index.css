@@ -146,6 +146,11 @@ li {
     height: 100vh;
 }
 
+.lineAmount {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
 @media screen and (max-width: 1440px) {
     .container {
         width: 1020px;
@@ -197,5 +202,9 @@ li {
 
     .select-add {
         margin-bottom: 8px;
+    }
+
+    .lineAmount {
+        grid-template-columns: 1fr;
     }
 }

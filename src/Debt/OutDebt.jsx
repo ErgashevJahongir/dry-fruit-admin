@@ -20,8 +20,7 @@ const OutDebt = () => {
                 `api/dry/fruit/debt/get-outcome?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                console.log(data);
-                let value = data.data.data.debts?.map((df) => {
+                let value = data.data?.data?.debts?.map((df) => {
                     const deadline = moment(df.deadline).format("DD-MM-YYYY");
                     return {
                         ...df,
@@ -29,7 +28,7 @@ const OutDebt = () => {
                     };
                 });
                 setDebts(value);
-                setTotalItems(data.data.data.totalItems);
+                setTotalItems(data.data?.data?.totalItems);
             })
             .catch((error) => {
                 console.error(error);
@@ -109,6 +108,15 @@ const OutDebt = () => {
                 const name = clientData?.filter((item) => item.id === record);
                 return name[0]?.fio;
             },
+            sorter: (a, b) => {
+                if (a.clientId < b.clientId) {
+                    return -1;
+                }
+                if (a.clientId > b.clientId) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Qarzdor bergan filial",
@@ -119,6 +127,15 @@ const OutDebt = () => {
             render: (record) => {
                 const name = branchData?.filter((item) => item.id === record);
                 return name[0]?.name;
+            },
+            sorter: (a, b) => {
+                if (a.branchId < b.branchId) {
+                    return -1;
+                }
+                if (a.branchId > b.branchId) {
+                    return 1;
+                }
+                return 0;
             },
         },
         {
@@ -131,6 +148,15 @@ const OutDebt = () => {
                 const name = usersData?.filter((item) => item.id === record);
                 return name[0]?.fio;
             },
+            sorter: (a, b) => {
+                if (a.createdBy < b.createdBy) {
+                    return -1;
+                }
+                if (a.createdBy > b.createdBy) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Olingan mahsulot",
@@ -142,6 +168,15 @@ const OutDebt = () => {
                 const name = dryfruitData?.filter((item) => item.id === record);
                 return name[0]?.name;
             },
+            sorter: (a, b) => {
+                if (a.dryFruitId < b.dryFruitId) {
+                    return -1;
+                }
+                if (a.dryFruitId > b.dryFruitId) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Qarz miqdori",
@@ -149,6 +184,15 @@ const OutDebt = () => {
             key: "borrowAmount",
             width: "10%",
             search: false,
+            sorter: (a, b) => {
+                if (a.borrowAmount < b.borrowAmount) {
+                    return -1;
+                }
+                if (a.borrowAmount > b.borrowAmount) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Qaytarish vaqti",
@@ -156,6 +200,15 @@ const OutDebt = () => {
             key: "deadline",
             width: "20%",
             search: false,
+            sorter: (a, b) => {
+                if (a.deadline < b.deadline) {
+                    return -1;
+                }
+                if (a.deadline > b.deadline) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "To'liq uzilganmi",
@@ -180,7 +233,7 @@ const OutDebt = () => {
 
     return (
         <>
-            <h3>Tashqi qarzlar</h3>
+            <h3>Klientlar qarzlari</h3>
             <CustomTable
                 onEdit={onEdit}
                 onCreate={onCreate}

@@ -21,7 +21,7 @@ const Worker = () => {
                 `api/dry/fruit/api/dry/fruit/worker/page?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                setWorkers(data.data.data?.fuelReports);
+                setWorkers(data.data.data?.incomeDryFruit);
                 setTotalItems(data.data.data?.totalItems);
             })
             .catch((error) => {
@@ -119,6 +119,15 @@ const Worker = () => {
             key: "fio",
             width: "33%",
             search: true,
+            sorter: (a, b) => {
+                if (a.fio < b.fio) {
+                    return -1;
+                }
+                if (a.fio > b.fio) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Ishchi nomeri",
@@ -126,6 +135,15 @@ const Worker = () => {
             key: "phoneNumber",
             width: "33%",
             search: false,
+            sorter: (a, b) => {
+                if (a.phoneNumber < b.phoneNumber) {
+                    return -1;
+                }
+                if (a.phoneNumber > b.phoneNumber) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Ishlash filiali",
@@ -138,6 +156,15 @@ const Worker = () => {
                     (item) => item?.id === initealValue
                 );
                 return branch[0]?.name;
+            },
+            sorter: (a, b) => {
+                if (a.branchId < b.branchId) {
+                    return -1;
+                }
+                if (a.branchId > b.branchId) {
+                    return 1;
+                }
+                return 0;
             },
         },
     ];

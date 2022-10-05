@@ -24,7 +24,7 @@ const AxiosInterceptor = ({ children }) => {
             return req;
         };
         const reqErrInterceptor = (error) => {
-            console.log("reqErrInterceptor", error);
+            console.error("reqErrInterceptor", error);
             return Promise.reject(error);
         };
         const resInterceptor = (response) => {
@@ -33,7 +33,7 @@ const AxiosInterceptor = ({ children }) => {
         };
 
         const resErrInterceptor = (error) => {
-            console.log("resErrInterceptor", error);
+            console.error("resErrInterceptor", error);
             if (error?.response?.status === 401) {
                 if (sessionStorage.getItem("dry-fruit"))
                     sessionStorage.removeItem("dry-fruit", token1);
@@ -41,6 +41,7 @@ const AxiosInterceptor = ({ children }) => {
                     localStorage.removeItem("dry-fruit", token2);
                 }
                 navigate("/login");
+                window.location.href = "/";
             }
 
             return Promise.reject(error);

@@ -102,7 +102,16 @@ const CategoryVsMeasurement = () => {
             dataIndex: "name",
             key: "name",
             width: "100%",
-            search: false,
+            search: true,
+            sorter: (a, b) => {
+                if (a.name < b.name) {
+                    return -1;
+                }
+                if (a.name > b.name) {
+                    return 1;
+                }
+                return 0;
+            },
         },
     ];
 
@@ -190,7 +199,16 @@ const CategoryVsMeasurement = () => {
             dataIndex: "name",
             key: "name",
             width: "100%",
-            search: false,
+            search: true,
+            sorter: (a, b) => {
+                if (a.name < b.name) {
+                    return -1;
+                }
+                if (a.name > b.name) {
+                    return 1;
+                }
+                return 0;
+            },
         },
     ];
 

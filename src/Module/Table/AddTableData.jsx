@@ -22,12 +22,12 @@ const CollectionCreateForm = ({
             }}
             onOk={() => {
                 form.validateFields()
-                    .then(values => {
+                    .then((values) => {
                         form.resetFields();
                         onCreate(values);
                     })
-                    .catch(info => {
-                        console.log("Validate Failed:", info);
+                    .catch((info) => {
+                        console.error("Validate Failed:", info);
                     });
             }}
         >
@@ -39,7 +39,7 @@ const CollectionCreateForm = ({
                     modifier: "public",
                 }}
             >
-                {formData?.map(data => {
+                {formData?.map((data) => {
                     let valuePropName =
                         data.name === "debt"
                             ? { valuePropName: data.name }
@@ -69,7 +69,7 @@ const CollectionCreateForm = ({
 const AddData = ({ onCreate, formData, modalTitle }) => {
     const [visible, setVisible] = useState(false);
 
-    const onCreatee = values => {
+    const onCreatee = (values) => {
         onCreate(values);
         setVisible(false);
     };

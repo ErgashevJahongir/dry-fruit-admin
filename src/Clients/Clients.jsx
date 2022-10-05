@@ -102,6 +102,15 @@ const Clients = () => {
             key: "fio",
             width: "33%",
             search: true,
+            sorter: (a, b) => {
+                if (a.fio < b.fio) {
+                    return -1;
+                }
+                if (a.fio > b.fio) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Klient nomeri",
@@ -109,13 +118,22 @@ const Clients = () => {
             key: "phoneNumber",
             width: "33%",
             search: false,
+            sorter: (a, b) => {
+                if (a.phoneNumber < b.phoneNumber) {
+                    return -1;
+                }
+                if (a.phoneNumber > b.phoneNumber) {
+                    return 1;
+                }
+                return 0;
+            },
         },
         {
             title: "Klient addressi",
             dataIndex: "address",
             key: "address",
             width: "33%",
-            search: false,
+            search: true,
             sorter: (a, b) => {
                 if (a.address < b.address) {
                     return -1;

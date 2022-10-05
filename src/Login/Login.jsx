@@ -34,7 +34,6 @@ const Login = () => {
 
     const onFinish = (values) => {
         setLoading(true);
-        console.log(values);
         axios
             .post(
                 "https://app-dry-fruits.herokuapp.com/api/dry/fruit/auth/login",
@@ -63,7 +62,7 @@ const Login = () => {
 
     const onFinishFailed = (errorInfo) => {
         setLoading(false);
-        console.log(errorInfo);
+        console.error(errorInfo);
     };
 
     useEffect(() => {
