@@ -24,6 +24,7 @@ const IncomeDryFruit = () => {
         deadlineValue,
         setDeadlineValue,
         setQarzValue,
+        setValueDebt,
     } = useData();
     const navigate = useNavigate();
 
@@ -266,7 +267,6 @@ const IncomeDryFruit = () => {
             cash: values?.cash === "true" ? true : false,
             debt: values.debt?.target?.value === "false" ? false : true,
         };
-        console.log(values, value);
         instance
             .post("api/dry/fruit/outcomeFruit/add", { ...value })
             .then(function (response) {
@@ -306,6 +306,7 @@ const IncomeDryFruit = () => {
                         .finally(() => {
                             setQarzValue(null);
                             setDeadlineValue(null);
+                            setValueDebt(null);
                         });
                 getOutcomeDryFruits(current - 1, pageSize);
             })
@@ -334,6 +335,7 @@ const IncomeDryFruit = () => {
             .finally(() => {
                 setQarzValue(null);
                 setDeadlineValue(null);
+                setValueDebt(null);
                 setLoading(false);
             });
     };
@@ -390,6 +392,7 @@ const IncomeDryFruit = () => {
                         .finally(() => {
                             setQarzValue(null);
                             setDeadlineValue(null);
+                            setValueDebt(null);
                         });
             })
             .catch(function (error) {
@@ -419,6 +422,7 @@ const IncomeDryFruit = () => {
             .finally(() => {
                 setQarzValue(null);
                 setDeadlineValue(null);
+                setValueDebt(null);
                 setLoading(false);
             });
     };
@@ -451,7 +455,7 @@ const IncomeDryFruit = () => {
         setLoading(true);
         instance
             .get(
-                `api/dry/fruit/outcomeFruit/getAllByBranchId${value}?page=${current}&size=${pageSize}`
+                `api/dry/fruit/outcomeFruit/findAllByBranchId/${value}?page=${current}&size=${pageSize}`
             )
             .then((data) => {
                 const incomeDryfruit =
@@ -513,7 +517,9 @@ const IncomeDryFruit = () => {
             })
             .catch((error) => {
                 console.error(error);
-                message.error("Kelgan yoqilg'ilarni yuklashda muammo bo'ldi");
+                message.error(
+                    "Sotilgan quruq mevani o'chirishda muammo bo'ldi"
+                );
             })
             .finally(() => setLoading(false));
     };
@@ -554,7 +560,9 @@ const IncomeDryFruit = () => {
             })
             .catch((err) => {
                 console.error(err);
-                message.error("Kelgan yoqilg'ilarni yuklashda muammo bo'ldi");
+                message.error(
+                    "Sotilgan quruq mevani o'chirishda muammo bo'ldi"
+                );
             })
             .finally(() => setLoading(false));
     };

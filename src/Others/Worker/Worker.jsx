@@ -21,7 +21,7 @@ const Worker = () => {
                 `api/dry/fruit/api/dry/fruit/worker/page?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                setWorkers(data.data.data?.fuelReports);
+                setWorkers(data.data.data?.incomeDryFruit);
                 setTotalItems(data.data.data?.totalItems);
             })
             .catch((error) => {

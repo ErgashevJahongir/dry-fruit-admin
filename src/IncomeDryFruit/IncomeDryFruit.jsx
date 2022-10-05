@@ -23,6 +23,7 @@ const IncomeDryFruit = () => {
         setQarzValue,
         deadlineValue,
         setDeadlineValue,
+        setValueDebt,
     } = useData();
     const navigate = useNavigate();
 
@@ -312,6 +313,7 @@ const IncomeDryFruit = () => {
                             );
                             setDeadlineValue(null);
                             setQarzValue(null);
+                            setValueDebt(null);
                         })
                         .catch((err) => {
                             message.error(
@@ -330,6 +332,7 @@ const IncomeDryFruit = () => {
                 setLoading(false);
                 setDeadlineValue(null);
                 setQarzValue(null);
+                setValueDebt(null);
             });
     };
 
@@ -373,6 +376,7 @@ const IncomeDryFruit = () => {
                         .then((res) => {
                             setDeadlineValue(null);
                             setQarzValue(null);
+                            setValueDebt(null);
                         })
                         .catch((err) => console.error(err));
             })
@@ -385,6 +389,7 @@ const IncomeDryFruit = () => {
                 setLoading(false);
                 setDeadlineValue(null);
                 setQarzValue(null);
+                setValueDebt(null);
             });
     };
 

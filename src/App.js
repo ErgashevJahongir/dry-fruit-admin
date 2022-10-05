@@ -69,7 +69,7 @@ function App() {
             {token ? (
                 <DataProvider>
                     <AxiosInterceptor>
-                        {user.block ? (
+                        {user?.block ? (
                             <Routes>
                                 <Route path="/" element={<BlockPage />} />
                             </Routes>

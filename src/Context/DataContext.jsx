@@ -594,9 +594,8 @@ export const DataProvider = ({ children }) => {
             name: "main",
             label: "Bu filial asosiymi",
             inputSelect: (defaultId = null) => {
-                const str = defaultId?.toString();
                 return (
-                    <Radio.Group defaultValue={str}>
+                    <Radio.Group>
                         <Radio value="false"> Yo'q </Radio>
                         <Radio value="true"> Ha </Radio>
                     </Radio.Group>
@@ -1167,9 +1166,8 @@ export const DataProvider = ({ children }) => {
             name: "given",
             label: "Qarz uzilganmi",
             inputSelect: (defaultId = null) => {
-                const str = defaultId?.toString();
                 return (
-                    <Radio.Group defaultValue={str}>
+                    <Radio.Group>
                         <Radio value="false"> Yo'q </Radio>
                         <Radio value="true"> Ha </Radio>
                     </Radio.Group>
@@ -1316,7 +1314,7 @@ export const DataProvider = ({ children }) => {
                 editFormData: othersData,
                 branchData: false,
                 timeFilterInfo: false,
-                deleteInfo: true,
+                deleteInfo: user?.roleId === 1 ? true : false,
                 createInfo: true,
                 editInfo: true,
                 timelyInfo: false,
@@ -1396,7 +1394,7 @@ export const DataProvider = ({ children }) => {
                 editInfo: true,
                 timelyInfo: false,
                 editModalTitle: "Qarzga olingan mahsulotni o'zgartirish",
-                modalTitle: "Ichki qarz qo'shish",
+                modalTitle: "Qarzga olingan mahsulotni qo'shish",
             };
             break;
         }
@@ -1513,6 +1511,7 @@ export const DataProvider = ({ children }) => {
         measurementData,
         branchData,
         dryfruitWareData,
+        setValueDebt,
         dryfruitData,
         usersData,
         clientData,

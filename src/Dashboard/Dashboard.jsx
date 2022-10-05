@@ -1,7 +1,8 @@
-import { Card, message, Row } from "antd";
+import { Card, Row } from "antd";
 import { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import instance from "../Api/Axios";
+import Loading from "../Components/Loading";
 import { useData } from "../Hook/UseData";
 
 const Dashboard = () => {
@@ -37,7 +38,6 @@ const Dashboard = () => {
             })
             .catch((error) => {
                 console.error(error);
-                message.error("Ombordagi Mevalarni yuklashda muammo bo'ldi");
             });
     };
 
@@ -55,7 +55,6 @@ const Dashboard = () => {
             })
             .catch((error) => {
                 console.error(error);
-                message.error("Kelgan quruq mevalarni yuklashda muammo bo'ldi");
             });
     };
 
@@ -73,7 +72,6 @@ const Dashboard = () => {
             })
             .catch((error) => {
                 console.error(error);
-                message.error("Kelgan yoqilg'ilarni yuklashda muammo bo'ldi");
             });
     };
 
@@ -83,6 +81,10 @@ const Dashboard = () => {
         getIncomeDryFruitsTimely();
         getOutcomeDryFruitsTimely();
     }, []);
+
+    if (loading) {
+        return <Loading />;
+    }
 
     const ApexChartLine = () => {
         const [miqdor, setMiqdor] = useState({

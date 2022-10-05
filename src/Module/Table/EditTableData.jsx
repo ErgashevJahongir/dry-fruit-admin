@@ -7,7 +7,7 @@ const EditData = ({ selectedRowKeys, onEdit, editData, editModalTitle }) => {
     const [form] = Form.useForm();
     const [visible, setVisible] = useState(false);
 
-    const onEdited = values => {
+    const onEdited = (values) => {
         onEdit(values, selectedRowKeys);
         setVisible(false);
     };
@@ -59,17 +59,17 @@ const EditData = ({ selectedRowKeys, onEdit, editData, editModalTitle }) => {
                 }}
                 onOk={() => {
                     form.validateFields()
-                        .then(values => {
+                        .then((values) => {
                             form?.resetFields();
                             onEdited(values);
                         })
-                        .catch(info => {
-                            console.log("Validate Failed:", info);
+                        .catch((info) => {
+                            console.error("Validate Failed:", info);
                         });
                 }}
             >
                 <Form form={form} layout="vertical" name="form_in_modal">
-                    {editData?.map(data => {
+                    {editData?.map((data) => {
                         let valuePropName =
                             data.name === "debt"
                                 ? { name: data.name, valuePropName: data.name }

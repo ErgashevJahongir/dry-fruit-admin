@@ -45,7 +45,6 @@ const WorkerDebt = () => {
     };
 
     const onCreate = (values) => {
-        console.log(values);
         setLoading(true);
         instance
             .post("api/dry/fruit/debt/post", {

@@ -20,7 +20,6 @@ const OutDebt = () => {
                 `api/dry/fruit/debt/get-outcome?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                console.log(data);
                 let value = data.data?.data?.debts?.map((df) => {
                     const deadline = moment(df.deadline).format("DD-MM-YYYY");
                     return {
