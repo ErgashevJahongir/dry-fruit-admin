@@ -9,28 +9,9 @@ import rasm from "./loginPicture.jpg";
 import { FrownOutlined } from "@ant-design/icons";
 
 const Login = () => {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const { token, setToken } = useToken();
     let navigate = useNavigate();
-
-    // const getUser = (token) => {
-    //     axios
-    //         .get(
-    //             "http://31.44.5.130:8080/api/dry/fruit/api/dry/fruit/user",
-    //             {
-    //                 headers: { Authorization: `Bearer ${token}` },
-    //             }
-    //         )
-    //         .then((data) => {
-    //             navigate("/", { replace: true });
-    //             window.location.href = "/";
-    //         })
-    //         .catch((err) => {
-    //             console.error(err);
-    //             navigate("/login");
-    //         })
-    //         .finally(() => setLoading(false));
-    // };
 
     const onFinish = (values) => {
         setLoading(true);
@@ -40,9 +21,7 @@ const Login = () => {
                 password: values.password,
             })
             .then((data) => {
-                // getUser(data.data.data);
                 setToken(data.data.data, values.remember);
-                navigate("/", { replace: true });
                 window.location.href = "/";
             })
             .catch((err) => {
@@ -68,6 +47,7 @@ const Login = () => {
         if (token) {
             navigate("/");
         }
+        setLoading(false);
     }, []);
 
     if (loading) {

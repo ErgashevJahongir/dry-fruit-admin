@@ -10,18 +10,12 @@ import RoutesPage from "./RoutesPage";
 function App() {
     const { token } = useToken();
     const navigate = useNavigate();
-    const [userLoading, setUserLoading] = useState(true);
 
     useEffect(() => {
         if (!token) {
             return navigate("/login", { replace: true });
         }
-        setUserLoading(false);
     }, []);
-
-    if (userLoading) {
-        return <Loading />;
-    }
 
     return (
         <>
@@ -34,7 +28,7 @@ function App() {
             ) : null}
             {token ? null : (
                 <Routes>
-                    <Route path="login" element={<Login />} />
+                    <Route path="/login" element={<Login />} />
                 </Routes>
             )}
         </>

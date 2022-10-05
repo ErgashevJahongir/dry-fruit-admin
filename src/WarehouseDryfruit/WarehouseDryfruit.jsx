@@ -11,7 +11,7 @@ const WarehouseDryfruit = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { dryfruitData, branchData, user } = useData();
+    const { dryfruitData, branchData } = useData();
     const navigate = useNavigate();
 
     const getWerehouseDryFruit = (current, pageSize) => {
