@@ -16,10 +16,13 @@ const Login = () => {
     const onFinish = (values) => {
         setLoading(true);
         axios
-            .post("http://31.44.5.130:8080/api/dry/fruit/auth/login", {
-                phoneNumber: values.phoneNumber,
-                password: values.password,
-            })
+            .post(
+                "https://app-dry-fruits.herokuapp.com/api/dry/fruit/auth/login",
+                {
+                    phoneNumber: values.phoneNumber,
+                    password: values.password,
+                }
+            )
             .then((data) => {
                 setToken(data.data.data, values.remember);
                 window.location.href = "/";

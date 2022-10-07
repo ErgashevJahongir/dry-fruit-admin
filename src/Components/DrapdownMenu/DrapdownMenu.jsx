@@ -31,8 +31,7 @@ function DrapdownMenu({ onClose, isVisible }) {
         if (localStorage.getItem("dry-fruit")) {
             localStorage.removeItem("dry-fruit", token);
         }
-        navigate("/login", { replace: true });
-        window.location.href = "/";
+        window.location.href = "/login";
     };
     return (
         <Drawer
