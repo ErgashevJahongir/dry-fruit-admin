@@ -66,8 +66,7 @@ function Navbar() {
         if (localStorage.getItem("dry-fruit")) {
             localStorage.removeItem("dry-fruit", token);
         }
-        navigate("/login", { replace: true });
-        window.location.href = "/";
+        window.location.href = "/login";
     };
 
     const showDrawer = () => {
