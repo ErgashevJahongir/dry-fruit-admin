@@ -1,5 +1,5 @@
 import { Drawer, Menu } from "antd";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
     DashboardOutlined,
     UserOutlined,
@@ -20,7 +20,6 @@ import { useData } from "../../Hook/UseData";
 
 function DrapdownMenu({ onClose, isVisible }) {
     const { token } = useToken();
-    const navigate = useNavigate();
     const { user } = useData();
     const location = useLocation();
 

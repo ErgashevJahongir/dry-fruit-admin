@@ -24,6 +24,7 @@ const IncomeDryFruit = () => {
         deadlineValue,
         setDeadlineValue,
         setValueDebt,
+        getIncomeDryfruitData,
     } = useData();
     const navigate = useNavigate();
 
@@ -60,6 +61,7 @@ const IncomeDryFruit = () => {
                                   .slice(0, index + 3),
                           totalCash: data.data.data?.incomeDryFruit?.totalCash,
                       });
+                      getIncomeDryfruitData();
                       setIncomeDryFruit(incomeDryfruit);
                       setTotalItems(data.data.data?.totalItems);
                   })
@@ -109,6 +111,7 @@ const IncomeDryFruit = () => {
                           totalCash:
                               branchItemData[0]?.totalIncomeDryFruit?.totalCash,
                       });
+                      getIncomeDryfruitData();
                       setIncomeDryFruit(incomeDryfruit);
                       setTotalItems(branchItemData[0]?.totalItems);
                   })
@@ -202,22 +205,40 @@ const IncomeDryFruit = () => {
             },
             search: false,
         },
-        {
-            title: "Kelish narxi",
-            dataIndex: "price",
-            key: "price",
-            width: "15%",
-            search: false,
-            sorter: (a, b) => {
-                if (a.price < b.price) {
-                    return -1;
-                }
-                if (a.price > b.price) {
-                    return 1;
-                }
-                return 0;
-            },
-        },
+        user.roleId === 1
+            ? {
+                  title: "Kelish narxi",
+                  dataIndex: "price",
+                  key: "price",
+                  width: "15%",
+                  search: false,
+                  sorter: (a, b) => {
+                      if (a.price < b.price) {
+                          return -1;
+                      }
+                      if (a.price > b.price) {
+                          return 1;
+                      }
+                      return 0;
+                  },
+              }
+            : {
+                  title: "Kelish narxi",
+                  dataIndex: "price",
+                  key: "price",
+                  width: "15%",
+                  search: false,
+                  render: () => null,
+                  sorter: (a, b) => {
+                      if (a.price < b.price) {
+                          return -1;
+                      }
+                      if (a.price > b.price) {
+                          return 1;
+                      }
+                      return 0;
+                  },
+              },
         {
             title: "Kelish vaqti",
             dataIndex: "date",
