@@ -11,7 +11,7 @@ const DryFruit = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { categoryData, getDryfruitData } = useData();
+    const { categoryData, getDryfruitData, user } = useData();
     const navigate = useNavigate();
 
     const getDryFruits = (current, pageSize) => {
@@ -60,22 +60,40 @@ const DryFruit = () => {
             },
             search: false,
         },
-        {
-            title: "Kelish narxi",
-            dataIndex: "incomePrice",
-            key: "incomePrice",
-            width: "20%",
-            search: false,
-            sorter: (a, b) => {
-                if (a.incomePrice < b.incomePrice) {
-                    return -1;
-                }
-                if (a.incomePrice > b.incomePrice) {
-                    return 1;
-                }
-                return 0;
-            },
-        },
+        user.roleId === 1
+            ? {
+                  title: "Kelish narxi",
+                  dataIndex: "incomePrice",
+                  key: "incomePrice",
+                  width: "20%",
+                  search: false,
+                  sorter: (a, b) => {
+                      if (a.incomePrice < b.incomePrice) {
+                          return -1;
+                      }
+                      if (a.incomePrice > b.incomePrice) {
+                          return 1;
+                      }
+                      return 0;
+                  },
+              }
+            : {
+                  title: "Kelish narxi",
+                  dataIndex: "incomePrice",
+                  key: "incomePrice",
+                  width: "20%",
+                  search: false,
+                  render: () => null,
+                  sorter: (a, b) => {
+                      if (a.incomePrice < b.incomePrice) {
+                          return -1;
+                      }
+                      if (a.incomePrice > b.incomePrice) {
+                          return 1;
+                      }
+                      return 0;
+                  },
+              },
         {
             title: "Sotilish narxi",
             dataIndex: "outcomePrice",

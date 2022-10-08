@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import Loading from "./Components/Loading";
 import { DataProvider } from "./Context/DataContext";
 import { AxiosInterceptor } from "./Api/Axios";
 import useToken from "./Hook/UseToken";

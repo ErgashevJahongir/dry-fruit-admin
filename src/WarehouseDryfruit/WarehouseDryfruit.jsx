@@ -11,7 +11,7 @@ const WarehouseDryfruit = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { dryfruitData, branchData } = useData();
+    const { dryfruitData, branchData, getDryfruitWareData } = useData();
     const navigate = useNavigate();
 
     const getWerehouseDryFruit = (current, pageSize) => {
@@ -23,6 +23,7 @@ const WarehouseDryfruit = () => {
             .then((data) => {
                 setDryfruitWarehouseData(data.data.data?.fuelReports);
                 setTotalItems(data.data.data?.totalItems);
+                getDryfruitWareData();
             })
             .catch((error) => {
                 console.error(error);
