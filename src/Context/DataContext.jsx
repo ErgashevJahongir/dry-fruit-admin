@@ -275,7 +275,7 @@ export const DataProvider = ({ children }) => {
             input: (
                 <CustomSelect
                     backValue={"id"}
-                    placeholder={"Quruq meva kiritilayotgan klient"}
+                    placeholder={"Quruq meva sotilayotgan klient"}
                     selectData={clientData?.map((item) => ({
                         ...item,
                         name: item.fio,
