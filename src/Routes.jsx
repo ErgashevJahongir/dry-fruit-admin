@@ -21,6 +21,9 @@ import Notification from "./Components/Notification/Notification";
 import Loading from "./Components/Loading";
 import BlockPage from "./Module/ErrorPages/BlockPage";
 import { useData } from "./Hook/UseData";
+import Country from "./Others/Country/Country";
+import DryFruitLimit from "./Others/DryFruitLimit/DryFruitLimit";
+import Outlay from "./Others/Outlay/Outlay";
 
 const RoutesPage = () => {
     const { user, userLoading } = useData();
@@ -57,8 +60,16 @@ const RoutesPage = () => {
                         <Route path="outdebts" element={<OutDebt />} />
                         <Route path="clients" element={<Clients />} />
                         <Route path="profil" element={<Profil />} />
+                        <Route path="outlay" element={<Outlay />} />
                         {user?.roleId === 1 && (
-                            <Route path="branchs" element={<Branch />} />
+                            <>
+                                <Route path="branchs" element={<Branch />} />
+                                <Route path="country" element={<Country />} />
+                                <Route
+                                    path="dryfruit-limit"
+                                    element={<DryFruitLimit />}
+                                />
+                            </>
                         )}
                         {user?.roleId === 1 || user?.roleId === 2 ? (
                             <>

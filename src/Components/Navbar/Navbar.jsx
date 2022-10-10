@@ -25,6 +25,7 @@ import {
     BranchesOutlined,
     BellOutlined,
     BellFilled,
+    FileTextOutlined,
     CloseOutlined,
 } from "@ant-design/icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -321,6 +322,17 @@ function Navbar() {
                             ),
                             children: [
                                 {
+                                    label: "Chiqimlar",
+                                    key: "/outlay",
+                                    icon: (
+                                        <Link to="/outlay">
+                                            <DollarCircleOutlined
+                                                style={{ fontSize: "18px" }}
+                                            />
+                                        </Link>
+                                    ),
+                                },
+                                {
                                     label: "Klientlar",
                                     key: "/clients",
                                     icon: (
@@ -338,6 +350,36 @@ function Navbar() {
                                           icon: (
                                               <Link to="/branchs">
                                                   <BranchesOutlined
+                                                      style={{
+                                                          fontSize: "18px",
+                                                      }}
+                                                  />
+                                              </Link>
+                                          ),
+                                      }
+                                    : null,
+                                user?.roleId === 1
+                                    ? {
+                                          label: "Yuk keluvchi davlatlar",
+                                          key: "/country",
+                                          icon: (
+                                              <Link to="/country">
+                                                  <BranchesOutlined
+                                                      style={{
+                                                          fontSize: "18px",
+                                                      }}
+                                                  />
+                                              </Link>
+                                          ),
+                                      }
+                                    : null,
+                                user?.roleId === 1
+                                    ? {
+                                          label: "Quruq meva limiti",
+                                          key: "/dryfruit-limit",
+                                          icon: (
+                                              <Link to="/dryfruit-limit">
+                                                  <FileTextOutlined
                                                       style={{
                                                           fontSize: "18px",
                                                       }}

@@ -20,9 +20,11 @@ export const DataProvider = ({ children }) => {
     const [measurementData, setMeasurementData] = useState([]);
     const [categoryData, setCategoryData] = useState([]);
     const [dryfruitData, setDryfruitData] = useState([]);
+    const [dryfruitDataLimit, setDryfruitDataLimit] = useState([]);
     const [dryfruitWareData, setDryfruitWareData] = useState([]);
     const [roleData, setRoleData] = useState([]);
     const [branchData, setBranchData] = useState([]);
+    const [countryData, setCountryData] = useState([]);
     const [qarzValue, setQarzValue] = useState("");
     const [deadlineValue, setDeadlineValue] = useState("");
     const { token } = useToken();
@@ -310,8 +312,7 @@ export const DataProvider = ({ children }) => {
                     selectData={
                         user.roleId === 1
                             ? dryfruitData.filter((item) => {
-                                  if (dryfruitWareData.length === 0)
-                                      return null;
+                                  if (dryfruitWareData.length === 0) return [];
                                   for (
                                       let index = 0;
                                       index < dryfruitWareData.length;
@@ -566,6 +567,126 @@ export const DataProvider = ({ children }) => {
         },
     ];
 
+    const othersCountryData = [
+        {
+            name: "name",
+            label: "Nomi",
+            input: <Input />,
+        },
+    ];
+
+    const editDryfruitLimitData = [
+        {
+            name: "limit",
+            label: "Limitni kiriting",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+    ];
+
+    const dryfruitLimitData = [
+        {
+            name: "dryFruitId",
+            label: "Quruq mevani tanlang",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq mevani tanlang"}
+                    selectData={dryfruitData}
+                />
+            ),
+        },
+        {
+            name: "limit",
+            label: "Limitni kiriting",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+    ];
+
+    const outlayFormData = [
+        {
+            name: "name",
+            label: "Chiqim nimaga qilinganligi",
+            input: <Input />,
+        },
+        {
+            name: "outgoings",
+            label: "Chiqim miqdori",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "userId",
+            label: "Chiqim qilgan odam",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Chiqim qilgan odam"}
+                    selectData={
+                        user?.roleId === 1
+                            ? usersData.map((data) => {
+                                  return { ...data, name: data.fio };
+                              })
+                            : user?.roleId === 2
+                            ? usersData
+                                  .filter(
+                                      (item) => item.branchId === user.branchId
+                                  )
+                                  .map((data) => {
+                                      return { ...data, name: data.fio };
+                                  })
+                            : usersData
+                                  .filter((item) => item.id === user.id)
+                                  .map((data) => {
+                                      return { ...data, name: data.fio };
+                                  })
+                    }
+                />
+            ),
+        },
+    ];
+
+    const editOutlayFormData = [
+        {
+            name: "name",
+            label: "Chiqim nimaga qilinganligi",
+            input: <Input />,
+        },
+        {
+            name: "outgoings",
+            label: "Chiqim miqdori",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "userId",
+            label: "Chiqim qilgan odam",
+            inputSelect: (defaultId = null) => (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Chiqim qilgan odam"}
+                    selectData={
+                        user?.roleId === 1
+                            ? usersData.map((data) => {
+                                  return { ...data, name: data.fio };
+                              })
+                            : user?.roleId === 2
+                            ? usersData
+                                  .filter(
+                                      (item) => item.branchId === user.branchId
+                                  )
+                                  .map((data) => {
+                                      return { ...data, name: data.fio };
+                                  })
+                            : usersData
+                                  .filter((item) => item.id === user.id)
+                                  .map((data) => {
+                                      return { ...data, name: data.fio };
+                                  })
+                    }
+                    DValue={defaultId}
+                />
+            ),
+        },
+    ];
+
     const othersBranchData = [
         {
             name: "name",
@@ -607,7 +728,7 @@ export const DataProvider = ({ children }) => {
     const dryFruitFormData = [
         {
             name: "name",
-            label: "Quruq meva nomi",
+            label: "",
             input: <Input />,
         },
         {
@@ -618,6 +739,17 @@ export const DataProvider = ({ children }) => {
                     backValue={"id"}
                     placeholder={"Kategoriyani tanlang"}
                     selectData={categoryData}
+                />
+            ),
+        },
+        {
+            name: "countryId",
+            label: "Yuk keluvchi davlatni tanlang",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Yuk keluvchi davlatni tanlang"}
+                    selectData={countryData}
                 />
             ),
         },
@@ -654,6 +786,20 @@ export const DataProvider = ({ children }) => {
                         backValue={"id"}
                         placeholder={"Kategoriyani tanlang"}
                         selectData={categoryData}
+                    />
+                );
+            },
+        },
+        {
+            name: "countryId",
+            label: "Yuk keluvchi davlatni tanlang",
+            inputSelect: (defaultId = null) => {
+                return (
+                    <CustomSelect
+                        DValue={defaultId}
+                        backValue={"id"}
+                        placeholder={"Yuk keluvchi davlatni tanlang"}
+                        selectData={countryData}
                     />
                 );
             },
@@ -1254,6 +1400,15 @@ export const DataProvider = ({ children }) => {
             .catch((err) => console.error(err));
     };
 
+    const getDryfruitDataLimit = () => {
+        instance
+            .get("api/dry/fruit/limitOfDryFruit/list")
+            .then((data) => {
+                setDryfruitDataLimit(data.data.data);
+            })
+            .catch((err) => console.error(err));
+    };
+
     const getDryfruitWareData = () => {
         instance
             .get("api/dry/fruit/dryFruitWarehouse/getAll")
@@ -1268,6 +1423,15 @@ export const DataProvider = ({ children }) => {
             .get("api/dry/fruit/api/dry/fruit/branch")
             .then((data) => {
                 setBranchData(data.data.data);
+            })
+            .catch((err) => console.error(err));
+    };
+
+    const getCountryData = () => {
+        instance
+            .get("api/dry/fruit/country")
+            .then((data) => {
+                setCountryData(data.data.data);
             })
             .catch((err) => console.error(err));
     };
@@ -1297,12 +1461,14 @@ export const DataProvider = ({ children }) => {
         getMeasurementData();
         getCategoryData();
         getBranchData();
+        getCountryData();
         getDryfruitData();
         getDryfruitWareData();
         getRoleData();
         getClientData();
         getOutcomeDryfruitData();
         getIncomeDryfruitData();
+        getDryfruitDataLimit();
     }, []);
 
     let formData = {};
@@ -1338,15 +1504,45 @@ export const DataProvider = ({ children }) => {
             };
             break;
         }
+        case "/country": {
+            formData = {
+                formData: othersCountryData,
+                editFormData: othersCountryData,
+                branchData: false,
+                timeFilterInfo: false,
+                deleteInfo: false,
+                createInfo: user?.roleId === 1 ? true : false,
+                editInfo: user?.roleId === 1 ? true : false,
+                timelyInfo: false,
+                editModalTitle: "Yuk keluvchi davlatni o'zgartirish",
+                modalTitle: "Yangi yuk keluvchi davlat qo'shish",
+            };
+            break;
+        }
+        case "/dryfruit-limit": {
+            formData = {
+                formData: dryfruitLimitData,
+                editFormData: editDryfruitLimitData,
+                branchData: false,
+                timeFilterInfo: false,
+                deleteInfo: false,
+                createInfo: user?.roleId === 1 ? true : false,
+                editInfo: user?.roleId === 1 ? true : false,
+                timelyInfo: false,
+                editModalTitle: "Quruq meva limitini o'zgartirish",
+                modalTitle: "Quruq mevaga limit qo'shish",
+            };
+            break;
+        }
         case "/dryfruit": {
             formData = {
                 formData: dryFruitFormData,
                 editFormData: editdryFruitData,
                 branchData: false,
                 timeFilterInfo: false,
-                deleteInfo: true,
-                createInfo: true,
-                editInfo: true,
+                deleteInfo: user?.roleId === 1 ? true : false,
+                createInfo: user?.roleId === 1 ? true : false,
+                editInfo: user?.roleId === 1 ? true : false,
                 timelyInfo: false,
                 editModalTitle: "Quruq mevanini o'zgartirish",
                 modalTitle: "Quruq meva qo'shish",
@@ -1362,6 +1558,21 @@ export const DataProvider = ({ children }) => {
                 deleteInfo: user?.roleId === 1 ? true : false,
                 createInfo: user?.roleId === 1 ? true : false,
                 editInfo: user?.roleId === 1 ? true : false,
+                timelyInfo: true,
+                editModalTitle: "Kelgan quruq mevani o'zgartirish",
+                modalTitle: "Kelgan quruq mevani qo'shish",
+            };
+            break;
+        }
+        case "/outlay": {
+            formData = {
+                formData: outlayFormData,
+                editFormData: editOutlayFormData,
+                branchData: user?.roleId === 1 ? true : false,
+                timeFilterInfo: true,
+                deleteInfo: user?.roleId === 1 ? true : false,
+                createInfo: true,
+                editInfo: true,
                 timelyInfo: true,
                 editModalTitle: "Kelgan quruq mevani o'zgartirish",
                 modalTitle: "Kelgan quruq mevani qo'shish",
@@ -1502,6 +1713,7 @@ export const DataProvider = ({ children }) => {
         getCategoryData,
         getDryfruitWareData,
         getBranchData,
+        getCountryData,
         getUserData,
         getClientData,
         getWorkerData,
@@ -1512,6 +1724,7 @@ export const DataProvider = ({ children }) => {
         categoryData,
         measurementData,
         branchData,
+        countryData,
         dryfruitWareData,
         setValueDebt,
         dryfruitData,

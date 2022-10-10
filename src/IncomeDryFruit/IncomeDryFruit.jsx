@@ -205,40 +205,22 @@ const IncomeDryFruit = () => {
             },
             search: false,
         },
-        user.roleId === 1
-            ? {
-                  title: "Kelish narxi",
-                  dataIndex: "price",
-                  key: "price",
-                  width: "15%",
-                  search: false,
-                  sorter: (a, b) => {
-                      if (a.price < b.price) {
-                          return -1;
-                      }
-                      if (a.price > b.price) {
-                          return 1;
-                      }
-                      return 0;
-                  },
-              }
-            : {
-                  title: "Kelish narxi",
-                  dataIndex: "price",
-                  key: "price",
-                  width: "15%",
-                  search: false,
-                  render: () => null,
-                  sorter: (a, b) => {
-                      if (a.price < b.price) {
-                          return -1;
-                      }
-                      if (a.price > b.price) {
-                          return 1;
-                      }
-                      return 0;
-                  },
-              },
+        user.roleId === 1 && {
+            title: "Kelish narxi",
+            dataIndex: "price",
+            key: "price",
+            width: "15%",
+            search: false,
+            sorter: (a, b) => {
+                if (a.price < b.price) {
+                    return -1;
+                }
+                if (a.price > b.price) {
+                    return 1;
+                }
+                return 0;
+            },
+        },
         {
             title: "Kelish vaqti",
             dataIndex: "date",
