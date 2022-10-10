@@ -14,6 +14,7 @@ import {
     AppstoreOutlined,
     BranchesOutlined,
     BellOutlined,
+    FileTextOutlined,
 } from "@ant-design/icons";
 import useToken from "../../Hook/UseToken";
 import { useData } from "../../Hook/UseData";
@@ -154,6 +155,17 @@ function DrapdownMenu({ onClose, isVisible }) {
                         ),
                         children: [
                             {
+                                label: "Chiqimlar",
+                                key: "/outlay",
+                                icon: (
+                                    <Link to="/outlay">
+                                        <DollarCircleOutlined
+                                            style={{ fontSize: "18px" }}
+                                        />
+                                    </Link>
+                                ),
+                            },
+                            {
                                 label: "Klientlar",
                                 key: "/clients",
                                 icon: (
@@ -164,6 +176,36 @@ function DrapdownMenu({ onClose, isVisible }) {
                                     </Link>
                                 ),
                             },
+                            user?.roleId === 1
+                                ? {
+                                      label: "Yuk keluvchi davlatlar",
+                                      key: "/country",
+                                      icon: (
+                                          <Link to="/country">
+                                              <BranchesOutlined
+                                                  style={{
+                                                      fontSize: "18px",
+                                                  }}
+                                              />
+                                          </Link>
+                                      ),
+                                  }
+                                : null,
+                            user?.roleId === 1
+                                ? {
+                                      label: "Quruq meva limiti",
+                                      key: "/dryfruit-limit",
+                                      icon: (
+                                          <Link to="/dryfruit-limit">
+                                              <FileTextOutlined
+                                                  style={{
+                                                      fontSize: "18px",
+                                                  }}
+                                              />
+                                          </Link>
+                                      ),
+                                  }
+                                : null,
                             user?.roleId === 1 || user?.roleId === 2
                                 ? {
                                       label: "Ishchilar",

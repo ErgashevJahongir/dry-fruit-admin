@@ -4,7 +4,7 @@ import { DataProvider } from "./Context/DataContext";
 import { AxiosInterceptor } from "./Api/Axios";
 import useToken from "./Hook/UseToken";
 import Login from "./Login/Login";
-import RoutesPage from "./RoutesPage";
+import RoutesPage from "./Routes";
 
 function App() {
     const { token } = useToken();

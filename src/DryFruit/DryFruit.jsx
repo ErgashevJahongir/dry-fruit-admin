@@ -11,7 +11,7 @@ const DryFruit = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { categoryData, getDryfruitData, user } = useData();
+    const { categoryData, countryData, getDryfruitData, user } = useData();
     const navigate = useNavigate();
 
     const getDryFruits = (current, pageSize) => {
@@ -60,45 +60,47 @@ const DryFruit = () => {
             },
             search: false,
         },
-        user.roleId === 1
-            ? {
-                  title: "Kelish narxi",
-                  dataIndex: "incomePrice",
-                  key: "incomePrice",
-                  width: "20%",
-                  search: false,
-                  sorter: (a, b) => {
-                      if (a.incomePrice < b.incomePrice) {
-                          return -1;
-                      }
-                      if (a.incomePrice > b.incomePrice) {
-                          return 1;
-                      }
-                      return 0;
-                  },
-              }
-            : {
-                  title: "Kelish narxi",
-                  dataIndex: "incomePrice",
-                  key: "incomePrice",
-                  width: "20%",
-                  search: false,
-                  render: () => null,
-                  sorter: (a, b) => {
-                      if (a.incomePrice < b.incomePrice) {
-                          return -1;
-                      }
-                      if (a.incomePrice > b.incomePrice) {
-                          return 1;
-                      }
-                      return 0;
-                  },
-              },
+        {
+            title: "Yuk keluvchi davlat",
+            dataIndex: "countryId",
+            key: "countryId",
+            width: "20%",
+            render: (id) => {
+                const data = countryData.filter((item) => item.id === id);
+                return data[0]?.name;
+            },
+            sorter: (a, b) => {
+                if (a.countryId < b.countryId) {
+                    return -1;
+                }
+                if (a.countryId > b.countryId) {
+                    return 1;
+                }
+                return 0;
+            },
+            search: false,
+        },
+        user.roleId === 1 && {
+            title: "Kelish narxi",
+            dataIndex: "incomePrice",
+            key: "incomePrice",
+            width: "13%",
+            search: false,
+            sorter: (a, b) => {
+                if (a.incomePrice < b.incomePrice) {
+                    return -1;
+                }
+                if (a.incomePrice > b.incomePrice) {
+                    return 1;
+                }
+                return 0;
+            },
+        },
         {
             title: "Sotilish narxi",
             dataIndex: "outcomePrice",
             key: "outcomePrice",
-            width: "20%",
+            width: "14%",
             search: false,
             sorter: (a, b) => {
                 if (a.outcomePrice < b.outcomePrice) {
@@ -114,7 +116,7 @@ const DryFruit = () => {
             title: "Optom narxi",
             dataIndex: "wholesalePrice",
             key: "wholesalePrice",
-            width: "20%",
+            width: "13%",
             search: false,
             sorter: (a, b) => {
                 if (a.wholesalePrice < b.wholesalePrice) {
