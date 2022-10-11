@@ -37,14 +37,14 @@ const DryFruit = () => {
             title: "Mahsulot nomi",
             dataIndex: "name",
             key: "name",
-            width: "20%",
+            width: "15%",
             search: true,
         },
         {
             title: "Mahsulot kategoriyasi",
             dataIndex: "categoryId",
             key: "categoryId",
-            width: "20%",
+            width: "15%",
             render: (id) => {
                 const data = categoryData.filter((item) => item.id === id);
                 return data[0]?.name;
@@ -64,7 +64,7 @@ const DryFruit = () => {
             title: "Yuk keluvchi davlat",
             dataIndex: "countryId",
             key: "countryId",
-            width: "20%",
+            width: "15%",
             render: (id) => {
                 const data = countryData.filter((item) => item.id === id);
                 return data[0]?.name;
@@ -79,6 +79,22 @@ const DryFruit = () => {
                 return 0;
             },
             search: false,
+        },
+        {
+            title: "Quruq meva kodi",
+            dataIndex: "code",
+            key: "code",
+            width: "15%",
+            sorter: (a, b) => {
+                if (a.code < b.code) {
+                    return -1;
+                }
+                if (a.code > b.code) {
+                    return 1;
+                }
+                return 0;
+            },
+            search: true,
         },
         user.roleId === 1 && {
             title: "Kelish narxi",

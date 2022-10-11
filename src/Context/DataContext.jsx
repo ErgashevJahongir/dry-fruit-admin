@@ -155,6 +155,55 @@ export const DataProvider = ({ children }) => {
         },
     ];
 
+    const incomeProssesDryFruitFormData = [
+        {
+            name: "dryFruitId",
+            label: "Quruq meva nomi",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq mevani tanlang"}
+                    selectData={dryfruitData}
+                />
+            ),
+        },
+        {
+            name: "amount",
+            label: "Quruq meva miqdori",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "price",
+            label: "Quruq meva narxi",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "totalPrice",
+            label: "Quruq meva jami narxi",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "startDate",
+            label: "Yo'lga chiqish vaqti",
+            input: (
+                <DatePicker
+                    style={{ width: "100%" }}
+                    value={moment().format()}
+                />
+            ),
+        },
+        {
+            name: "arrivalDate",
+            label: "Yetib kelish vaqti",
+            input: (
+                <DatePicker
+                    style={{ width: "100%" }}
+                    value={moment().format()}
+                />
+            ),
+        },
+    ];
+
     const editIncomeFuelsData = [
         {
             name: "branchId",
@@ -267,6 +316,46 @@ export const DataProvider = ({ children }) => {
                     <Radio value="true"> Bor </Radio>
                 </Radio.Group>
             ),
+        },
+    ];
+
+    const editIncomeProssesDryFruitFormData = [
+        {
+            name: "dryFruitId",
+            label: "Quruq meva nomi",
+            inputSelect: (defaultId = null) => (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq mevani tanlang"}
+                    selectData={dryfruitData}
+                    DValue={defaultId}
+                />
+            ),
+        },
+        {
+            name: "amount",
+            label: "Quruq meva miqdori",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "price",
+            label: "Quruq meva narxi",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "totalPrice",
+            label: "Quruq meva jami narxi",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "startDate",
+            label: "Yo'lga chiqish vaqti",
+            input: <Input />,
+        },
+        {
+            name: "arrivalDate",
+            label: "Yetib kelish vaqti",
+            input: <Input />,
         },
     ];
 
@@ -728,7 +817,7 @@ export const DataProvider = ({ children }) => {
     const dryFruitFormData = [
         {
             name: "name",
-            label: "",
+            label: "Quruq meva nomi",
             input: <Input />,
         },
         {
@@ -752,6 +841,11 @@ export const DataProvider = ({ children }) => {
                     selectData={countryData}
                 />
             ),
+        },
+        {
+            name: "code",
+            label: "Quruq meva kodi",
+            input: <Input />,
         },
         {
             name: "incomePrice",
@@ -803,6 +897,11 @@ export const DataProvider = ({ children }) => {
                     />
                 );
             },
+        },
+        {
+            name: "code",
+            label: "Quruq meva kodi",
+            input: <Input />,
         },
         {
             name: "incomePrice",
@@ -1561,6 +1660,21 @@ export const DataProvider = ({ children }) => {
                 timelyInfo: true,
                 editModalTitle: "Kelgan quruq mevani o'zgartirish",
                 modalTitle: "Kelgan quruq mevani qo'shish",
+            };
+            break;
+        }
+        case "/income-in-prosses": {
+            formData = {
+                formData: incomeProssesDryFruitFormData,
+                editFormData: editIncomeProssesDryFruitFormData,
+                branchData: false,
+                timeFilterInfo: false,
+                deleteInfo: false,
+                createInfo: user?.roleId === 1 ? true : false,
+                editInfo: user?.roleId === 1 ? true : false,
+                timelyInfo: true,
+                editModalTitle: "Kelayotgan quruq mevani o'zgartirish",
+                modalTitle: "Kelayotgan quruq mevani qo'shish",
             };
             break;
         }

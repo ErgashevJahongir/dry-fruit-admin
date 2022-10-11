@@ -25,10 +25,11 @@ import {
     BranchesOutlined,
     BellOutlined,
     BellFilled,
+    CarOutlined,
     FileTextOutlined,
     CloseOutlined,
 } from "@ant-design/icons";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useData } from "../../Hook/UseData";
 import useToken from "../../Hook/UseToken";
 import DrapdownMenu from "../DrapdownMenu/DrapdownMenu";
@@ -42,7 +43,6 @@ function Navbar() {
     const [notificationn, setNotificationn] = useState([]);
     const { user } = useData();
     const { token } = useToken();
-    const navigate = useNavigate();
     const location = useLocation();
 
     const getNotification = () => {
@@ -360,11 +360,26 @@ function Navbar() {
                                     : null,
                                 user?.roleId === 1
                                     ? {
+                                          label: "Kelayotgan quruq mevalar",
+                                          key: "/income-in-prosses",
+                                          icon: (
+                                              <Link to="/income-in-prosses">
+                                                  <CloudUploadOutlined
+                                                      style={{
+                                                          fontSize: "18px",
+                                                      }}
+                                                  />
+                                              </Link>
+                                          ),
+                                      }
+                                    : null,
+                                user?.roleId === 1
+                                    ? {
                                           label: "Yuk keluvchi davlatlar",
                                           key: "/country",
                                           icon: (
                                               <Link to="/country">
-                                                  <BranchesOutlined
+                                                  <CarOutlined
                                                       style={{
                                                           fontSize: "18px",
                                                       }}
