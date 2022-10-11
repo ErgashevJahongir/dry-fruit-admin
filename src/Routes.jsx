@@ -24,6 +24,7 @@ import { useData } from "./Hook/UseData";
 import Country from "./Others/Country/Country";
 import DryFruitLimit from "./Others/DryFruitLimit/DryFruitLimit";
 import Outlay from "./Others/Outlay/Outlay";
+import IncomeInProsses from "./Others/IncomeInProsses/IncomeInProsses";
 
 const RoutesPage = () => {
     const { user, userLoading } = useData();
@@ -68,6 +69,10 @@ const RoutesPage = () => {
                                 <Route
                                     path="dryfruit-limit"
                                     element={<DryFruitLimit />}
+                                />
+                                <Route
+                                    path="income-in-prosses"
+                                    element={<IncomeInProsses />}
                                 />
                             </>
                         )}

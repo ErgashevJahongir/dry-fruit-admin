@@ -14,6 +14,7 @@ import {
     AppstoreOutlined,
     BranchesOutlined,
     BellOutlined,
+    CarOutlined,
     FileTextOutlined,
 } from "@ant-design/icons";
 import useToken from "../../Hook/UseToken";
@@ -178,11 +179,26 @@ function DrapdownMenu({ onClose, isVisible }) {
                             },
                             user?.roleId === 1
                                 ? {
+                                      label: "Kelayotgan quruq mevalar",
+                                      key: "/income-in-prosses",
+                                      icon: (
+                                          <Link to="/income-in-prosses">
+                                              <CloudUploadOutlined
+                                                  style={{
+                                                      fontSize: "18px",
+                                                  }}
+                                              />
+                                          </Link>
+                                      ),
+                                  }
+                                : null,
+                            user?.roleId === 1
+                                ? {
                                       label: "Yuk keluvchi davlatlar",
                                       key: "/country",
                                       icon: (
                                           <Link to="/country">
-                                              <BranchesOutlined
+                                              <CarOutlined
                                                   style={{
                                                       fontSize: "18px",
                                                   }}

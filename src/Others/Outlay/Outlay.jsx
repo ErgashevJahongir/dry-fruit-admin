@@ -41,7 +41,7 @@ const Outlay = () => {
             .catch((error) => {
                 console.error(error);
                 if (error.response?.status === 500) navigate("/server-error");
-                message.error("Kelgan quruq mevalarni yuklashda muammo bo'ldi");
+                message.error("Chiqimlarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoading(false));
     };
@@ -106,13 +106,13 @@ const Outlay = () => {
         instance
             .post("api/dry/fruit/api/dry/fruit/outlay", { ...values })
             .then(function (response) {
-                message.success("Kelgan quruq meva muvofaqiyatli qo'shildi");
+                message.success("Chiqim muvofaqiyatli qo'shildi");
                 getIncomeDryFruits(current - 1, pageSize);
             })
             .catch(function (error) {
                 console.error(error);
                 if (error.response?.status === 500) navigate("/server-error");
-                message.error("Kelgan quruq mevani qo'shishda muammo bo'ldi");
+                message.error("Chiqimni qo'shishda muammo bo'ldi");
             })
             .finally(() => {
                 setLoading(false);
@@ -126,13 +126,13 @@ const Outlay = () => {
                 ...values,
             })
             .then((res) => {
-                message.success("Kelgan quruq meva muvaffaqiyatli taxrirlandi");
+                message.success("Chiqim muvaffaqiyatli taxrirlandi");
                 getIncomeDryFruits(current - 1, pageSize);
             })
             .catch(function (error) {
                 console.error("Error in edit: ", error);
                 if (error.response?.status === 500) navigate("/server-error");
-                message.error("Kelgan quruq mevani taxrirlashda muammo bo'ldi");
+                message.error("Chiqimni taxrirlashda muammo bo'ldi");
             })
             .finally(() => {
                 setLoading(false);
@@ -146,17 +146,13 @@ const Outlay = () => {
                 .delete(`api/dry/fruit/api/dry/fruit/outlay/delete${item}`)
                 .then((data) => {
                     getIncomeDryFruits(current - 1, pageSize);
-                    message.success(
-                        "Kelgan quruq meva muvaffaqiyatli o'chirildi"
-                    );
+                    message.success("Chiqim muvaffaqiyatli o'chirildi");
                 })
                 .catch((error) => {
                     console.error(error);
                     if (error.response?.status === 500)
                         navigate("/server-error");
-                    message.error(
-                        "Kelgan quruq mevani o'chirishda muammo bo'ldi"
-                    );
+                    message.error("Chiqimni o'chirishda muammo bo'ldi");
                 })
                 .finally(() => setLoading(false));
             return null;
@@ -187,7 +183,7 @@ const Outlay = () => {
             .catch((err) => {
                 console.error(err);
                 if (err.response?.status === 500) navigate("/server-error");
-                message.error("Kelgan quruq mevalarni yuklashda muammo bo'ldi");
+                message.error("Chiqimlarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoading(false));
     };
@@ -215,7 +211,7 @@ const Outlay = () => {
             .catch((error) => {
                 console.error(error);
                 if (error.response?.status === 500) navigate("/server-error");
-                message.error("Kelgan quruq mevalarni yuklashda muammo bo'ldi");
+                message.error("Chiqimlarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoading(false));
     };
@@ -247,7 +243,7 @@ const Outlay = () => {
             .catch((err) => {
                 console.error(err);
                 if (err.response?.status === 500) navigate("/server-error");
-                message.error("Kelgan quruq mevalarni yuklashda muammo bo'ldi");
+                message.error("Chiqimlarni yuklashda muammo bo'ldi");
             })
             .finally(() => setLoading(false));
     };
