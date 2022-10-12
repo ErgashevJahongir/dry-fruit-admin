@@ -16,7 +16,7 @@ const CategoryVsMeasurement = () => {
     const [currentCategory, setCurrentCategory] = useState(1);
     const [pageSizeCategory, setPageSizeCategory] = useState(10);
     const [totalItemsCategory, setTotalItemsCategory] = useState(0);
-    const { getCategoryData, getMeasurementData } = useData();
+    const { getCategoryData } = useData();
     const navigate = useNavigate();
 
     const getCategory = (current, pageSize) => {
@@ -131,66 +131,15 @@ const CategoryVsMeasurement = () => {
     };
 
     const onCreate = (values) => {
-        setLoading(true);
-        instance
-            .post("api/dry/fruit/measurement/post", {
-                ...values,
-            })
-            .then(function (response) {
-                message.success("O'lchov birligi muvaffaqiyatli qo'shildi");
-                getMeasurment();
-                getMeasurementData();
-            })
-            .catch(function (error) {
-                console.error(error);
-                if (error.response?.status === 500) navigate("/server-error");
-                message.error("O'lchov birligini qo'shishda muammo bo'ldi");
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+        message.error("O'lchov birligini qo'shib bo'lmaydi");
     };
 
     const onEdit = (values, initial) => {
-        setLoading(true);
-        instance
-            .put(`api/dry/fruit/measurement/update${initial.id}`, { values })
-            .then(function (response) {
-                message.success("O'lchov birligi muvofaqiyatli taxrirlandi");
-                getMeasurment();
-                getMeasurementData();
-            })
-            .catch(function (error) {
-                console.error(error);
-                if (error.response?.status === 500) navigate("/server-error");
-                message.error("O'lchov birligini taxrirlashda muammo bo'ldi");
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+        message.error("O'lchov birligini taxrirlab bo'lmaydi");
     };
 
     const handleDelete = (arr) => {
-        setLoading(true);
-        arr.map((item) => {
-            instance
-                .delete(`api/dry/fruit/measurement/delete${item}`)
-                .then((data) => {
-                    message.success("O'lchov birligi muvofaqiyatli o'chirildi");
-                    getMeasurment();
-                    getMeasurementData();
-                })
-                .catch((error) => {
-                    console.error(error);
-                    if (error.response?.status === 500)
-                        navigate("/server-error");
-                    message.error(
-                        "O'lchov birligini o'chirishda muammo bo'ldi"
-                    );
-                });
-            return null;
-        });
-        setLoading(false);
+        message.error("O'lchov birligini o'chirib bo'lmaydi");
     };
 
     const columns = [

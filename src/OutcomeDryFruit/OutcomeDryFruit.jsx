@@ -279,7 +279,7 @@ const IncomeDryFruit = () => {
                 const amount =
                     ulchov[0].name.toLowerCase() === "tonna"
                         ? 1000
-                        : ulchov[0].name.toLowerCase() === "gramm"
+                        : ulchov[0].name.toLowerCase() === "gram"
                         ? 0.001
                         : 1;
                 response.data.data &&
@@ -365,7 +365,7 @@ const IncomeDryFruit = () => {
                 const amount =
                     ulchov[0].name.toLowerCase() === "tonna"
                         ? 1000
-                        : ulchov[0].name.toLowerCase() === "gramm"
+                        : ulchov[0].name.toLowerCase() === "gram"
                         ? 0.001
                         : 1;
                 res.data.data &&
