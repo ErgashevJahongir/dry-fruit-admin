@@ -703,6 +703,16 @@ export const DataProvider = ({ children }) => {
             input: <InputNumber style={{ width: "100%" }} />,
         },
         {
+            name: "date",
+            label: "Chiqim qilingan vaqt",
+            input: (
+                <DatePicker
+                    style={{ width: "100%" }}
+                    value={moment().format()}
+                />
+            ),
+        },
+        {
             name: "userId",
             label: "Chiqim qilgan odam",
             input: (
@@ -743,6 +753,11 @@ export const DataProvider = ({ children }) => {
             name: "outgoings",
             label: "Chiqim miqdori",
             input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "date",
+            label: "Chiqim qilingan vaqt",
+            input: <Input />,
         },
         {
             name: "userId",
