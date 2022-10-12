@@ -19,31 +19,121 @@ const Outlay = () => {
 
     const getIncomeDryFruits = (current, pageSize) => {
         setLoading(true);
-        instance
-            .get(
-                `api/dry/fruit/api/dry/fruit/outlay/getByUserId${user.id}?page=${current}&size=${pageSize}`
-            )
-            .then((data) => {
-                const incomeDryfruit =
-                    data.data.data?.outlayAllByUser?.outlayDtoList;
-                const index = data.data.data?.outlayAllByUser?.totalDollar
-                    ?.toString()
-                    .indexOf(".");
-                setTotalsum({
-                    totalSumma: data.data.data?.outlayAllByUser?.totalSumma,
-                    totalDollar: data.data.data?.outlayAllByUser?.totalDollar
-                        ?.toString()
-                        .slice(0, index + 3),
-                });
-                setIncomeDryFruit(incomeDryfruit);
-                setTotalItems(data.data.data?.totalItems);
-            })
-            .catch((error) => {
-                console.error(error);
-                if (error.response?.status === 500) navigate("/server-error");
-                message.error("Chiqimlarni yuklashda muammo bo'ldi");
-            })
-            .finally(() => setLoading(false));
+        user.roleId === 1
+            ? instance
+                  .get(
+                      `api/dry/fruit/api/dry/fruit/outlay/main?page=${current}&size=${pageSize}`
+                  )
+                  .then((data) => {
+                      const incomeDryfruit =
+                          data.data.data?.outlayAllByBranch?.outlayDtoList.map(
+                              (item) => {
+                                  return {
+                                      ...item,
+                                      date: moment(item?.date).format(
+                                          "DD-MM-YYYY"
+                                      ),
+                                  };
+                              }
+                          );
+                      const index =
+                          data.data.data?.outlayAllByBranch?.totalDollar
+                              ?.toString()
+                              .indexOf(".");
+                      setTotalsum({
+                          totalSumma:
+                              data.data.data?.outlayAllByBranch?.totalSumma,
+                          totalDollar:
+                              data.data.data?.outlayAllByBranch?.totalDollar
+                                  ?.toString()
+                                  .slice(0, index + 3),
+                      });
+                      setIncomeDryFruit(incomeDryfruit);
+                      setTotalItems(data.data.data?.totalItems);
+                  })
+                  .catch((error) => {
+                      console.error(error);
+                      if (error.response?.status === 500)
+                          navigate("/server-error");
+                      message.error("Chiqimlarni yuklashda muammo bo'ldi");
+                  })
+                  .finally(() => setLoading(false))
+            : user.roleId === 2
+            ? instance
+                  .get(
+                      `api/dry/fruit/api/dry/fruit/outlay/getByBranchId${user.branchId}?page=${current}&size=${pageSize}`
+                  )
+                  .then((data) => {
+                      const incomeDryfruit =
+                          data.data.data?.outlayAllByBranch?.outlayDtoList.map(
+                              (item) => {
+                                  return {
+                                      ...item,
+                                      date: moment(item?.date).format(
+                                          "DD-MM-YYYY"
+                                      ),
+                                  };
+                              }
+                          );
+                      const index =
+                          data.data.data?.outlayAllByBranch?.totalDollar
+                              ?.toString()
+                              .indexOf(".");
+                      setTotalsum({
+                          totalSumma:
+                              data.data.data?.outlayAllByBranch?.totalSumma,
+                          totalDollar:
+                              data.data.data?.outlayAllByBranch?.totalDollar
+                                  ?.toString()
+                                  .slice(0, index + 3),
+                      });
+                      setIncomeDryFruit(incomeDryfruit);
+                      setTotalItems(data.data.data?.totalItems);
+                  })
+                  .catch((err) => {
+                      console.error(err);
+                      if (err.response?.status === 500)
+                          navigate("/server-error");
+                      message.error("Chiqimlarni yuklashda muammo bo'ldi");
+                  })
+                  .finally(() => setLoading(false))
+            : instance
+                  .get(
+                      `api/dry/fruit/api/dry/fruit/outlay/getByUserId${user.id}?page=${current}&size=${pageSize}`
+                  )
+                  .then((data) => {
+                      const incomeDryfruit =
+                          data.data.data?.outlayAllByUser?.outlayDtoList.map(
+                              (item) => {
+                                  return {
+                                      ...item,
+                                      date: moment(item?.date).format(
+                                          "DD-MM-YYYY"
+                                      ),
+                                  };
+                              }
+                          );
+                      const index = data.data.data?.outlayAllByUser?.totalDollar
+                          ?.toString()
+                          .indexOf(".");
+                      setTotalsum({
+                          totalSumma:
+                              data.data.data?.outlayAllByUser?.totalSumma,
+                          totalDollar:
+                              data.data.data?.outlayAllByUser?.totalDollar
+                                  ?.toString()
+                                  .slice(0, index + 3),
+                      });
+                      setIncomeDryFruit(incomeDryfruit);
+                      setTotalItems(data.data.data?.totalItems);
+                  })
+                  .catch((error) => {
+                      console.error(error);
+                      if (error.response?.status === 500)
+                          navigate("/server-error");
+                      message.error("Chiqimlarni yuklashda muammo bo'ldi");
+                  })
+                  .finally(() => setLoading(false));
     };
 
     const columns = [
@@ -51,7 +141,7 @@ const Outlay = () => {
             title: "Chiqim nimaga ishlatilganligi",
             dataIndex: "name",
             key: "name",
-            width: "40%",
+            width: "30%",
             search: true,
             sorter: (a, b) => {
                 if (a.name < b.name) {
@@ -80,10 +170,26 @@ const Outlay = () => {
             search: false,
         },
         {
+            title: "Chiqim qilingan vaqt",
+            dataIndex: "date",
+            key: "date",
+            width: "20%",
+            sorter: (a, b) => {
+                if (a.date < b.date) {
+                    return -1;
+                }
+                if (a.date > b.date) {
+                    return 1;
+                }
+                return 0;
+            },
+            search: false,
+        },
+        {
             title: "Ishlatgan odam",
             dataIndex: "userId",
             key: "userId",
-            width: "39%",
+            width: "29%",
             search: false,
             render: (record) => {
                 const data = usersData?.filter((item) => item.id === record);
@@ -104,7 +210,10 @@ const Outlay = () => {
     const onCreate = (values) => {
         setLoading(true);
         instance
-            .post("api/dry/fruit/api/dry/fruit/outlay", { ...values })
+            .post("api/dry/fruit/api/dry/fruit/outlay", {
+                ...values,
+                date: moment(values.date, "DD-MM-YYYY").toISOString(),
+            })
             .then(function (response) {
                 message.success("Chiqim muvofaqiyatli qo'shildi");
                 getIncomeDryFruits(current - 1, pageSize);
@@ -124,6 +233,7 @@ const Outlay = () => {
         instance
             .put(`api/dry/fruit/api/dry/fruit/outlay/edit${initial.id}`, {
                 ...values,
+                date: moment(values.date, "DD-MM-YYYY").toISOString(),
             })
             .then((res) => {
                 message.success("Chiqim muvaffaqiyatli taxrirlandi");
@@ -167,7 +277,14 @@ const Outlay = () => {
             )
             .then((data) => {
                 const incomeDryfruit =
-                    data.data.data?.outlayAllByBranch?.outlayDtoList;
+                    data.data.data?.outlayAllByBranch?.outlayDtoList.map(
+                        (item) => {
+                            return {
+                                ...item,
+                                date: moment(item?.date).format("DD-MM-YYYY"),
+                            };
+                        }
+                    );
                 const index = data.data.data?.outlayAllByBranch?.totalDollar
                     ?.toString()
                     .indexOf(".");
@@ -195,7 +312,13 @@ const Outlay = () => {
                 `api/dry/fruit/api/dry/fruit/outlay/${value}?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                const incomeDryfruit = data.data.data?.outlayAll?.outlayDtoList;
+                const incomeDryfruit =
+                    data.data.data?.outlayAll?.outlayDtoList.map((item) => {
+                        return {
+                            ...item,
+                            date: moment(item?.date).format("DD-MM-YYYY"),
+                        };
+                    });
                 const index = data.data.data?.outlayAll?.totalDollar
                     ?.toString()
                     .indexOf(".");

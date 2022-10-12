@@ -228,7 +228,7 @@ const IncomeDryFruit = () => {
             width: "7%",
             search: false,
             render: (record) => {
-                return record ? "Bor" : "Yo'q";
+                return record ? "Ha" : "Yo'q";
             },
             sorter: (a, b) => {
                 if (a.cash < b.cash) {
@@ -460,25 +460,26 @@ const IncomeDryFruit = () => {
                 `api/dry/fruit/outcomeFruit/findAllByBranchId/${value}?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                const incomeDryfruit =
-                    data.data.data.dryFruits.outcomeDryFruitGetDtoList.map(
-                        (item) => {
-                            return {
-                                ...item,
-                                date: moment(item?.date).format("DD-MM-YYYY"),
-                            };
-                        }
-                    );
-                const index = data.data.data?.dryFruits.totalDollar
+                const incomeDryfruit = data.data.data?.allOutcomeDryFruits?.map(
+                    (item) => {
+                        return {
+                            ...item,
+                            date: moment(item?.date).format("DD-MM-YYYY"),
+                        };
+                    }
+                );
+                const index = data.data.data?.allOutcomeDryFruits?.totalDollar
                     ?.toString()
                     .indexOf(".");
                 setTotalsum({
-                    totalSumma: data.data.data?.dryFruits.totalSumma,
-                    totalPlastic: data.data.data?.dryFruits.totalPlastic,
-                    totalDollar: data.data.data?.dryFruits.totalDollar
-                        ?.toString()
-                        .slice(0, index + 3),
-                    totalCash: data.data.data?.dryFruits.totalCash,
+                    totalSumma: data.data.data?.allOutcomeDryFruits?.totalSumma,
+                    totalPlastic:
+                        data.data.data?.allOutcomeDryFruits?.totalPlastic,
+                    totalDollar:
+                        data.data.data?.allOutcomeDryFruits?.totalDollar
+                            ?.toString()
+                            .slice(0, index + 3),
+                    totalCash: data.data.data?.allOutcomeDryFruits?.totalCash,
                 });
                 setOutcomeFuel(incomeDryfruit);
                 setTotalItems(data.data.data?.totalItems);
