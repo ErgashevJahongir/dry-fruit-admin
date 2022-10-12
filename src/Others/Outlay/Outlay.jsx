@@ -19,46 +19,7 @@ const Outlay = () => {
 
     const getIncomeDryFruits = (current, pageSize) => {
         setLoading(true);
-        user.roleId === 1
-            ? instance
-                  .get(
-                      `api/dry/fruit/api/dry/fruit/outlay/main?page=${current}&size=${pageSize}`
-                  )
-                  .then((data) => {
-                      const incomeDryfruit =
-                          data.data.data?.outlayAllByBranch?.outlayDtoList.map(
-                              (item) => {
-                                  return {
-                                      ...item,
-                                      date: moment(item?.date).format(
-                                          "DD-MM-YYYY"
-                                      ),
-                                  };
-                              }
-                          );
-                      const index =
-                          data.data.data?.outlayAllByBranch?.totalDollar
-                              ?.toString()
-                              .indexOf(".");
-                      setTotalsum({
-                          totalSumma:
-                              data.data.data?.outlayAllByBranch?.totalSumma,
-                          totalDollar:
-                              data.data.data?.outlayAllByBranch?.totalDollar
-                                  ?.toString()
-                                  .slice(0, index + 3),
-                      });
-                      setIncomeDryFruit(incomeDryfruit);
-                      setTotalItems(data.data.data?.totalItems);
-                  })
-                  .catch((error) => {
-                      console.error(error);
-                      if (error.response?.status === 500)
-                          navigate("/server-error");
-                      message.error("Chiqimlarni yuklashda muammo bo'ldi");
-                  })
-                  .finally(() => setLoading(false))
-            : user.roleId === 2
+        user.roleId === 1 || user.roleId === 2
             ? instance
                   .get(
                       `api/dry/fruit/api/dry/fruit/outlay/getByBranchId${user.branchId}?page=${current}&size=${pageSize}`
@@ -271,38 +232,83 @@ const Outlay = () => {
 
     const getIncomeDryFruitsBranches = (value, current, pageSize) => {
         setLoading(true);
-        instance
-            .get(
-                `api/dry/fruit/api/dry/fruit/outlay/getByBranchId${value}?page=${current}&size=${pageSize}`
-            )
-            .then((data) => {
-                const incomeDryfruit =
-                    data.data.data?.outlayAllByBranch?.outlayDtoList.map(
-                        (item) => {
-                            return {
-                                ...item,
-                                date: moment(item?.date).format("DD-MM-YYYY"),
-                            };
-                        }
-                    );
-                const index = data.data.data?.outlayAllByBranch?.totalDollar
-                    ?.toString()
-                    .indexOf(".");
-                setTotalsum({
-                    totalSumma: data.data.data?.outlayAllByBranch?.totalSumma,
-                    totalDollar: data.data.data?.outlayAllByBranch?.totalDollar
-                        ?.toString()
-                        .slice(0, index + 3),
-                });
-                setIncomeDryFruit(incomeDryfruit);
-                setTotalItems(data.data.data?.totalItems);
-            })
-            .catch((err) => {
-                console.error(err);
-                if (err.response?.status === 500) navigate("/server-error");
-                message.error("Chiqimlarni yuklashda muammo bo'ldi");
-            })
-            .finally(() => setLoading(false));
+        value === user.branchId && user.roleId === 1
+            ? instance
+                  .get(
+                      `api/dry/fruit/api/dry/fruit/outlay/main?page=${current}&size=${pageSize}`
+                  )
+                  .then((data) => {
+                      const incomeDryfruit =
+                          data.data.data?.outlayAllByBranch?.outlayDtoList.map(
+                              (item) => {
+                                  return {
+                                      ...item,
+                                      date: moment(item?.date).format(
+                                          "DD-MM-YYYY"
+                                      ),
+                                  };
+                              }
+                          );
+                      const index =
+                          data.data.data?.outlayAllByBranch?.totalDollar
+                              ?.toString()
+                              .indexOf(".");
+                      setTotalsum({
+                          totalSumma:
+                              data.data.data?.outlayAllByBranch?.totalSumma,
+                          totalDollar:
+                              data.data.data?.outlayAllByBranch?.totalDollar
+                                  ?.toString()
+                                  .slice(0, index + 3),
+                      });
+                      setIncomeDryFruit(incomeDryfruit);
+                      setTotalItems(data.data.data?.totalItems);
+                  })
+                  .catch((error) => {
+                      console.error(error);
+                      if (error.response?.status === 500)
+                          navigate("/server-error");
+                      message.error("Chiqimlarni yuklashda muammo bo'ldi");
+                  })
+                  .finally(() => setLoading(false))
+            : instance
+                  .get(
+                      `api/dry/fruit/api/dry/fruit/outlay/getByBranchId${value}?page=${current}&size=${pageSize}`
+                  )
+                  .then((data) => {
+                      const incomeDryfruit =
+                          data.data.data?.outlayAllByBranch?.outlayDtoList.map(
+                              (item) => {
+                                  return {
+                                      ...item,
+                                      date: moment(item?.date).format(
+                                          "DD-MM-YYYY"
+                                      ),
+                                  };
+                              }
+                          );
+                      const index =
+                          data.data.data?.outlayAllByBranch?.totalDollar
+                              ?.toString()
+                              .indexOf(".");
+                      setTotalsum({
+                          totalSumma:
+                              data.data.data?.outlayAllByBranch?.totalSumma,
+                          totalDollar:
+                              data.data.data?.outlayAllByBranch?.totalDollar
+                                  ?.toString()
+                                  .slice(0, index + 3),
+                      });
+                      setIncomeDryFruit(incomeDryfruit);
+                      setTotalItems(data.data.data?.totalItems);
+                  })
+                  .catch((err) => {
+                      console.error(err);
+                      if (err.response?.status === 500)
+                          navigate("/server-error");
+                      message.error("Chiqimlarni yuklashda muammo bo'ldi");
+                  })
+                  .finally(() => setLoading(false));
     };
 
     const getIncomeDryFruitsTimely = (value, current, pageSize) => {
