@@ -520,6 +520,139 @@ export const DataProvider = ({ children }) => {
         },
     ];
 
+    const outcomeNakladnoyData = [
+        {
+            name: "dryFruitId",
+            label: "Quruq meva nomi",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq mevani tanlang"}
+                    selectData={
+                        user.roleId === 1
+                            ? dryfruitData.filter((item) => {
+                                  if (dryfruitWareData.length === 0) return [];
+                                  for (
+                                      let index = 0;
+                                      index < dryfruitWareData.length;
+                                      index++
+                                  ) {
+                                      if (
+                                          item.id ===
+                                          dryfruitWareData[index].dryFruitId
+                                      )
+                                          return item;
+                                  }
+                              })
+                            : dryfruitData.filter((item) => {
+                                  const branch = dryfruitWareData.filter(
+                                      (qism) => qism.branchId === user.branchId
+                                  );
+                                  if (branch.length === 0) return null;
+                                  for (
+                                      let index = 0;
+                                      index < branch.length;
+                                      index++
+                                  ) {
+                                      if (item.id === branch[index].dryFruitId)
+                                          return item;
+                                  }
+                              })
+                    }
+                />
+            ),
+        },
+        {
+            name: "measurementId",
+            label: "Quruq meva o'lchovi",
+            input: (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq meva o'lchovi"}
+                    selectData={measurementData}
+                />
+            ),
+        },
+        {
+            name: "amount",
+            label: "Quruq meva miqdori",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "price",
+            label: "Quruq meva narxi",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+    ];
+
+    const editOutcomeNakladnoyData = [
+        {
+            name: "dryFruitId",
+            label: "Quruq meva nomi",
+            inputSelect: (defaultId = null) => (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq mevani tanlang"}
+                    selectData={
+                        user.roleId === 1
+                            ? dryfruitData.filter((item) => {
+                                  if (dryfruitWareData.length === 0)
+                                      return null;
+                                  for (
+                                      let index = 0;
+                                      index < dryfruitWareData.length;
+                                      index++
+                                  ) {
+                                      if (
+                                          item.id ===
+                                          dryfruitWareData[index].dryFruitId
+                                      )
+                                          return item;
+                                  }
+                              })
+                            : dryfruitData.filter((item) => {
+                                  const branch = dryfruitWareData.filter(
+                                      (qism) => qism.branchId === user.branchId
+                                  );
+                                  if (branch.length === 0) return null;
+                                  for (
+                                      let index = 0;
+                                      index < branch.length;
+                                      index++
+                                  ) {
+                                      if (item.id === branch[index].dryFruitId)
+                                          return item;
+                                  }
+                              })
+                    }
+                    DValue={defaultId}
+                />
+            ),
+        },
+        {
+            name: "measurementId",
+            label: "Quruq meva o'lchovi",
+            inputSelect: (defaultId = null) => (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq meva o'lchovi"}
+                    selectData={measurementData}
+                    DValue={defaultId}
+                />
+            ),
+        },
+        {
+            name: "amount",
+            label: "Quruq meva miqdori",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "price",
+            label: "Quruq meva narxi",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+    ];
+
     const editOutcomeDryFruitData = [
         {
             name: "dryFruitId",
@@ -1825,6 +1958,21 @@ export const DataProvider = ({ children }) => {
                 timelyInfo: false,
                 editModalTitle: "Mevani o'zgartirish",
                 modalTitle: "Yangi meva qo'shish",
+            };
+            break;
+        }
+        case "/outcome-client": {
+            formData = {
+                formData: outcomeNakladnoyData,
+                editFormData: editOutcomeNakladnoyData,
+                branchData: false,
+                timeFilterInfo: false,
+                deleteInfo: true,
+                createInfo: true,
+                editInfo: true,
+                timelyInfo: false,
+                editModalTitle: "Sotilayotgan mevani o'zgartirish",
+                modalTitle: "Yangi sotilayotgan meva qo'shish",
             };
             break;
         }

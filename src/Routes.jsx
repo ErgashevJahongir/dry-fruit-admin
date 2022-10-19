@@ -25,6 +25,9 @@ import Country from "./Others/Country/Country";
 import DryFruitLimit from "./Others/DryFruitLimit/DryFruitLimit";
 import Outlay from "./Others/Outlay/Outlay";
 import IncomeInProsses from "./Others/IncomeInProsses/IncomeInProsses";
+import OutcomeScanner from "./OutcomeScanner/OutcomeScanner";
+import OutcomeNakladnoy from "./OutcomeNakladnoy/OutcomeNakladnoy";
+import Nakladnoy from "./Nakladnoy/Nakladnoy";
 
 const RoutesPage = () => {
     const { user, userLoading } = useData();
@@ -57,11 +60,17 @@ const RoutesPage = () => {
                             path="outcome-dryfruit"
                             element={<OutcomeDryFruit />}
                         />
+                        <Route path="kassa" element={<OutcomeScanner />} />
                         <Route path="indebts" element={<InDebt />} />
                         <Route path="outdebts" element={<OutDebt />} />
                         <Route path="clients" element={<Clients />} />
                         <Route path="profil" element={<Profil />} />
                         <Route path="outlay" element={<Outlay />} />
+                        <Route
+                            path="outcome-client"
+                            element={<OutcomeNakladnoy />}
+                        />
+                        <Route path="client-salelist" element={<Nakladnoy />} />
                         {user?.roleId === 1 && (
                             <>
                                 <Route path="branchs" element={<Branch />} />

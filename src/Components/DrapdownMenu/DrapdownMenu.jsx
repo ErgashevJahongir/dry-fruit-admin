@@ -93,14 +93,34 @@ function DrapdownMenu({ onClose, isVisible }) {
                     },
                     {
                         label: "Sotilgan Mahsulotlar",
-                        key: "/outcome-dryfruit",
+                        key: "/outcome",
                         icon: (
-                            <Link to="/outcome-dryfruit">
-                                <CloudUploadOutlined
-                                    style={{ fontSize: "18px" }}
-                                />
-                            </Link>
+                            <CloudUploadOutlined style={{ fontSize: "18px" }} />
                         ),
+                        children: [
+                            {
+                                label: "Sotilgan Mahsulotlar",
+                                key: "/outcome-dryfruit",
+                                icon: (
+                                    <Link to="/outcome-dryfruit">
+                                        <CloudUploadOutlined
+                                            style={{ fontSize: "18px" }}
+                                        />
+                                    </Link>
+                                ),
+                            },
+                            {
+                                label: "Kassada Sotish",
+                                key: "/kassa",
+                                icon: (
+                                    <Link to="/kassa">
+                                        <CloudUploadOutlined
+                                            style={{ fontSize: "18px" }}
+                                        />
+                                    </Link>
+                                ),
+                            },
+                        ],
                     },
                     {
                         label: "Qarzlar",
