@@ -88,6 +88,7 @@ const App = () => {
                 instance
                     .get(`${url}${searchValue}`)
                     .then((data) => {
+                        console.log(data);
                         data.data.data.id && data.data.data[0] === undefined
                             ? setFilteredResults([
                                   {
@@ -355,7 +356,7 @@ const App = () => {
                 }}
                 items={[
                     {
-                        label: `Bar Code`,
+                        label: `Bar Code, Kod`,
                         key: "1",
                         children: (
                             <Posts
@@ -366,7 +367,7 @@ const App = () => {
                     },
                     {
                         label: `Mahsulot`,
-                        key: "3",
+                        key: "2",
                         children: (
                             <Posts
                                 url={"api/dry/fruit/dryFruit/search?word="}
@@ -416,6 +417,7 @@ const App = () => {
                         marginTop: "20px",
                     }}
                     onClick={showLargeDrawer}
+                    disabled={tableData[0] ? false : true}
                 >
                     Sotish
                 </Button>
@@ -432,9 +434,14 @@ const App = () => {
                         <Button
                             type="primary"
                             onClick={() => {
-                                onCash(true, tableData);
                                 handlePrint();
+                                setTimeout(() => onCash(true, tableData), 2000);
                             }}
+                            disabled={
+                                payInputValue - totalInputValue < 0
+                                    ? true
+                                    : false
+                            }
                         >
                             Naqt pul
                         </Button>
@@ -482,7 +489,7 @@ const App = () => {
                             }}
                         />
                     </Col>
-                    {payInputValue - totalInputValue > 0 && (
+                    {payInputValue - totalInputValue >= 0 && (
                         <Col
                             span={24}
                             style={{
@@ -516,8 +523,11 @@ const App = () => {
                         <Space size={"large"}>
                             <Button
                                 onClick={() => {
-                                    onCash(false, tableData);
                                     handlePrint();
+                                    setTimeout(
+                                        () => onCash(false, tableData),
+                                        2000
+                                    );
                                 }}
                                 icon={<CreditCardOutlined />}
                                 style={{
@@ -525,6 +535,11 @@ const App = () => {
                                     height: 60,
                                     fontSize: "18px",
                                 }}
+                                disabled={
+                                    payInputValue - totalInputValue < 0
+                                        ? true
+                                        : false
+                                }
                             >
                                 Platitik orqali
                             </Button>
@@ -543,6 +558,11 @@ const App = () => {
                                     height: 60,
                                     fontSize: "18px",
                                 }}
+                                disabled={
+                                    payInputValue - totalInputValue < 0
+                                        ? true
+                                        : false
+                                }
                             >
                                 Naqt pul orqali
                             </Button>

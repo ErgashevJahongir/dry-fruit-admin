@@ -157,7 +157,7 @@ const OutcomeNakladnoy = () => {
         const value = tableData.map((values) => {
             const date = new Date();
             return {
-                clientId: "88bc99aa-f143-4624-8a49-60e67910d15c",
+                clientId: client,
                 measurementId: values.measurementId ? values.measurementId : 4,
                 amount: values.amount,
                 dryFruitId: values.id,
@@ -165,7 +165,7 @@ const OutcomeNakladnoy = () => {
                 branchId: user.branchId,
                 date,
                 cash: bol,
-                debt: false,
+                debt: valueDebt,
             };
         });
         instance
@@ -182,6 +182,29 @@ const OutcomeNakladnoy = () => {
             .finally(() => {
                 setLoading(false);
             });
+
+        valueDebt &&
+            instance
+                .post("api/dry/fruit/outcomeFruit/createOutcomeList", [
+                    ...value,
+                ])
+                .then(function (response) {
+                    message.success(
+                        "Sotilgan quruq meva muvaffaqiyatli qo'shildi"
+                    );
+                    setOutcomeFuel([]);
+                })
+                .catch(function (error) {
+                    console.error(error);
+                    if (error.response?.status === 500)
+                        navigate("/server-error");
+                    message.error(
+                        "Sotilgan quruq mevani qo'shishda muammo bo'ldi"
+                    );
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
         setOpen(false);
         setPayInputValue(null);
         setTotalInputValue(null);
@@ -196,12 +219,12 @@ const OutcomeNakladnoy = () => {
     };
 
     const onChangeDeadline = (e) => {
-        console.log(e);
         setDeadlineValue(moment(e).toISOString());
     };
 
     return (
         <>
+            <h3>Optom sotish</h3>
             <CustomTable
                 onEdit={onEdit}
                 onCreate={onCreate}
@@ -224,6 +247,7 @@ const OutcomeNakladnoy = () => {
                         marginTop: "20px",
                     }}
                     onClick={showLargeDrawer}
+                    disabled={outcomeFuel[0] ? false : true}
                 >
                     Sotish
                 </Button>
@@ -240,7 +264,7 @@ const OutcomeNakladnoy = () => {
                                 type="primary"
                                 onClick={() => onCash(true, outcomeFuel)}
                                 disabled={
-                                    payInputValue - totalInputValue >= 0
+                                    payInputValue - totalInputValue < 0
                                         ? true
                                         : false
                                 }
@@ -368,7 +392,7 @@ const OutcomeNakladnoy = () => {
                                 }}
                             />
                         </Col>
-                        {payInputValue - totalInputValue > 0 && (
+                        {payInputValue - totalInputValue >= 0 && (
                             <Col
                                 span={24}
                                 style={{
@@ -409,7 +433,7 @@ const OutcomeNakladnoy = () => {
                                         fontSize: "18px",
                                     }}
                                     disabled={
-                                        payInputValue - totalInputValue >= 0
+                                        payInputValue - totalInputValue < 0
                                             ? true
                                             : false
                                     }
@@ -426,7 +450,7 @@ const OutcomeNakladnoy = () => {
                                         fontSize: "18px",
                                     }}
                                     disabled={
-                                        payInputValue - totalInputValue >= 0
+                                        payInputValue - totalInputValue < 0
                                             ? true
                                             : false
                                     }

@@ -1,4 +1,5 @@
 import { Col, Row } from "antd";
+import moment from "moment";
 import * as React from "react";
 
 export class ComponentToPrint extends React.PureComponent {
@@ -21,24 +22,48 @@ export class ComponentToPrint extends React.PureComponent {
                 className="relativeCSS"
                 style={{
                     position: "absolute",
-                    zIndex: 99,
+                    zIndex: -99,
                     top: "0",
                     padding: "30px 40px 0",
                 }}
             >
                 <style type="text/css" media="print"></style>
                 <div className="flash" />
-                <div style={{ borderBottom: "1px dashed #000" }}>
+                <div style={{ textAlign: "center", marginBottom: 20 }}>
+                    <h2 style={{ fontWeight: 600 }}>N1 сухофрукты</h2>
+                </div>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginBottom: 10,
+                    }}
+                >
+                    <p>Дата : </p>
+                    <p>{moment(new Date()).format("YYYY-MM-DD HH:mm:ss")}</p>
+                </div>
+                <div
+                    style={{
+                        borderBottom: "1px dashed #000",
+                        borderTop: "1px dashed #000",
+                        marginBottom: 20,
+                    }}
+                >
                     <div
                         style={{
                             display: "grid",
                             gridTemplateColumns: "2fr 1fr 1fr 1fr",
+                            marginBottom: 10,
                         }}
                     >
-                        <h4>Наименование продукта</h4>
-                        <h4>Цена продукта</h4>
-                        <h4>Количество</h4>
-                        <h4>общая стоимость продукта</h4>
+                        <h4 style={{ fontWeight: 600 }}>
+                            Наименование продукта
+                        </h4>
+                        <h4 style={{ fontWeight: 600 }}>Цена продукта</h4>
+                        <h4 style={{ fontWeight: 600 }}>Количество</h4>
+                        <h4 style={{ fontWeight: 600 }}>
+                            общая стоимость продукта
+                        </h4>
                     </div>
                     {this.props.tableData.map((item) => {
                         console.log(this.props);
@@ -59,8 +84,19 @@ export class ComponentToPrint extends React.PureComponent {
                         );
                     })}
                 </div>
-                <div style={{ display: "flex", justifyContent: "end" }}>
-                    <h4>Итоговая цена: {this.props.totalInputValue}</h4>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "end",
+                        marginBottom: 15,
+                    }}
+                >
+                    <h3 style={{ fontWeight: 600 }}>
+                        Итоговая цена: {this.props.totalInputValue}
+                    </h3>
+                </div>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                    <h3 style={{ fontWeight: 600 }}>Спасибо за покупку</h3>
                 </div>
             </div>
         );

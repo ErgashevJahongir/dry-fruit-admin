@@ -282,6 +282,17 @@ function Navbar() {
                                         </Link>
                                     ),
                                 },
+                                {
+                                    label: "Optom Sotish",
+                                    key: "/client-salelist",
+                                    icon: (
+                                        <Link to="/client-salelist">
+                                            <CloudUploadOutlined
+                                                style={{ fontSize: "18px" }}
+                                            />
+                                        </Link>
+                                    ),
+                                },
                             ],
                         },
                         {

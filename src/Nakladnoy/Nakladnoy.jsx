@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { message } from "antd";
+import { Button, message, Row } from "antd";
 import { useData } from "../Hook/UseData";
 import CustomTable from "../Module/Table/Table";
 import instance from "../Api/Axios";
 import { useNavigate } from "react-router-dom";
+import { PlusOutlined } from "@ant-design/icons";
 
 const Nakladnoy = () => {
     const [dryFruitWarehouseData, setDryfruitWarehouseData] = useState([]);
@@ -21,6 +22,7 @@ const Nakladnoy = () => {
                 `api/dry/fruit/dryFruitWarehouse/getAllPageable?page=${current}&size=${pageSize}`
             )
             .then((data) => {
+                console.log(data);
                 setDryfruitWarehouseData(data.data.data?.fuelReports);
                 setTotalItems(data.data.data?.totalItems);
                 getDryfruitWareData();
@@ -35,16 +37,16 @@ const Nakladnoy = () => {
 
     const columns = [
         {
-            title: "Filial",
-            dataIndex: "branchId",
-            key: "branchId",
+            title: "Klient nomi",
+            dataIndex: "clientId",
+            key: "clientId",
             width: "35%",
             search: false,
             sorter: (a, b) => {
-                if (a.branchId < b.branchId) {
+                if (a.clientId < b.clientId) {
                     return -1;
                 }
-                if (a.branchId > b.branchId) {
+                if (a.clientId > b.clientId) {
                     return 1;
                 }
                 return 0;
@@ -57,19 +59,15 @@ const Nakladnoy = () => {
             },
         },
         {
-            title: "Quruq meva turi",
-            dataIndex: "dryFruitId",
-            key: "dryFruitId",
+            title: "Olingan vaqti",
+            dataIndex: "date",
+            key: "date",
             width: "35%",
-            render: (record) => {
-                const data = dryfruitData.filter((item) => item.id === record);
-                return data[0]?.name;
-            },
             sorter: (a, b) => {
-                if (a.dryFruitId < b.dryFruitId) {
+                if (a.date < b.date) {
                     return -1;
                 }
-                if (a.dryFruitId > b.dryFruitId) {
+                if (a.date > b.date) {
                     return 1;
                 }
                 return 0;
@@ -77,7 +75,7 @@ const Nakladnoy = () => {
             search: false,
         },
         {
-            title: "Miqdori",
+            title: "Yuklab olish",
             dataIndex: "amount",
             key: "amount",
             width: "30%",
@@ -91,6 +89,9 @@ const Nakladnoy = () => {
                 return 0;
             },
             search: false,
+            render: (record) => {
+                return <Button>Yuklab olish</Button>;
+            },
         },
     ];
 
@@ -120,6 +121,17 @@ const Nakladnoy = () => {
 
     return (
         <>
+            <Row justify="end">
+                <Button
+                    type="primary"
+                    onClick={() => {
+                        navigate("/outcome-client");
+                    }}
+                    icon={<PlusOutlined />}
+                >
+                    Qo'shish
+                </Button>
+            </Row>
             <CustomTable
                 onDelete={handleDelete}
                 getData={getWerehouseDryFruit}
