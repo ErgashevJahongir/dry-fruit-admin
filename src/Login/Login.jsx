@@ -17,7 +17,7 @@ const Login = () => {
         setLoading(true);
         axios
             .post(
-                "https://app-dry-fruit.herokuapp.com/api/dry/fruit/auth/login",
+                "https://heroku-dry-fruit.herokuapp.com/api/dry/fruit/auth/login",
                 {
                     phoneNumber: values.phoneNumber,
                     password: values.password,

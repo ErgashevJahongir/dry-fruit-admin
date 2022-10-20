@@ -138,16 +138,18 @@ thead:hover {
     border-color: rgba(0, 0, 0, 0.03);
 }
 
-.ant-drawer-body {
-    padding: 0 !important;
+.ant-drawer-wrapper-body .ant-input-number-input {
+    text-align: right;
+    padding-right: 0;
+    font-weight: 700;
+}
+
+.ant-drawer-wrapper-body .ant-input-number .ant-input-number-handler-wrap {
+    display: none;
 }
 
 .header-notifications-dropdown {
     border-radius: 5px;
-}
-
-.ant-drawer-content-wrapper {
-    width: 250px !important;
 }
 
 .ant-layout-header {

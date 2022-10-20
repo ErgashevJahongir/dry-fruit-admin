@@ -4,7 +4,7 @@ import { useEffect } from "react";
 const token1 = JSON.parse(sessionStorage.getItem("dry-fruit"));
 const token2 = JSON.parse(localStorage.getItem("dry-fruit"));
 const instance = axios.create({
-    baseURL: "https://app-dry-fruit.herokuapp.com/",
+    baseURL: "https://heroku-dry-fruit.herokuapp.com/",
     headers: {
         "Content-Type": "application/json",
         "Accept-Language": "uz",

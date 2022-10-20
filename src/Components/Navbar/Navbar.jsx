@@ -253,24 +253,55 @@ function Navbar() {
                         },
                         {
                             label: "Sotilgan Mahsulotlar",
-                            key: "/outcome-dryfruit",
+                            key: "/outcome",
                             icon: (
-                                <Link to="/outcome-dryfruit">
-                                    <CloudUploadOutlined
-                                        style={{ fontSize: "18px" }}
-                                    />
-                                </Link>
+                                <CloudUploadOutlined
+                                    style={{ fontSize: "18px" }}
+                                />
                             ),
+                            children: [
+                                {
+                                    label: "Sotilgan Mahsulotlar",
+                                    key: "/outcome-dryfruit",
+                                    icon: (
+                                        <Link to="/outcome-dryfruit">
+                                            <CloudUploadOutlined
+                                                style={{ fontSize: "18px" }}
+                                            />
+                                        </Link>
+                                    ),
+                                },
+                                {
+                                    label: "Kassada Sotish",
+                                    key: "/kassa",
+                                    icon: (
+                                        <Link to="/kassa">
+                                            <CloudUploadOutlined
+                                                style={{ fontSize: "18px" }}
+                                            />
+                                        </Link>
+                                    ),
+                                },
+                                {
+                                    label: "Optom Sotish",
+                                    key: "/client-salelist",
+                                    icon: (
+                                        <Link to="/client-salelist">
+                                            <CloudUploadOutlined
+                                                style={{ fontSize: "18px" }}
+                                            />
+                                        </Link>
+                                    ),
+                                },
+                            ],
                         },
                         {
                             label: "Qarzlar",
                             key: "/debts",
                             icon: (
-                                <Link to="/debts">
-                                    <DollarCircleOutlined
-                                        style={{ fontSize: "18px" }}
-                                    />
-                                </Link>
+                                <DollarCircleOutlined
+                                    style={{ fontSize: "18px" }}
+                                />
                             ),
                             children: [
                                 {

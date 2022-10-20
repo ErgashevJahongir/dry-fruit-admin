@@ -414,10 +414,10 @@ const IncomeDryFruit = () => {
                     message.error(
                         "Kelgan quruq mevani o'chirishda muammo bo'ldi"
                     );
-                });
+                })
+                .finally(() => setLoading(false));
             return null;
         });
-        setLoading(false);
     };
 
     const getIncomeDryFruitsBranches = (value, current, pageSize) => {
