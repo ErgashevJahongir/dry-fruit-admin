@@ -27,7 +27,6 @@ const OutcomeNakladnoy = () => {
     const [client, setClient] = useState(null);
     const [valueDebt, setValueDebt] = useState(null);
     const [totalInputRef, setTotalInputRef] = useState(false);
-    const [qarzValue, setQarzValue] = useState("");
     const [deadlineValue, setDeadlineValue] = useState("");
     const { dryfruitData, measurementData, user, clientData } = useData();
     const navigate = useNavigate();
@@ -155,17 +154,18 @@ const OutcomeNakladnoy = () => {
     const onCash = (bol, tableData) => {
         setLoading(true);
         const value = tableData.map((values) => {
+            console.log(values);
             const date = new Date();
             return {
                 clientId: client,
                 measurementId: values.measurementId ? values.measurementId : 4,
                 amount: values.amount,
                 dryFruitId: values.id,
-                price: values.productPrice,
+                price: values.price,
                 branchId: user.branchId,
                 date,
                 cash: bol,
-                debt: valueDebt,
+                debt: valueDebt === "true" ? true : false,
             };
         });
         instance
@@ -184,32 +184,67 @@ const OutcomeNakladnoy = () => {
             });
 
         valueDebt &&
-            instance
-                .post("api/dry/fruit/outcomeFruit/createOutcomeList", [
-                    ...value,
-                ])
-                .then(function (response) {
-                    message.success(
-                        "Sotilgan quruq meva muvaffaqiyatli qo'shildi"
-                    );
-                    setOutcomeFuel([]);
-                })
-                .catch(function (error) {
-                    console.error(error);
-                    if (error.response?.status === 500)
-                        navigate("/server-error");
-                    message.error(
-                        "Sotilgan quruq mevani qo'shishda muammo bo'ldi"
-                    );
-                })
-                .finally(() => {
-                    setLoading(false);
-                });
+            value.map((values) => {
+                instance
+                    .post("api/dry/fruit/outcomeFruit/add", { ...values })
+                    .then(function (response) {
+                        message.success(
+                            "Sotilgan quruq meva muvaffaqiyatli qo'shildi"
+                        );
+                        const ulchov = measurementData.filter(
+                            (item) => item.id === values.measurementId
+                        );
+                        const amount =
+                            ulchov[0].name.toLowerCase() === "tonna"
+                                ? 1000
+                                : ulchov[0].name.toLowerCase() === "gram"
+                                ? 0.001
+                                : 1;
+                        response.data.data &&
+                            instance
+                                .post("api/dry/fruit/debt/post", {
+                                    incomeDryFruitId: null,
+                                    workerId: null,
+                                    outcomeDryFruitId: response.data.data,
+                                    deadline: deadlineValue,
+                                    given: false,
+                                    borrowAmount:
+                                        values.price * values.amount * amount,
+                                })
+                                .then((res) =>
+                                    message.success(
+                                        "Tashqi qarz muvofaqiyatli qo'shildi"
+                                    )
+                                )
+                                .catch((err) => {
+                                    message.error(
+                                        "Tashqi qarzni qo'shishda muammo bo'ldi"
+                                    );
+                                    console.error(err);
+                                })
+                                .finally(() => {
+                                    setDeadlineValue(null);
+                                    setValueDebt(null);
+                                });
+                    })
+                    .catch(function (error) {
+                        console.error(error);
+                        if (error.response?.status === 500)
+                            navigate("/server-error");
+                        message.error(
+                            "Sotilgan quruq mevani qo'shishda muammo bo'ldi"
+                        );
+                    })
+                    .finally(() => {
+                        setDeadlineValue(null);
+                        setValueDebt(null);
+                        setLoading(false);
+                    });
+            });
         setOpen(false);
         setPayInputValue(null);
         setTotalInputValue(null);
         setDeadlineValue("");
-        setQarzValue("");
         setValueDebt(null);
         setClient(null);
     };
@@ -310,24 +345,6 @@ const OutcomeNakladnoy = () => {
                                         <p>Ha</p>
                                         {valueDebt === "true" ? (
                                             <>
-                                                <div
-                                                    style={{
-                                                        width: "115%",
-                                                        marginLeft: "-25px",
-                                                    }}
-                                                >
-                                                    Qancha pul to'langan
-                                                    <InputNumber
-                                                        value={qarzValue}
-                                                        placeholder="Qancha pul to'langan"
-                                                        onChange={(e) =>
-                                                            setQarzValue(e)
-                                                        }
-                                                        style={{
-                                                            width: "100%",
-                                                        }}
-                                                    />
-                                                </div>
                                                 <div
                                                     style={{
                                                         width: "115%",
