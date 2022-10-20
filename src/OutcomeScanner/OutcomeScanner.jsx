@@ -17,6 +17,8 @@ import {
     CreditCardOutlined,
     DeleteOutlined,
     DollarOutlined,
+    MinusOutlined,
+    PlusOutlined,
     SearchOutlined,
 } from "@ant-design/icons";
 import instance from "../Api/Axios";
@@ -99,9 +101,12 @@ const App = () => {
                                           : 1,
                                       productPrice:
                                           data.data.data?.outcomePrice,
-                                      measurmentId: data.data.data?.amount
+                                      measurment: data.data.data?.amount
                                           ? "KG"
                                           : "DONA",
+                                      measurmentId: data.data.data?.amount
+                                          ? 1
+                                          : 4,
                                       productTotalPrice:
                                           (data.data.data?.amount
                                               ? data.data.data?.amount
@@ -119,9 +124,12 @@ const App = () => {
                                               ? item?.amount
                                               : 1,
                                           productPrice: item?.outcomePrice,
-                                          measurmentId: data.data.data?.amount
+                                          measurment: data.data.data?.amount
                                               ? "KG"
                                               : "DONA",
+                                          measurmentId: data.data.data?.amount
+                                              ? 1
+                                              : 4,
                                           productTotalPrice:
                                               (item?.amount
                                                   ? item?.amount
@@ -183,10 +191,10 @@ const App = () => {
                                                               ...item,
                                                               amount:
                                                                   item.amount +
-                                                                  1,
+                                                                  field.amount,
                                                               productTotalPrice:
                                                                   (item.amount +
-                                                                      1) *
+                                                                      field.amount) *
                                                                   item.productPrice,
                                                           }
                                                         : item;
@@ -329,11 +337,27 @@ const App = () => {
             title: "Miqdori",
             dataIndex: "amount",
             id: "amount",
+            render: (record) => {
+                return (
+                    <>
+                        <Button
+                            icon={<MinusOutlined />}
+                            onClick={(e) => console.log(e)}
+                        ></Button>{" "}
+                        {record}
+                        {"  "}
+                        <Button
+                            icon={<PlusOutlined />}
+                            onClick={(e) => console.log(e)}
+                        ></Button>
+                    </>
+                );
+            },
         },
         {
             title: "O'lchovi",
-            dataIndex: "measurmentId",
-            id: "measurmentId",
+            dataIndex: "measurment",
+            id: "measurment",
         },
         {
             title: "Narxi",
