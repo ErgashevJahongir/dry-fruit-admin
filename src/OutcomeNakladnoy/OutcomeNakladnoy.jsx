@@ -14,7 +14,11 @@ import {
 import CustomTable from "../Module/Table/Table";
 import { useNavigate } from "react-router-dom";
 import { useData } from "../Hook/UseData";
-import { CreditCardOutlined, DollarOutlined } from "@ant-design/icons";
+import {
+    CreditCardOutlined,
+    DollarOutlined,
+    DownloadOutlined,
+} from "@ant-design/icons";
 import CustomSelect from "../Module/Select/Select";
 import moment from "moment";
 
@@ -136,7 +140,16 @@ const OutcomeNakladnoy = () => {
         setOpen(true);
         let totalsumma = 0;
         outcomeFuel.map((item) => {
-            totalsumma = totalsumma + item.price * item.amount;
+            const ulchov = measurementData.filter(
+                (data) => data.id === item.measurementId
+            );
+            const amount =
+                ulchov[0].name.toLowerCase() === "tonna"
+                    ? 1000
+                    : ulchov[0].name.toLowerCase() === "gram"
+                    ? 0.001
+                    : 1;
+            totalsumma = totalsumma + item.price * item.amount * amount;
             return null;
         });
         setTotalInputValue(totalsumma);
@@ -154,7 +167,6 @@ const OutcomeNakladnoy = () => {
     const onCash = (bol, tableData) => {
         setLoading(true);
         const value = tableData.map((values) => {
-            console.log(values);
             const date = new Date();
             return {
                 clientId: client,
@@ -169,7 +181,7 @@ const OutcomeNakladnoy = () => {
             };
         });
         instance
-            .post("api/dry/fruit/outcomeFruit/createOutcomeList", [...value])
+            .post("api/dry/fruit/outcomeFruit/covenant", [...value])
             .then(function (response) {
                 message.success("Sotilgan quruq meva muvaffaqiyatli qo'shildi");
                 setOutcomeFuel([]);
@@ -183,14 +195,11 @@ const OutcomeNakladnoy = () => {
                 setLoading(false);
             });
 
-        valueDebt &&
+        valueDebt === true &&
             value.map((values) => {
                 instance
                     .post("api/dry/fruit/outcomeFruit/add", { ...values })
                     .then(function (response) {
-                        message.success(
-                            "Sotilgan quruq meva muvaffaqiyatli qo'shildi"
-                        );
                         const ulchov = measurementData.filter(
                             (item) => item.id === values.measurementId
                         );
@@ -260,11 +269,28 @@ const OutcomeNakladnoy = () => {
     return (
         <>
             <h3>Optom sotish</h3>
+            <div
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "end",
+                    marginBottom: 15,
+                }}
+            >
+                <h3 style={{ margin: 0, marginRight: 20 }}>
+                    Oldingi Nakladnoyni yuklash
+                </h3>
+                <a href="api/dry/fruit/outcomeFruit/download" download>
+                    <Button type="primary" icon={<DownloadOutlined />}>
+                        Yuklab olish
+                    </Button>
+                </a>
+            </div>
             <CustomTable
                 onEdit={onEdit}
                 onCreate={onCreate}
                 onDelete={handleDelete}
-                getData={(a) => console.log(a)}
+                getData={(a) => a}
                 columns={columns}
                 tableData={outcomeFuel}
                 loading={loading}

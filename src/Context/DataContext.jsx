@@ -313,7 +313,7 @@ export const DataProvider = ({ children }) => {
             input: (
                 <Radio.Group>
                     <Radio value="false"> Yo'q </Radio>
-                    <Radio value="true"> Bor </Radio>
+                    <Radio value="true"> Ha </Radio>
                 </Radio.Group>
             ),
         },
@@ -1961,7 +1961,7 @@ export const DataProvider = ({ children }) => {
             };
             break;
         }
-        case "/outcome-client": {
+        case "/client-salelist": {
             formData = {
                 formData: outcomeNakladnoyData,
                 editFormData: editOutcomeNakladnoyData,
