@@ -1,4 +1,3 @@
-import { Col, Row } from "antd";
 import moment from "moment";
 import * as React from "react";
 
@@ -66,7 +65,6 @@ export class ComponentToPrint extends React.PureComponent {
                         </h4>
                     </div>
                     {this.props.tableData.map((item) => {
-                        console.log(this.props);
                         return (
                             <div
                                 style={{
@@ -77,7 +75,7 @@ export class ComponentToPrint extends React.PureComponent {
                                 <h4>{item.name}</h4>
                                 <h4>{item.productPrice}</h4>
                                 <h4>
-                                    {item.amount}({item.measurmentId})
+                                    {item.amount}({item.measurment})
                                 </h4>
                                 <h4>{item.productTotalPrice}</h4>
                             </div>

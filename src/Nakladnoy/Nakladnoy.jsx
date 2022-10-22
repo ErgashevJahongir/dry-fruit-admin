@@ -12,7 +12,7 @@ const Nakladnoy = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const { dryfruitData, branchData, getDryfruitWareData } = useData();
+    const { clientData } = useData();
     const navigate = useNavigate();
 
     const getWerehouseDryFruit = (current, pageSize) => {
@@ -22,10 +22,8 @@ const Nakladnoy = () => {
                 `api/dry/fruit/dryFruitWarehouse/getAllPageable?page=${current}&size=${pageSize}`
             )
             .then((data) => {
-                console.log(data);
                 setDryfruitWarehouseData(data.data.data?.fuelReports);
                 setTotalItems(data.data.data?.totalItems);
-                getDryfruitWareData();
             })
             .catch((error) => {
                 console.error(error);
@@ -51,11 +49,9 @@ const Nakladnoy = () => {
                 }
                 return 0;
             },
-            render: (initealValue) => {
-                const branch = branchData?.filter(
-                    (item) => item?.id === initealValue
-                );
-                return branch[0]?.name;
+            render: (record) => {
+                const data = clientData?.filter((item) => item.id === record);
+                return data[0]?.fio;
             },
         },
         {

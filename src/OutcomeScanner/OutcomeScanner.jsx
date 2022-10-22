@@ -17,8 +17,6 @@ import {
     CreditCardOutlined,
     DeleteOutlined,
     DollarOutlined,
-    MinusOutlined,
-    PlusOutlined,
     SearchOutlined,
 } from "@ant-design/icons";
 import instance from "../Api/Axios";
@@ -35,7 +33,6 @@ const App = () => {
     const [open, setOpen] = useState(false);
     const [totalInputRef, setTotalInputRef] = useState(false);
     const [searchInputRef, setSearchInputRef] = useState(true);
-    const [loadingPdf, setLoadingPdf] = React.useState(false);
     const [text, setText] = React.useState("old boring text");
     const componentRef = React.useRef(null);
     const navigate = useNavigate();
@@ -45,31 +42,24 @@ const App = () => {
         return componentRef.current;
     }, [componentRef.current]);
 
-    const handleAfterPrint = React.useCallback(() => {
-        console.log("`onAfterPrint` called");
-    }, []);
+    const handleAfterPrint = React.useCallback(() => {}, []);
 
-    const handleBeforePrint = React.useCallback(() => {
-        console.log("`onBeforePrint` called"); // tslint:disable-line no-console
-    }, []);
+    const handleBeforePrint = React.useCallback(() => {}, []);
 
     const onBeforeGetContentResolve = React.useRef(null);
 
     const handleOnBeforeGetContent = React.useCallback(() => {
-        console.log("`onBeforeGetContent` called"); // tslint:disable-line no-console
-        setLoadingPdf(true);
         setText("Loading new text...");
 
         return new Promise((resolve) => {
             onBeforeGetContentResolve.current = resolve;
 
             setTimeout(() => {
-                setLoadingPdf(false);
                 setText("New, Updated Text!");
                 resolve();
             }, 2000);
         });
-    }, [setLoadingPdf, setText]);
+    }, [setText]);
 
     const handlePrint = useReactToPrint({
         content: reactToPrintContent,
@@ -90,7 +80,6 @@ const App = () => {
                 instance
                     .get(`${url}${searchValue}`)
                     .then((data) => {
-                        console.log(data);
                         data.data.data.id && data.data.data[0] === undefined
                             ? setFilteredResults([
                                   {
@@ -173,7 +162,6 @@ const App = () => {
                         itemLayout="horizontal"
                         dataSource={filteredResults}
                         renderItem={(field) => {
-                            console.log(field);
                             return (
                                 <List.Item
                                     style={{ padding: "10px 30px" }}
@@ -282,7 +270,7 @@ const App = () => {
         const value = tableData.map((values) => {
             const date = new Date();
             return {
-                clientId: "88bc99aa-f143-4624-8a49-60e67910d15c",
+                clientId: "74b4a80c-24ed-4aa2-ac97-1fceddc6f378",
                 measurementId: values.measurementId ? values.measurementId : 4,
                 amount: values.amount,
                 dryFruitId: values.id,
@@ -337,22 +325,6 @@ const App = () => {
             title: "Miqdori",
             dataIndex: "amount",
             id: "amount",
-            render: (record) => {
-                return (
-                    <>
-                        <Button
-                            icon={<MinusOutlined />}
-                            onClick={(e) => console.log(e)}
-                        ></Button>{" "}
-                        {record}
-                        {"  "}
-                        <Button
-                            icon={<PlusOutlined />}
-                            onClick={(e) => console.log(e)}
-                        ></Button>
-                    </>
-                );
-            },
         },
         {
             title: "O'lchovi",

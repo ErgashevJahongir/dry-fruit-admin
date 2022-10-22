@@ -343,9 +343,12 @@ const IncomeDryFruit = () => {
     };
 
     const onEdit = (values, initial) => {
+        console.log(values);
         setLoading(true);
         const data = {
             ...values,
+            clientId: initial.clientId,
+            branchId: initial.branchId,
             date: moment(values.date, "DD-MM-YYYY")?.toISOString(),
             cash: values?.cash === "true" ? true : false,
             debt: values.debt?.target?.value === "false" ? false : true,
@@ -369,6 +372,7 @@ const IncomeDryFruit = () => {
                         ? 0.001
                         : 1;
                 res.data.data &&
+                    initial.debt === false &&
                     instance
                         .post("api/dry/fruit/debt/post", {
                             incomeDryFruitId: null,

@@ -67,10 +67,9 @@ const RoutesPage = () => {
                         <Route path="profil" element={<Profil />} />
                         <Route path="outlay" element={<Outlay />} />
                         <Route
-                            path="outcome-client"
+                            path="client-salelist"
                             element={<OutcomeNakladnoy />}
                         />
-                        <Route path="client-salelist" element={<Nakladnoy />} />
                         {user?.roleId === 1 && (
                             <>
                                 <Route path="branchs" element={<Branch />} />

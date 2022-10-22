@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button, Form, Modal } from "antd";
 import { EditOutlined } from "@ant-design/icons";
-import moment from "moment";
 
 const EditData = ({ selectedRowKeys, onEdit, editData, editModalTitle }) => {
     const [form] = Form.useForm();
@@ -16,24 +15,7 @@ const EditData = ({ selectedRowKeys, onEdit, editData, editModalTitle }) => {
         setVisible(false);
     };
 
-    const initialData = selectedRowKeys.incomeTime
-        ? {
-              ...selectedRowKeys,
-              incomeTime: selectedRowKeys.incomeTime.substr(0, 10),
-          }
-        : selectedRowKeys.reportTime
-        ? {
-              ...selectedRowKeys,
-              reportTime: selectedRowKeys.reportTime.substr(0, 10),
-          }
-        : selectedRowKeys.outgoingTime
-        ? {
-              ...selectedRowKeys,
-              outgoingTime: moment(selectedRowKeys.outgoingTime)
-                  .toISOString()
-                  .substr(0, 10),
-          }
-        : { ...selectedRowKeys };
+    const initialData = { ...selectedRowKeys };
 
     return (
         <div>
@@ -70,12 +52,9 @@ const EditData = ({ selectedRowKeys, onEdit, editData, editModalTitle }) => {
             >
                 <Form form={form} layout="vertical" name="form_in_modal">
                     {editData?.map((data) => {
-                        let valuePropName =
-                            data.name === "debt"
-                                ? { name: data.name, valuePropName: data.name }
-                                : { name: data.name };
                         return (
                             <Form.Item
+                                name={data.name}
                                 key={data.name}
                                 label={data.label}
                                 rules={[
@@ -84,7 +63,6 @@ const EditData = ({ selectedRowKeys, onEdit, editData, editModalTitle }) => {
                                         message: `${data.label}ni kiriting`,
                                     },
                                 ]}
-                                {...valuePropName}
                             >
                                 {data.hasOwnProperty("input")
                                     ? data.input

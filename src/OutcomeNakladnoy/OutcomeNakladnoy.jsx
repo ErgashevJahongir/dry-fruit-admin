@@ -14,7 +14,11 @@ import {
 import CustomTable from "../Module/Table/Table";
 import { useNavigate } from "react-router-dom";
 import { useData } from "../Hook/UseData";
-import { CreditCardOutlined, DollarOutlined } from "@ant-design/icons";
+import {
+    CreditCardOutlined,
+    DollarOutlined,
+    DownloadOutlined,
+} from "@ant-design/icons";
 import CustomSelect from "../Module/Select/Select";
 import moment from "moment";
 
@@ -27,7 +31,7 @@ const OutcomeNakladnoy = () => {
     const [client, setClient] = useState(null);
     const [valueDebt, setValueDebt] = useState(null);
     const [totalInputRef, setTotalInputRef] = useState(false);
-    const [deadlineValue, setDeadlineValue] = useState("");
+    const [deadlineValue, setDeadlineValue] = useState(null);
     const { dryfruitData, measurementData, user, clientData } = useData();
     const navigate = useNavigate();
 
@@ -95,10 +99,11 @@ const OutcomeNakladnoy = () => {
         values.dryFruitId === initial.dryFruitId
             ? setOutcomeFuel((prev) => {
                   return prev.map((item) => {
-                      return item.dryFruitId === initial.dryFruitId
+                      return item.dryFruitId === values.dryFruitId
                           ? {
                                 ...item,
-                                amount: item.amount + values.amount,
+                                price: values.price,
+                                amount: values.amount,
                             }
                           : item;
                   });
@@ -136,7 +141,16 @@ const OutcomeNakladnoy = () => {
         setOpen(true);
         let totalsumma = 0;
         outcomeFuel.map((item) => {
-            totalsumma = totalsumma + item.price * item.amount;
+            const ulchov = measurementData.filter(
+                (data) => data.id === item.measurementId
+            );
+            const amount =
+                ulchov[0].name.toLowerCase() === "tonna"
+                    ? 1000
+                    : ulchov[0].name.toLowerCase() === "gram"
+                    ? 0.001
+                    : 1;
+            totalsumma = totalsumma + item.price * item.amount * amount;
             return null;
         });
         setTotalInputValue(totalsumma);
@@ -154,7 +168,6 @@ const OutcomeNakladnoy = () => {
     const onCash = (bol, tableData) => {
         setLoading(true);
         const value = tableData.map((values) => {
-            console.log(values);
             const date = new Date();
             return {
                 clientId: client,
@@ -169,7 +182,7 @@ const OutcomeNakladnoy = () => {
             };
         });
         instance
-            .post("api/dry/fruit/outcomeFruit/createOutcomeList", [...value])
+            .post("api/dry/fruit/outcomeFruit/covenant", [...value])
             .then(function (response) {
                 message.success("Sotilgan quruq meva muvaffaqiyatli qo'shildi");
                 setOutcomeFuel([]);
@@ -183,68 +196,69 @@ const OutcomeNakladnoy = () => {
                 setLoading(false);
             });
 
-        valueDebt &&
-            value.map((values) => {
-                instance
-                    .post("api/dry/fruit/outcomeFruit/add", { ...values })
-                    .then(function (response) {
-                        message.success(
-                            "Sotilgan quruq meva muvaffaqiyatli qo'shildi"
-                        );
-                        const ulchov = measurementData.filter(
-                            (item) => item.id === values.measurementId
-                        );
-                        const amount =
-                            ulchov[0].name.toLowerCase() === "tonna"
-                                ? 1000
-                                : ulchov[0].name.toLowerCase() === "gram"
-                                ? 0.001
-                                : 1;
-                        response.data.data &&
-                            instance
-                                .post("api/dry/fruit/debt/post", {
-                                    incomeDryFruitId: null,
-                                    workerId: null,
-                                    outcomeDryFruitId: response.data.data,
-                                    deadline: deadlineValue,
-                                    given: false,
-                                    borrowAmount:
-                                        values.price * values.amount * amount,
-                                })
-                                .then((res) =>
-                                    message.success(
-                                        "Tashqi qarz muvofaqiyatli qo'shildi"
-                                    )
-                                )
-                                .catch((err) => {
-                                    message.error(
-                                        "Tashqi qarzni qo'shishda muammo bo'ldi"
-                                    );
-                                    console.error(err);
-                                })
-                                .finally(() => {
-                                    setDeadlineValue(null);
-                                    setValueDebt(null);
-                                });
-                    })
-                    .catch(function (error) {
-                        console.error(error);
-                        if (error.response?.status === 500)
-                            navigate("/server-error");
-                        message.error(
-                            "Sotilgan quruq mevani qo'shishda muammo bo'ldi"
-                        );
-                    })
-                    .finally(() => {
-                        setDeadlineValue(null);
-                        setValueDebt(null);
-                        setLoading(false);
-                    });
-            });
+        console.log(valueDebt === "true", valueDebt);
+
+        valueDebt === "true"
+            ? value.map((values) => {
+                  instance
+                      .post("api/dry/fruit/outcomeFruit/add", { ...values })
+                      .then(function (response) {
+                          const ulchov = measurementData.filter(
+                              (item) => item.id === values.measurementId
+                          );
+                          const amount =
+                              ulchov[0].name.toLowerCase() === "tonna"
+                                  ? 1000
+                                  : ulchov[0].name.toLowerCase() === "gram"
+                                  ? 0.001
+                                  : 1;
+                          response.data.data &&
+                              instance
+                                  .post("api/dry/fruit/debt/post", {
+                                      incomeDryFruitId: null,
+                                      workerId: null,
+                                      outcomeDryFruitId: response.data.data,
+                                      deadline: deadlineValue,
+                                      given: false,
+                                      borrowAmount:
+                                          values.price * values.amount * amount,
+                                  })
+                                  .then((res) =>
+                                      message.success(
+                                          "Tashqi qarz muvofaqiyatli qo'shildi"
+                                      )
+                                  )
+                                  .catch((err) => {
+                                      message.error(
+                                          "Tashqi qarzni qo'shishda muammo bo'ldi"
+                                      );
+                                      console.error(err);
+                                  })
+                                  .finally(() => {
+                                      setDeadlineValue(null);
+                                      setValueDebt(null);
+                                  });
+                      })
+                      .catch(function (error) {
+                          console.error(error);
+                          if (error.response?.status === 500)
+                              navigate("/server-error");
+                          message.error(
+                              "Sotilgan quruq mevani qo'shishda muammo bo'ldi"
+                          );
+                      })
+                      .finally(() => {
+                          setDeadlineValue(null);
+                          setValueDebt(null);
+                          setLoading(false);
+                      });
+                  return null;
+              })
+            : console.log("Bo'madi");
         setOpen(false);
         setPayInputValue(null);
         setTotalInputValue(null);
-        setDeadlineValue("");
+        setDeadlineValue(null);
         setValueDebt(null);
         setClient(null);
     };
@@ -260,11 +274,31 @@ const OutcomeNakladnoy = () => {
     return (
         <>
             <h3>Optom sotish</h3>
+            <div
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "end",
+                    marginBottom: 15,
+                }}
+            >
+                <h3 style={{ margin: 0, marginRight: 20 }}>
+                    Oldingi Nakladnoyni yuklash
+                </h3>
+                <a
+                    href="http://31.44.5.130:8080/api/dry/fruit/outcomeFruit/download"
+                    download="report.pdf"
+                >
+                    <Button type="primary" icon={<DownloadOutlined />}>
+                        Yuklab olish
+                    </Button>
+                </a>
+            </div>
             <CustomTable
                 onEdit={onEdit}
                 onCreate={onCreate}
                 onDelete={handleDelete}
-                getData={(a) => console.log(a)}
+                getData={(a) => a}
                 columns={columns}
                 tableData={outcomeFuel}
                 loading={loading}
