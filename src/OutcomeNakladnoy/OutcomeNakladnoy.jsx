@@ -196,8 +196,6 @@ const OutcomeNakladnoy = () => {
                 setLoading(false);
             });
 
-        console.log(valueDebt === "true", valueDebt);
-
         valueDebt === "true"
             ? value.map((values) => {
                   instance
@@ -254,7 +252,7 @@ const OutcomeNakladnoy = () => {
                       });
                   return null;
               })
-            : console.log("Bo'madi");
+            : console.error("salom");
         setOpen(false);
         setPayInputValue(null);
         setTotalInputValue(null);

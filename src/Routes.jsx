@@ -27,7 +27,6 @@ import Outlay from "./Others/Outlay/Outlay";
 import IncomeInProsses from "./Others/IncomeInProsses/IncomeInProsses";
 import OutcomeScanner from "./OutcomeScanner/OutcomeScanner";
 import OutcomeNakladnoy from "./OutcomeNakladnoy/OutcomeNakladnoy";
-import Nakladnoy from "./Nakladnoy/Nakladnoy";
 
 const RoutesPage = () => {
     const { user, userLoading } = useData();
