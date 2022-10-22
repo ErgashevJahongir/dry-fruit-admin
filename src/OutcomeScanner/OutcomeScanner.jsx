@@ -270,7 +270,7 @@ const App = () => {
         const value = tableData.map((values) => {
             const date = new Date();
             return {
-                clientId: "75782075-293a-4c54-9ba1-9238d2e482c8",
+                clientId: "74b4a80c-24ed-4aa2-ac97-1fceddc6f378",
                 measurementId: values.measurementId ? values.measurementId : 4,
                 amount: values.amount,
                 dryFruitId: values.id,

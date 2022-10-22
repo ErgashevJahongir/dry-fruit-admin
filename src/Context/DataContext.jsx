@@ -20,7 +20,6 @@ export const DataProvider = ({ children }) => {
     const [measurementData, setMeasurementData] = useState([]);
     const [categoryData, setCategoryData] = useState([]);
     const [dryfruitData, setDryfruitData] = useState([]);
-    const [dryfruitDataLimit, setDryfruitDataLimit] = useState([]);
     const [dryfruitWareData, setDryfruitWareData] = useState([]);
     const [roleData, setRoleData] = useState([]);
     const [branchData, setBranchData] = useState([]);
@@ -1647,15 +1646,6 @@ export const DataProvider = ({ children }) => {
             .catch((err) => console.error(err));
     };
 
-    const getDryfruitDataLimit = () => {
-        instance
-            .get("api/dry/fruit/limitOfDryFruit/list")
-            .then((data) => {
-                setDryfruitDataLimit(data.data.data);
-            })
-            .catch((err) => console.error(err));
-    };
-
     const getDryfruitWareData = () => {
         instance
             .get("api/dry/fruit/dryFruitWarehouse/getAll")
@@ -1715,7 +1705,6 @@ export const DataProvider = ({ children }) => {
         getClientData();
         getOutcomeDryfruitData();
         getIncomeDryfruitData();
-        getDryfruitDataLimit();
     }, []);
 
     let formData = {};
