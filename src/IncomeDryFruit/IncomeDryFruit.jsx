@@ -365,6 +365,7 @@ const IncomeDryFruit = () => {
                         ? 0.001
                         : 1;
                 res.data?.data &&
+                    initial.debt === false &&
                     instance
                         .post("api/dry/fruit/debt/post", {
                             incomeDryFruitId: res.data?.data,

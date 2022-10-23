@@ -343,7 +343,6 @@ const IncomeDryFruit = () => {
     };
 
     const onEdit = (values, initial) => {
-        console.log(values);
         setLoading(true);
         const data = {
             ...values,

@@ -29,7 +29,7 @@ export class ComponentToPrint extends React.PureComponent {
                 <style type="text/css" media="print"></style>
                 <div className="flash" />
                 <div style={{ textAlign: "center", marginBottom: 20 }}>
-                    <h2 style={{ fontWeight: 600 }}>N1 сухофрукты</h2>
+                    <h2 style={{ fontWeight: 600 }}>Сухофрукты №1</h2>
                 </div>
                 <div
                     style={{
@@ -53,6 +53,7 @@ export class ComponentToPrint extends React.PureComponent {
                             display: "grid",
                             gridTemplateColumns: "2fr 1fr 1fr 1fr",
                             marginBottom: 10,
+                            marginTop: 20,
                         }}
                     >
                         <h4 style={{ fontWeight: 600 }}>
@@ -70,6 +71,7 @@ export class ComponentToPrint extends React.PureComponent {
                                 style={{
                                     display: "grid",
                                     gridTemplateColumns: "2fr 1fr 1fr 1fr",
+                                    marginBottom: 10,
                                 }}
                             >
                                 <h4>{item.name}</h4>
