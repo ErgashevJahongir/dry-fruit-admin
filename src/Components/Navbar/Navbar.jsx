@@ -192,7 +192,7 @@ function Navbar() {
                                 color: "#ff5722",
                             }}
                         >
-                            Dry Fruits
+                            Сухофрукты №1
                             <i
                                 className="bx bxs-gas-pump"
                                 style={{ marginLeft: "10px", fontSize: "26px" }}
