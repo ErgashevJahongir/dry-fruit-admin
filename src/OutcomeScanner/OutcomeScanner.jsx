@@ -5,7 +5,6 @@ import {
     Col,
     Drawer,
     Input,
-    InputNumber,
     List,
     message,
     Row,
@@ -28,10 +27,8 @@ const App = () => {
     const [tableData, setTableData] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [totalInputValue, setTotalInputValue] = useState(null);
-    const [payInputValue, setPayInputValue] = useState(null);
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
-    const [totalInputRef, setTotalInputRef] = useState(false);
     const [searchInputRef, setSearchInputRef] = useState(true);
     const [text, setText] = React.useState("old boring text");
     const componentRef = React.useRef(null);
@@ -113,12 +110,10 @@ const App = () => {
                                               ? item?.amount
                                               : 1,
                                           productPrice: item?.outcomePrice,
-                                          measurment: data.data.data?.amount
+                                          measurment: item?.amount
                                               ? "KG"
                                               : "DONA",
-                                          measurmentId: data.data.data?.amount
-                                              ? 1
-                                              : 4,
+                                          measurmentId: item?.amount ? 1 : 4,
                                           productTotalPrice:
                                               (item?.amount
                                                   ? item?.amount
@@ -249,7 +244,6 @@ const App = () => {
 
     const showLargeDrawer = () => {
         setOpen(true);
-        setTotalInputRef(true);
         setSearchInputRef(false);
         let totalsumma = 0;
         tableData.map((item) => {
@@ -261,7 +255,6 @@ const App = () => {
 
     const onClose = () => {
         setOpen(false);
-        setTotalInputRef(false);
         setSearchInputRef(true);
     };
 
@@ -270,7 +263,7 @@ const App = () => {
         const value = tableData.map((values) => {
             const date = new Date();
             return {
-                clientId: "b75e5b1c-cf46-4e47-9c0e-0e1330c2c300",
+                clientId: "c381fb83-7473-4f3e-8109-92f464166a99",
                 measurementId: values.measurementId ? values.measurementId : 4,
                 amount: values.amount,
                 dryFruitId: values.id,
@@ -305,14 +298,8 @@ const App = () => {
                 });
         setLoading(false);
         setOpen(false);
-        setTotalInputRef(false);
         setSearchInputRef(true);
-        setPayInputValue(null);
         setTotalInputValue(null);
-    };
-
-    const paySumOnChange = (e) => {
-        setPayInputValue(e);
     };
 
     const columns = [
@@ -433,11 +420,6 @@ const App = () => {
                                 handlePrint();
                                 setTimeout(() => onCash(true, tableData), 2000);
                             }}
-                            disabled={
-                                payInputValue - totalInputValue < 0
-                                    ? true
-                                    : false
-                            }
                         >
                             Naqt pul
                         </Button>
@@ -468,51 +450,6 @@ const App = () => {
                         span={24}
                         style={{
                             display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "end",
-                        }}
-                    >
-                        <h3 style={{ width: 250 }}>To'langan summa: </h3>
-                        <InputNumber
-                            autoFocus={totalInputRef}
-                            bordered={false}
-                            onChange={paySumOnChange}
-                            value={payInputValue}
-                            style={{
-                                width: "100%",
-                                fontSize: "25px",
-                                borderBottom: "1px solid #000",
-                            }}
-                        />
-                    </Col>
-                    {payInputValue - totalInputValue >= 0 && (
-                        <Col
-                            span={24}
-                            style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "end",
-                            }}
-                        >
-                            <h3 style={{ width: 250 }}>
-                                Qaytariladigan summa:{" "}
-                            </h3>
-                            <h3
-                                style={{
-                                    textAlign: "right",
-                                    fontSize: "25px",
-                                    fontWeight: 600,
-                                    color: "green",
-                                }}
-                            >
-                                {payInputValue - totalInputValue}
-                            </h3>
-                        </Col>
-                    )}
-                    <Col
-                        span={24}
-                        style={{
-                            display: "flex",
                             justifyContent: "center",
                         }}
                     >
@@ -531,11 +468,6 @@ const App = () => {
                                     height: 60,
                                     fontSize: "18px",
                                 }}
-                                disabled={
-                                    payInputValue - totalInputValue < 0
-                                        ? true
-                                        : false
-                                }
                             >
                                 Platitik orqali
                             </Button>
@@ -554,11 +486,6 @@ const App = () => {
                                     height: 60,
                                     fontSize: "18px",
                                 }}
-                                disabled={
-                                    payInputValue - totalInputValue < 0
-                                        ? true
-                                        : false
-                                }
                             >
                                 Naqt pul orqali
                             </Button>
