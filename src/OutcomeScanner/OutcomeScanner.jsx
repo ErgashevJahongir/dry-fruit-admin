@@ -23,12 +23,13 @@ import instance from "../Api/Axios";
 import { useNavigate } from "react-router-dom";
 import { useData } from "../Hook/UseData";
 import { ComponentToPrint } from "./ComponentToPrint";
+import NumPad from "react-numpad";
 
 const App = () => {
     const [tableData, setTableData] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [totalInputValue, setTotalInputValue] = useState(null);
-    const [payInputValue, setPayInputValue] = useState(null);
+    const [payInputValue, setPayInputValue] = useState();
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [totalInputRef, setTotalInputRef] = useState(false);
@@ -270,7 +271,7 @@ const App = () => {
         const value = tableData.map((values) => {
             const date = new Date();
             return {
-                clientId: "b75e5b1c-cf46-4e47-9c0e-0e1330c2c300",
+                clientId: "c381fb83-7473-4f3e-8109-92f464166a99",
                 measurementId: values.measurementId ? values.measurementId : 4,
                 amount: values.amount,
                 dryFruitId: values.id,
@@ -473,17 +474,22 @@ const App = () => {
                         }}
                     >
                         <h3 style={{ width: 250 }}>To'langan summa: </h3>
-                        <InputNumber
-                            autoFocus={totalInputRef}
-                            bordered={false}
-                            onChange={paySumOnChange}
-                            value={payInputValue}
+                        <div
                             style={{
                                 width: "100%",
                                 fontSize: "25px",
                                 borderBottom: "1px solid #000",
                             }}
-                        />
+                            className="numpad-number"
+                        >
+                            <NumPad.Number
+                                autoFocus={totalInputRef}
+                                onChange={(value) => {
+                                    paySumOnChange(value);
+                                }}
+                                value={payInputValue}
+                            />
+                        </div>
                     </Col>
                     {payInputValue - totalInputValue >= 0 && (
                         <Col
