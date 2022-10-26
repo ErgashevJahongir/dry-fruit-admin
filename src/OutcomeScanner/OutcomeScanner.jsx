@@ -5,7 +5,6 @@ import {
     Col,
     Drawer,
     Input,
-    InputNumber,
     List,
     message,
     Row,
@@ -23,16 +22,13 @@ import instance from "../Api/Axios";
 import { useNavigate } from "react-router-dom";
 import { useData } from "../Hook/UseData";
 import { ComponentToPrint } from "./ComponentToPrint";
-import NumPad from "react-numpad";
 
 const App = () => {
     const [tableData, setTableData] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [totalInputValue, setTotalInputValue] = useState(null);
-    const [payInputValue, setPayInputValue] = useState();
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
-    const [totalInputRef, setTotalInputRef] = useState(false);
     const [searchInputRef, setSearchInputRef] = useState(true);
     const [text, setText] = React.useState("old boring text");
     const componentRef = React.useRef(null);
@@ -250,7 +246,6 @@ const App = () => {
 
     const showLargeDrawer = () => {
         setOpen(true);
-        setTotalInputRef(true);
         setSearchInputRef(false);
         let totalsumma = 0;
         tableData.map((item) => {
@@ -262,7 +257,6 @@ const App = () => {
 
     const onClose = () => {
         setOpen(false);
-        setTotalInputRef(false);
         setSearchInputRef(true);
     };
 
@@ -306,14 +300,8 @@ const App = () => {
                 });
         setLoading(false);
         setOpen(false);
-        setTotalInputRef(false);
         setSearchInputRef(true);
-        setPayInputValue(null);
         setTotalInputValue(null);
-    };
-
-    const paySumOnChange = (e) => {
-        setPayInputValue(e);
     };
 
     const columns = [
@@ -434,11 +422,6 @@ const App = () => {
                                 handlePrint();
                                 setTimeout(() => onCash(true, tableData), 2000);
                             }}
-                            disabled={
-                                payInputValue - totalInputValue < 0
-                                    ? true
-                                    : false
-                            }
                         >
                             Naqt pul
                         </Button>
@@ -469,56 +452,6 @@ const App = () => {
                         span={24}
                         style={{
                             display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "end",
-                        }}
-                    >
-                        <h3 style={{ width: 250 }}>To'langan summa: </h3>
-                        <div
-                            style={{
-                                width: "100%",
-                                fontSize: "25px",
-                                borderBottom: "1px solid #000",
-                            }}
-                            className="numpad-number"
-                        >
-                            <NumPad.Number
-                                autoFocus={totalInputRef}
-                                onChange={(value) => {
-                                    paySumOnChange(value);
-                                }}
-                                value={payInputValue}
-                            />
-                        </div>
-                    </Col>
-                    {payInputValue - totalInputValue >= 0 && (
-                        <Col
-                            span={24}
-                            style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "end",
-                            }}
-                        >
-                            <h3 style={{ width: 250 }}>
-                                Qaytariladigan summa:{" "}
-                            </h3>
-                            <h3
-                                style={{
-                                    textAlign: "right",
-                                    fontSize: "25px",
-                                    fontWeight: 600,
-                                    color: "green",
-                                }}
-                            >
-                                {payInputValue - totalInputValue}
-                            </h3>
-                        </Col>
-                    )}
-                    <Col
-                        span={24}
-                        style={{
-                            display: "flex",
                             justifyContent: "center",
                         }}
                     >
@@ -537,11 +470,6 @@ const App = () => {
                                     height: 60,
                                     fontSize: "18px",
                                 }}
-                                disabled={
-                                    payInputValue - totalInputValue < 0
-                                        ? true
-                                        : false
-                                }
                             >
                                 Platitik orqali
                             </Button>
@@ -560,11 +488,6 @@ const App = () => {
                                     height: 60,
                                     fontSize: "18px",
                                 }}
-                                disabled={
-                                    payInputValue - totalInputValue < 0
-                                        ? true
-                                        : false
-                                }
                             >
                                 Naqt pul orqali
                             </Button>

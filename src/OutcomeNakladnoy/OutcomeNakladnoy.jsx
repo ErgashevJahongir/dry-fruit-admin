@@ -5,7 +5,6 @@ import {
     Col,
     DatePicker,
     Drawer,
-    InputNumber,
     message,
     Radio,
     Row,
@@ -27,10 +26,8 @@ const OutcomeNakladnoy = () => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [totalInputValue, setTotalInputValue] = useState(null);
-    const [payInputValue, setPayInputValue] = useState(null);
     const [client, setClient] = useState(null);
     const [valueDebt, setValueDebt] = useState(null);
-    const [totalInputRef, setTotalInputRef] = useState(false);
     const [deadlineValue, setDeadlineValue] = useState(null);
     const { dryfruitData, measurementData, user, clientData } = useData();
     const navigate = useNavigate();
@@ -154,11 +151,6 @@ const OutcomeNakladnoy = () => {
             return null;
         });
         setTotalInputValue(totalsumma);
-        setTotalInputRef(true);
-    };
-
-    const paySumOnChange = (e) => {
-        setPayInputValue(e);
     };
 
     const onClose = () => {
@@ -254,7 +246,6 @@ const OutcomeNakladnoy = () => {
               })
             : console.error("salom");
         setOpen(false);
-        setPayInputValue(null);
         setTotalInputValue(null);
         setDeadlineValue(null);
         setValueDebt(null);
@@ -330,11 +321,6 @@ const OutcomeNakladnoy = () => {
                             <Button
                                 type="primary"
                                 onClick={() => onCash(true, outcomeFuel)}
-                                disabled={
-                                    payInputValue - totalInputValue < 0
-                                        ? true
-                                        : false
-                                }
                             >
                                 Naqt pul
                             </Button>
@@ -424,51 +410,6 @@ const OutcomeNakladnoy = () => {
                             span={24}
                             style={{
                                 display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "end",
-                            }}
-                        >
-                            <h3 style={{ width: 250 }}>To'langan summa: </h3>
-                            <InputNumber
-                                autoFocus={totalInputRef}
-                                bordered={false}
-                                onChange={paySumOnChange}
-                                value={payInputValue}
-                                style={{
-                                    width: "100%",
-                                    fontSize: "25px",
-                                    borderBottom: "1px solid #000",
-                                }}
-                            />
-                        </Col>
-                        {payInputValue - totalInputValue >= 0 && (
-                            <Col
-                                span={24}
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "end",
-                                }}
-                            >
-                                <h3 style={{ width: 250 }}>
-                                    Qaytariladigan summa:{" "}
-                                </h3>
-                                <h3
-                                    style={{
-                                        textAlign: "right",
-                                        fontSize: "25px",
-                                        fontWeight: 600,
-                                        color: "green",
-                                    }}
-                                >
-                                    {payInputValue - totalInputValue}
-                                </h3>
-                            </Col>
-                        )}
-                        <Col
-                            span={24}
-                            style={{
-                                display: "flex",
                                 justifyContent: "center",
                             }}
                         >
@@ -481,11 +422,6 @@ const OutcomeNakladnoy = () => {
                                         height: 60,
                                         fontSize: "18px",
                                     }}
-                                    disabled={
-                                        payInputValue - totalInputValue < 0
-                                            ? true
-                                            : false
-                                    }
                                 >
                                     Platitik orqali
                                 </Button>
@@ -498,11 +434,6 @@ const OutcomeNakladnoy = () => {
                                         height: 60,
                                         fontSize: "18px",
                                     }}
-                                    disabled={
-                                        payInputValue - totalInputValue < 0
-                                            ? true
-                                            : false
-                                    }
                                 >
                                     Naqt pul orqali
                                 </Button>
