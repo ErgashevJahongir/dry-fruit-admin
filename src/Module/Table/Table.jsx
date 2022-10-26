@@ -342,6 +342,7 @@ const CustomTable = (props) => {
                                 onEdit={onEdit}
                                 editData={formData?.editFormData}
                                 editModalTitle={formData?.editModalTitle}
+                                setSelectedRowKeys={setSelectedRowKeys}
                             />
                         ) : null
                     ) : null}

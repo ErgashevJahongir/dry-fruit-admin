@@ -110,12 +110,10 @@ const App = () => {
                                               ? item?.amount
                                               : 1,
                                           productPrice: item?.outcomePrice,
-                                          measurment: data.data.data?.amount
+                                          measurment: item?.amount
                                               ? "KG"
                                               : "DONA",
-                                          measurmentId: data.data.data?.amount
-                                              ? 1
-                                              : 4,
+                                          measurmentId: item?.amount ? 1 : 4,
                                           productTotalPrice:
                                               (item?.amount
                                                   ? item?.amount

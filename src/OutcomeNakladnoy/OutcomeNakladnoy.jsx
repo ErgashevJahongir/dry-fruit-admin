@@ -106,17 +106,29 @@ const OutcomeNakladnoy = () => {
                   });
               })
             : setOutcomeFuel((prev) => {
+                  const borProduct = prev.filter(
+                      (data) => data.dryFruitId !== values.dryFruitId
+                  );
                   const newProduct = prev.filter(
                       (data) => data.dryFruitId !== initial.dryFruitId
                   );
-                  return newProduct.map((item) => {
-                      return item.dryFruitId === values.dryFruitId
-                          ? {
-                                ...item,
-                                amount: item.amount + values.amount,
-                            }
-                          : item;
-                  });
+                  return borProduct[0]
+                      ? newProduct.map((item) => {
+                            return item.dryFruitId === values.dryFruitId
+                                ? {
+                                      ...item,
+                                      amount: item.amount + values.amount,
+                                  }
+                                : item;
+                        })
+                      : prev.map((item) => {
+                            return item.dryFruitId === initial.dryFruitId
+                                ? {
+                                      ...values,
+                                      id: values.dryFruitId,
+                                  }
+                                : item;
+                        });
               });
         setLoading(false);
     };
