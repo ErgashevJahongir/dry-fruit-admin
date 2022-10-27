@@ -90,7 +90,7 @@ const App = () => {
                                       measurment: data.data.data?.amount
                                           ? "KG"
                                           : "DONA",
-                                      measurmentId: data.data.data?.amount
+                                      measurementId: data.data.data?.amount
                                           ? 1
                                           : 4,
                                       productTotalPrice:
@@ -113,7 +113,7 @@ const App = () => {
                                           measurment: item?.amount
                                               ? "KG"
                                               : "DONA",
-                                          measurmentId: item?.amount ? 1 : 4,
+                                          measurementId: item?.amount ? 1 : 4,
                                           productTotalPrice:
                                               (item?.amount
                                                   ? item?.amount
