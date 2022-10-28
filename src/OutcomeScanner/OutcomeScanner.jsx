@@ -89,8 +89,8 @@ const App = () => {
                                           data.data.data?.outcomePrice,
                                       measurment: data.data.data?.amount
                                           ? "KG"
-                                          : "DONA",
-                                      measurmentId: data.data.data?.amount
+                                          : "шт",
+                                      measurementId: data.data.data?.amount
                                           ? 1
                                           : 4,
                                       productTotalPrice:
@@ -112,8 +112,8 @@ const App = () => {
                                           productPrice: item?.outcomePrice,
                                           measurment: item?.amount
                                               ? "KG"
-                                              : "DONA",
-                                          measurmentId: item?.amount ? 1 : 4,
+                                              : "шт",
+                                          measurementId: item?.amount ? 1 : 4,
                                           productTotalPrice:
                                               (item?.amount
                                                   ? item?.amount

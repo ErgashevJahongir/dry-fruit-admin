@@ -5,12 +5,12 @@ import {
     Col,
     DatePicker,
     Drawer,
+    InputNumber,
     message,
     Radio,
     Row,
     Space,
 } from "antd";
-import CustomTable from "../Module/Table/Table";
 import { useNavigate } from "react-router-dom";
 import { useData } from "../Hook/UseData";
 import {
@@ -20,6 +20,214 @@ import {
 } from "@ant-design/icons";
 import CustomSelect from "../Module/Select/Select";
 import moment from "moment";
+
+import { useEffect } from "react";
+import { Table } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
+import EditDataCustome from "./EditCustomTableData";
+import EditData from "./../Module/Table/EditTableData";
+
+const CustomTable = (props) => {
+    const {
+        getData,
+        tableData,
+        columns,
+        current,
+        pageSize,
+        totalItems,
+        setCurrent,
+        setPageSize,
+        loading,
+        pageSizeOptions,
+        onCreate,
+        onEdit,
+        onDelete,
+    } = props;
+    const [selectedRowKeys, setSelectedRowKeys] = useState([[], []]);
+    const [nakladnoyDryFruitId, setNakladnoyDryFruitId] = useState("");
+    const { formData, dryfruitData, dryfruitWareData, user, measurementData } =
+        useData();
+
+    const outcomeNakladnoyData = [
+        {
+            name: "measurementId",
+            label: "Quruq meva o'lchovi",
+            inputSelect: (defaultId = null) => (
+                <CustomSelect
+                    backValue={"id"}
+                    placeholder={"Quruq meva o'lchovi"}
+                    selectData={measurementData}
+                    DValue={1}
+                />
+            ),
+        },
+        {
+            name: "price",
+            label: "Quruq meva narxi",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "amount",
+            label: "Quruq meva miqdori",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+    ];
+
+    const onChange = (pageNumber, page) => {
+        setPageSize(page);
+        setCurrent(pageNumber);
+        getData(pageNumber - 1, page);
+    };
+
+    useEffect(() => {
+        getData(current - 1, pageSize);
+    }, []);
+
+    const onSelectChange = (selectedRowKeys, record) => {
+        setSelectedRowKeys([[...selectedRowKeys], [...record]]);
+    };
+
+    const handleSelect = (record) => {
+        if (!selectedRowKeys[0].includes(record.id)) {
+            setSelectedRowKeys((prev) => [
+                [...prev[0], record.id],
+                [...prev[1], record],
+            ]);
+        } else {
+            setSelectedRowKeys((prev) => {
+                const arr = prev[0].filter((key) => key !== record.id);
+                const arr1 = prev[1].filter((key) => key.id !== record.id);
+                return [[...arr], [...arr1]];
+            });
+        }
+    };
+
+    const rowSelection = {
+        selectedRowKeys: selectedRowKeys[0],
+        onChange: onSelectChange,
+    };
+
+    const arr = columns.map((item) =>
+        item.search === true ? { ...item } : { ...item }
+    );
+    arr.map((item) => delete item.search);
+
+    const dataTableColumns = [...arr];
+
+    return (
+        <>
+            <Space className="buttons" size="middle">
+                <Space align="center" size={0}>
+                    <CustomSelect
+                        backValue={"id"}
+                        placeholder={"Quruq mevani tanlang"}
+                        onChange={(e) => {
+                            setNakladnoyDryFruitId(e);
+                        }}
+                        value={nakladnoyDryFruitId}
+                        selectData={
+                            user.roleId === 1
+                                ? dryfruitData.filter((item) => {
+                                      if (dryfruitWareData.length === 0)
+                                          return [];
+                                      for (
+                                          let index = 0;
+                                          index < dryfruitWareData.length;
+                                          index++
+                                      ) {
+                                          if (
+                                              item.id ===
+                                              dryfruitWareData[index].dryFruitId
+                                          )
+                                              return item;
+                                      }
+                                  })
+                                : dryfruitData.filter((item) => {
+                                      const branch = dryfruitWareData.filter(
+                                          (qism) =>
+                                              qism.branchId === user.branchId
+                                      );
+                                      if (branch.length === 0) return null;
+                                      for (
+                                          let index = 0;
+                                          index < branch.length;
+                                          index++
+                                      ) {
+                                          if (
+                                              item.id ===
+                                              branch[index].dryFruitId
+                                          )
+                                              return item;
+                                      }
+                                  })
+                        }
+                    />
+                </Space>
+                <Space align="center" size="middle" className="new-buttons">
+                    {formData?.editInfo ? (
+                        selectedRowKeys[0]?.length === 1 ? (
+                            <EditData
+                                selectedRowKeys={{ ...selectedRowKeys[1][0] }}
+                                onEdit={onEdit}
+                                editData={formData?.editFormData}
+                                editModalTitle={formData?.editModalTitle}
+                                setSelectedRowKeys={setSelectedRowKeys}
+                            />
+                        ) : null
+                    ) : null}
+                    {formData?.deleteInfo ? (
+                        <Button
+                            className="add-button"
+                            icon={<DeleteOutlined />}
+                            type="primary"
+                            danger
+                            onClick={() => {
+                                onDelete(selectedRowKeys[0]);
+                                setSelectedRowKeys([[], []]);
+                            }}
+                        >
+                            O'chirish
+                        </Button>
+                    ) : null}
+                    {formData?.createInfo ? (
+                        nakladnoyDryFruitId ? (
+                            <EditDataCustome
+                                setNakladnoyDryFruitId={setNakladnoyDryFruitId}
+                                selectedRowKeys={{ nakladnoyDryFruitId }}
+                                onEdit={onCreate}
+                                editData={outcomeNakladnoyData}
+                                editModalTitle={formData?.modalTitle}
+                                setSelectedRowKeys={setSelectedRowKeys}
+                            />
+                        ) : null
+                    ) : null}
+                </Space>
+            </Space>
+            <Table
+                rowSelection={rowSelection}
+                loading={loading}
+                columns={dataTableColumns}
+                dataSource={tableData}
+                bordered
+                rowKey={"id"}
+                scroll={{ x: true }}
+                onRow={(record) => ({
+                    onClick: () => {
+                        handleSelect(record);
+                    },
+                })}
+                pagination={{
+                    showSizeChanger: true,
+                    total: totalItems,
+                    pageSize: pageSize,
+                    current: current,
+                    pageSizeOptions: pageSizeOptions,
+                    onChange: onChange,
+                }}
+            />
+        </>
+    );
+};
 
 const OutcomeNakladnoy = () => {
     const [outcomeFuel, setOutcomeFuel] = useState([]);
@@ -69,11 +277,11 @@ const OutcomeNakladnoy = () => {
         },
     ];
 
-    const onCreate = (values) => {
+    const onCreate = (values, initial) => {
         setLoading(true);
         setOutcomeFuel((prev) => {
             const product = prev.filter(
-                (data) => data.dryFruitId === values.dryFruitId
+                (data) => data.dryFruitId === initial?.nakladnoyDryFruitId
             );
             if (product[0]) {
                 return prev.map((item) => {
@@ -85,7 +293,14 @@ const OutcomeNakladnoy = () => {
                         : item;
                 });
             } else {
-                return [...prev, { ...values, id: values.dryFruitId }];
+                return [
+                    ...prev,
+                    {
+                        ...values,
+                        id: initial?.nakladnoyDryFruitId,
+                        dryFruitId: initial?.nakladnoyDryFruitId,
+                    },
+                ];
             }
         });
         setLoading(false);

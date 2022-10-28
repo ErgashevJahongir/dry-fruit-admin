@@ -5,9 +5,10 @@ const CustomSelect = ({
     selectData,
     DValue,
     onChange,
-    backValue,
-    placeholder,
-    disabled,
+    backValue = "id",
+    placeholder = "Tanlang",
+    disabled = false,
+    value,
 }) => {
     const options = selectData.map((item) => (
         <Option value={backValue === "id" ? item.id : item.name} key={item.id}>
@@ -16,7 +17,9 @@ const CustomSelect = ({
     ));
     return (
         <Select
+            // value={value}
             showSearch
+            allowClear
             placeholder={placeholder}
             optionFilterProp="children"
             style={{ width: "100%" }}

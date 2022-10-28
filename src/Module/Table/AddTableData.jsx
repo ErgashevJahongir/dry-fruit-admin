@@ -40,10 +40,6 @@ const CollectionCreateForm = ({
                 }}
             >
                 {formData?.map((data) => {
-                    let valuePropName =
-                        data.name === "debt"
-                            ? { valuePropName: data.name }
-                            : { name: data.name };
                     return (
                         <Form.Item
                             key={data.name}
@@ -55,7 +51,6 @@ const CollectionCreateForm = ({
                                     message: `${data.label}ni kiriting`,
                                 },
                             ]}
-                            {...valuePropName}
                         >
                             {data.input}
                         </Form.Item>

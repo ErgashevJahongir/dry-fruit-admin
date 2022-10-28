@@ -10,6 +10,8 @@ export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
     const [valueDebt, setValueDebt] = useState(null);
+    const [nakladnoyMeasurment, setNakladnoyMeasurment] = useState(1);
+    const [nakladnoyPrice, setNakladnoyPrice] = useState("");
     const [user, setUser] = useState({});
     const [usersData, setUsersData] = useState([]);
     const [clientData, setClientData] = useState([]);
@@ -516,71 +518,6 @@ export const DataProvider = ({ children }) => {
                     <Radio value="true"> Ha </Radio>
                 </Radio.Group>
             ),
-        },
-    ];
-
-    const outcomeNakladnoyData = [
-        {
-            name: "dryFruitId",
-            label: "Quruq meva nomi",
-            input: (
-                <CustomSelect
-                    backValue={"id"}
-                    placeholder={"Quruq mevani tanlang"}
-                    selectData={
-                        user.roleId === 1
-                            ? dryfruitData.filter((item) => {
-                                  if (dryfruitWareData.length === 0) return [];
-                                  for (
-                                      let index = 0;
-                                      index < dryfruitWareData.length;
-                                      index++
-                                  ) {
-                                      if (
-                                          item.id ===
-                                          dryfruitWareData[index].dryFruitId
-                                      )
-                                          return item;
-                                  }
-                              })
-                            : dryfruitData.filter((item) => {
-                                  const branch = dryfruitWareData.filter(
-                                      (qism) => qism.branchId === user.branchId
-                                  );
-                                  if (branch.length === 0) return null;
-                                  for (
-                                      let index = 0;
-                                      index < branch.length;
-                                      index++
-                                  ) {
-                                      if (item.id === branch[index].dryFruitId)
-                                          return item;
-                                  }
-                              })
-                    }
-                />
-            ),
-        },
-        {
-            name: "measurementId",
-            label: "Quruq meva o'lchovi",
-            input: (
-                <CustomSelect
-                    backValue={"id"}
-                    placeholder={"Quruq meva o'lchovi"}
-                    selectData={measurementData}
-                />
-            ),
-        },
-        {
-            name: "amount",
-            label: "Quruq meva miqdori",
-            input: <InputNumber style={{ width: "100%" }} />,
-        },
-        {
-            name: "price",
-            label: "Quruq meva narxi",
-            input: <InputNumber style={{ width: "100%" }} />,
         },
     ];
 
@@ -1952,7 +1889,7 @@ export const DataProvider = ({ children }) => {
         }
         case "/client-salelist": {
             formData = {
-                formData: outcomeNakladnoyData,
+                formData: editOutcomeNakladnoyData,
                 editFormData: editOutcomeNakladnoyData,
                 branchData: false,
                 timeFilterInfo: false,
