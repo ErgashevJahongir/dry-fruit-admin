@@ -266,7 +266,15 @@ const Dashboard = () => {
                     series={series}
                     type="bar"
                     height={
-                        data?.length > 15 ? 900 : data?.length > 10 ? 500 : 400
+                        data?.length > 150
+                            ? 7000
+                            : data?.length > 100
+                            ? 5000
+                            : data?.length > 50
+                            ? 2500
+                            : data?.length > 30
+                            ? 1500
+                            : 700
                     }
                 />
             </div>

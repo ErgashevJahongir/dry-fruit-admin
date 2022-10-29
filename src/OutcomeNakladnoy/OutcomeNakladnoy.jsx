@@ -32,11 +32,6 @@ const CustomTable = (props) => {
         getData,
         tableData,
         columns,
-        current,
-        pageSize,
-        totalItems,
-        setCurrent,
-        setPageSize,
         loading,
         pageSizeOptions,
         onCreate,
@@ -73,14 +68,8 @@ const CustomTable = (props) => {
         },
     ];
 
-    const onChange = (pageNumber, page) => {
-        setPageSize(page);
-        setCurrent(pageNumber);
-        getData(pageNumber - 1, page);
-    };
-
     useEffect(() => {
-        getData(current - 1, pageSize);
+        getData();
     }, []);
 
     const onSelectChange = (selectedRowKeys, record) => {
@@ -124,7 +113,6 @@ const CustomTable = (props) => {
                         onChange={(e) => {
                             setNakladnoyDryFruitId(e);
                         }}
-                        value={nakladnoyDryFruitId}
                         selectData={
                             user.roleId === 1
                                 ? dryfruitData.filter((item) => {
@@ -217,12 +205,8 @@ const CustomTable = (props) => {
                     },
                 })}
                 pagination={{
-                    showSizeChanger: true,
-                    total: totalItems,
-                    pageSize: pageSize,
-                    current: current,
+                    pageSize: 50,
                     pageSizeOptions: pageSizeOptions,
-                    onChange: onChange,
                 }}
             />
         </>
@@ -519,7 +503,7 @@ const OutcomeNakladnoy = () => {
                 tableData={outcomeFuel}
                 loading={loading}
                 setLoading={setLoading}
-                pageSizeOptions={[10, 20]}
+                pageSizeOptions={[50, 100]}
             />
             <Row justify="end">
                 <Button

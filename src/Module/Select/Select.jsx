@@ -8,7 +8,6 @@ const CustomSelect = ({
     backValue = "id",
     placeholder = "Tanlang",
     disabled = false,
-    value,
 }) => {
     const options = selectData.map((item) => (
         <Option value={backValue === "id" ? item.id : item.name} key={item.id}>
@@ -17,7 +16,6 @@ const CustomSelect = ({
     ));
     return (
         <Select
-            // value={value}
             showSearch
             allowClear
             placeholder={placeholder}
