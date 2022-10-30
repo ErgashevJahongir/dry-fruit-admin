@@ -267,7 +267,7 @@ const IncomeDryFruit = () => {
             ...values,
             date: moment(values.date, "DD-MM-YYYY")?.toISOString(),
             cash: values?.cash === "true" ? true : false,
-            debt: values.debt?.target?.value === "false" ? false : true,
+            debt: values.debt === "true" ? true : false,
         };
         instance
             .post("api/dry/fruit/outcomeFruit/add", { ...value })
@@ -282,34 +282,37 @@ const IncomeDryFruit = () => {
                         : ulchov[0].name.toLowerCase() === "gram"
                         ? 0.001
                         : 1;
-                response.data.data &&
-                    instance
-                        .post("api/dry/fruit/debt/post", {
-                            incomeDryFruitId: null,
-                            workerId: null,
-                            outcomeDryFruitId: response.data.data,
-                            deadline: deadlineValue,
-                            given: false,
-                            borrowAmount:
-                                values.price * values.amount * amount -
-                                qarzValue,
-                        })
-                        .then((res) =>
-                            message.success(
-                                "Tashqi qarz muvofaqiyatli qo'shildi"
+                if (response.data.data) {
+                    if (values.debt === "true") {
+                        instance
+                            .post("api/dry/fruit/debt/post", {
+                                incomeDryFruitId: null,
+                                workerId: null,
+                                outcomeDryFruitId: response.data.data,
+                                deadline: deadlineValue,
+                                given: false,
+                                borrowAmount:
+                                    values.price * values.amount * amount -
+                                    qarzValue,
+                            })
+                            .then((res) =>
+                                message.success(
+                                    "Tashqi qarz muvofaqiyatli qo'shildi"
+                                )
                             )
-                        )
-                        .catch((err) => {
-                            message.error(
-                                "Tashqi qarzni qo'shishda muammo bo'ldi"
-                            );
-                            console.error(err);
-                        })
-                        .finally(() => {
-                            setQarzValue(null);
-                            setDeadlineValue(null);
-                            setValueDebt(null);
-                        });
+                            .catch((err) => {
+                                message.error(
+                                    "Tashqi qarzni qo'shishda muammo bo'ldi"
+                                );
+                                console.error(err);
+                            })
+                            .finally(() => {
+                                setQarzValue(null);
+                                setDeadlineValue(null);
+                                setValueDebt(null);
+                            });
+                    }
+                }
                 getOutcomeDryFruits(current - 1, pageSize);
             })
             .catch(function (error) {
@@ -350,7 +353,7 @@ const IncomeDryFruit = () => {
             branchId: initial.branchId,
             date: moment(values.date, "DD-MM-YYYY")?.toISOString(),
             cash: values?.cash === "true" ? true : false,
-            debt: values.debt?.target?.value === "false" ? false : true,
+            debt: values.debt === "true" ? true : false,
         };
         instance
             .put(`api/dry/fruit/outcomeFruit/update${initial.id}`, {
@@ -370,35 +373,39 @@ const IncomeDryFruit = () => {
                         : ulchov[0].name.toLowerCase() === "gram"
                         ? 0.001
                         : 1;
-                res.data.data &&
-                    initial.debt === false &&
-                    instance
-                        .post("api/dry/fruit/debt/post", {
-                            incomeDryFruitId: null,
-                            workerId: null,
-                            outcomeDryFruitId: res.data.data,
-                            deadline: deadlineValue,
-                            given: false,
-                            borrowAmount:
-                                values.price * values.amount * amount -
-                                qarzValue,
-                        })
-                        .then((res) =>
-                            message.success(
-                                "Tashqi qarz muvofaqiyatli qo'shildi"
-                            )
-                        )
-                        .catch((err) => {
-                            message.error(
-                                "Tashqi qarzni qo'shishda muammo bo'ldi"
-                            );
-                            console.error(err);
-                        })
-                        .finally(() => {
-                            setQarzValue(null);
-                            setDeadlineValue(null);
-                            setValueDebt(null);
-                        });
+                if (res.data.data) {
+                    if (initial.debt === false) {
+                        if (values.debt === "true") {
+                            instance
+                                .post("api/dry/fruit/debt/post", {
+                                    incomeDryFruitId: null,
+                                    workerId: null,
+                                    outcomeDryFruitId: res.data.data,
+                                    deadline: deadlineValue,
+                                    given: false,
+                                    borrowAmount:
+                                        values.price * values.amount * amount -
+                                        qarzValue,
+                                })
+                                .then((res) =>
+                                    message.success(
+                                        "Tashqi qarz muvofaqiyatli qo'shildi"
+                                    )
+                                )
+                                .catch((err) => {
+                                    message.error(
+                                        "Tashqi qarzni qo'shishda muammo bo'ldi"
+                                    );
+                                    console.error(err);
+                                })
+                                .finally(() => {
+                                    setQarzValue(null);
+                                    setDeadlineValue(null);
+                                    setValueDebt(null);
+                                });
+                        }
+                    }
+                }
             })
             .catch(function (error) {
                 console.error("Error in edit: ", error);

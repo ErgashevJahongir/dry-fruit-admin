@@ -283,7 +283,7 @@ const IncomeDryFruit = () => {
             ...values,
             date: moment(values.date, "DD-MM-YYYY").toISOString(),
             cash: values.cash === "true" ? true : false,
-            debt: values.debt?.target?.value === "false" ? false : true,
+            debt: values.debt === "true" ? true : false,
         };
         instance
             .post("api/dry/fruit/incomeDryFruit/add", { ...value })
@@ -298,32 +298,35 @@ const IncomeDryFruit = () => {
                         : ulchov[0].name.toLowerCase() === "gram"
                         ? 0.001
                         : 1;
-                response.data.data &&
-                    instance
-                        .post("api/dry/fruit/debt/post", {
-                            incomeDryFruitId: response.data?.data,
-                            workerId: null,
-                            outcomeDryFruitId: null,
-                            given: false,
-                            deadline: deadlineValue,
-                            borrowAmount:
-                                values.price * values.amount * amount -
-                                qarzValue,
-                        })
-                        .then((res) => {
-                            message.success(
-                                "Qarzga olingan mahsulot muvofaqiyatli qo'shildi"
-                            );
-                            setDeadlineValue(null);
-                            setQarzValue(null);
-                            setValueDebt(null);
-                        })
-                        .catch((err) => {
-                            message.error(
-                                "Qarzga olingan mahsulotni qo'shishda muammo bo'ldi"
-                            );
-                            console.error(err);
-                        });
+                if (response.data.data) {
+                    if (values.debt === "true") {
+                        instance
+                            .post("api/dry/fruit/debt/post", {
+                                incomeDryFruitId: response.data?.data,
+                                workerId: null,
+                                outcomeDryFruitId: null,
+                                given: false,
+                                deadline: deadlineValue,
+                                borrowAmount:
+                                    values.price * values.amount * amount -
+                                    qarzValue,
+                            })
+                            .then((res) => {
+                                message.success(
+                                    "Qarzga olingan mahsulot muvofaqiyatli qo'shildi"
+                                );
+                                setDeadlineValue(null);
+                                setQarzValue(null);
+                                setValueDebt(null);
+                            })
+                            .catch((err) => {
+                                message.error(
+                                    "Qarzga olingan mahsulotni qo'shishda muammo bo'ldi"
+                                );
+                                console.error(err);
+                            });
+                    }
+                }
                 getIncomeDryFruits(current - 1, pageSize);
             })
             .catch(function (error) {
@@ -344,7 +347,7 @@ const IncomeDryFruit = () => {
         const time = moment(values.date, "DD-MM-YYYY").toISOString();
         const data = {
             ...values,
-            debt: values.debt?.target?.value === "true" ? true : false,
+            debt: values.debt === "true" ? true : false,
             cash: values?.cash === "true" ? true : false,
             date: time,
         };
@@ -364,25 +367,37 @@ const IncomeDryFruit = () => {
                         : ulchov[0].name.toLowerCase() === "gram"
                         ? 0.001
                         : 1;
-                res.data?.data &&
-                    initial.debt === false &&
-                    instance
-                        .post("api/dry/fruit/debt/post", {
-                            incomeDryFruitId: res.data?.data,
-                            workerId: null,
-                            outcomeDryFruitId: null,
-                            given: false,
-                            deadline: deadlineValue,
-                            borrowAmount:
-                                values.price * values.amount * amount -
-                                qarzValue,
-                        })
-                        .then((res) => {
-                            setDeadlineValue(null);
-                            setQarzValue(null);
-                            setValueDebt(null);
-                        })
-                        .catch((err) => console.error(err));
+                if (res.data.data) {
+                    if (initial.debt === false) {
+                        if (values.debt === "true") {
+                            instance
+                                .post("api/dry/fruit/debt/post", {
+                                    incomeDryFruitId: res.data?.data,
+                                    workerId: null,
+                                    outcomeDryFruitId: null,
+                                    given: false,
+                                    deadline: deadlineValue,
+                                    borrowAmount:
+                                        values.price * values.amount * amount -
+                                        qarzValue,
+                                })
+                                .then((res) => {
+                                    message.success(
+                                        "Qarzga olingan mahsulot muvofaqiyatli qo'shildi"
+                                    );
+                                    setDeadlineValue(null);
+                                    setQarzValue(null);
+                                    setValueDebt(null);
+                                })
+                                .catch((err) => {
+                                    message.error(
+                                        "Qarzga olingan mahsulotni qo'shishda muammo bo'ldi"
+                                    );
+                                    console.error(err);
+                                });
+                        }
+                    }
+                }
             })
             .catch(function (error) {
                 console.error("Error in edit: ", error);

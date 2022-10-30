@@ -5,6 +5,7 @@ import {
     Col,
     Drawer,
     Input,
+    InputNumber,
     List,
     message,
     Row,
@@ -22,10 +23,11 @@ import instance from "../Api/Axios";
 import { useNavigate } from "react-router-dom";
 import { useData } from "../Hook/UseData";
 import { ComponentToPrint } from "./ComponentToPrint";
+import EditDataCustome from "./CustonEditTableData";
 
 const App = () => {
     const [tableData, setTableData] = useState([]);
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [selectedRowKeys, setSelectedRowKeys] = useState([[], []]);
     const [totalInputValue, setTotalInputValue] = useState(null);
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
@@ -88,7 +90,7 @@ const App = () => {
                                       productPrice:
                                           data.data.data?.outcomePrice,
                                       measurment: data.data.data?.amount
-                                          ? "KG"
+                                          ? "kg"
                                           : "шт",
                                       measurementId: data.data.data?.amount
                                           ? 1
@@ -105,13 +107,14 @@ const App = () => {
                                   data.data.data.map((item) => {
                                       return {
                                           id: item.id,
+                                          key: item.id,
                                           name: item.name,
                                           amount: item?.amount
                                               ? item?.amount
                                               : 1,
                                           productPrice: item?.outcomePrice,
                                           measurment: item?.amount
-                                              ? "KG"
+                                              ? "kg"
                                               : "шт",
                                           measurementId: item?.amount ? 1 : 4,
                                           productTotalPrice:
@@ -172,6 +175,7 @@ const App = () => {
                                                         product[0].id
                                                         ? {
                                                               ...item,
+                                                              key: item.id,
                                                               amount:
                                                                   item.amount +
                                                                   field.amount,
@@ -180,7 +184,10 @@ const App = () => {
                                                                       field.amount) *
                                                                   item.productPrice,
                                                           }
-                                                        : item;
+                                                        : {
+                                                              ...item,
+                                                              key: item.id,
+                                                          };
                                                 });
                                             } else {
                                                 setSearchInputRef(true);
@@ -209,24 +216,28 @@ const App = () => {
         }
     }, [onBeforeGetContentResolve.current, text]);
 
-    const onSelectChange = (selectedRowKeys) => {
-        setSelectedRowKeys([...selectedRowKeys]);
-    };
-
-    const rowSelection = {
-        selectedRowKeys: selectedRowKeys,
-        onChange: onSelectChange,
+    const onSelectChange = (selectedRowKeys, record) => {
+        setSelectedRowKeys([[...selectedRowKeys], [...record]]);
     };
 
     const handleSelect = (record) => {
-        if (!selectedRowKeys.includes(record.id)) {
-            setSelectedRowKeys((prev) => [...prev, record.id]);
+        if (!selectedRowKeys[0].includes(record.id)) {
+            setSelectedRowKeys((prev) => [
+                [...prev[0], record.id],
+                [...prev[1], record],
+            ]);
         } else {
             setSelectedRowKeys((prev) => {
-                const arr = prev.filter((key) => key !== record.id);
-                return [...arr];
+                const arr = prev[0].filter((key) => key !== record.id);
+                const arr1 = prev[1].filter((key) => key.id !== record.id);
+                return [[...arr], [...arr1]];
             });
         }
+    };
+
+    const rowSelection = {
+        selectedRowKeys: selectedRowKeys[0],
+        onChange: onSelectChange,
     };
 
     const onDelete = (arr) => {
@@ -240,6 +251,22 @@ const App = () => {
         });
         setTableData(newTableData);
         setLoading(false);
+    };
+
+    const onEdit = (values, initial) => {
+        setTableData((prev) => {
+            return prev.map((item) => {
+                return item.id === initial.id
+                    ? {
+                          ...initial,
+                          productPrice: values.productPrice,
+                          amount: values.amount,
+                          productTotalPrice:
+                              values.amount * values.productPrice,
+                      }
+                    : item;
+            });
+        });
     };
 
     const showLargeDrawer = () => {
@@ -330,6 +357,19 @@ const App = () => {
         },
     ];
 
+    const outcomeNakladnoyData = [
+        {
+            name: "productPrice",
+            label: "Quruq meva narxi",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+        {
+            name: "amount",
+            label: "Quruq meva miqdori",
+            input: <InputNumber style={{ width: "100%" }} />,
+        },
+    ];
+
     return (
         <>
             <Tabs
@@ -361,13 +401,22 @@ const App = () => {
                 ]}
             />
             <Space style={{ display: "flex", justifyContent: "end" }}>
+                {selectedRowKeys[0]?.length === 1 ? (
+                    <EditDataCustome
+                        selectedRowKeys={{ ...selectedRowKeys[1][0] }}
+                        onEdit={onEdit}
+                        editData={outcomeNakladnoyData}
+                        editModalTitle={"Mahsulotni o'zgartirish"}
+                        setSelectedRowKeys={setSelectedRowKeys}
+                    />
+                ) : null}
                 <Button
                     className="add-button"
                     icon={<DeleteOutlined />}
                     type="primary"
                     danger
                     onClick={() => {
-                        onDelete(selectedRowKeys);
+                        onDelete(selectedRowKeys[0]);
                         setSelectedRowKeys([[], []]);
                     }}
                 >

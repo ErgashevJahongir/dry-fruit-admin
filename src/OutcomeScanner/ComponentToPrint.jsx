@@ -29,7 +29,7 @@ export class ComponentToPrint extends React.PureComponent {
                 <style type="text/css" media="print"></style>
                 <div className="flash" />
                 <div style={{ textAlign: "center", marginBottom: 20 }}>
-                    <h2 style={{ fontWeight: 600 }}>Сухофрукты №1</h2>
+                    <h2 style={{ fontWeight: 600 }}>№1 Сухофрукты</h2>
                 </div>
                 <div
                     style={{

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import instance from "../Api/Axios";
 import {
     Button,
@@ -10,33 +10,26 @@ import {
     Radio,
     Row,
     Space,
+    Table,
 } from "antd";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 import { useData } from "../Hook/UseData";
+import CustomSelect from "../Module/Select/Select";
+import EditDataCustome from "./EditCustomTableData";
+import EditData from "./../Module/Table/EditTableData";
 import {
     CreditCardOutlined,
     DollarOutlined,
     DownloadOutlined,
+    DeleteOutlined,
 } from "@ant-design/icons";
-import CustomSelect from "../Module/Select/Select";
-import moment from "moment";
-
-import { useEffect } from "react";
-import { Table } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
-import EditDataCustome from "./EditCustomTableData";
-import EditData from "./../Module/Table/EditTableData";
 
 const CustomTable = (props) => {
     const {
         getData,
         tableData,
         columns,
-        current,
-        pageSize,
-        totalItems,
-        setCurrent,
-        setPageSize,
         loading,
         pageSizeOptions,
         onCreate,
@@ -73,14 +66,8 @@ const CustomTable = (props) => {
         },
     ];
 
-    const onChange = (pageNumber, page) => {
-        setPageSize(page);
-        setCurrent(pageNumber);
-        getData(pageNumber - 1, page);
-    };
-
     useEffect(() => {
-        getData(current - 1, pageSize);
+        getData();
     }, []);
 
     const onSelectChange = (selectedRowKeys, record) => {
@@ -124,7 +111,6 @@ const CustomTable = (props) => {
                         onChange={(e) => {
                             setNakladnoyDryFruitId(e);
                         }}
-                        value={nakladnoyDryFruitId}
                         selectData={
                             user.roleId === 1
                                 ? dryfruitData.filter((item) => {
@@ -217,12 +203,8 @@ const CustomTable = (props) => {
                     },
                 })}
                 pagination={{
-                    showSizeChanger: true,
-                    total: totalItems,
-                    pageSize: pageSize,
-                    current: current,
+                    pageSize: 50,
                     pageSizeOptions: pageSizeOptions,
-                    onChange: onChange,
                 }}
             />
         </>
@@ -519,7 +501,7 @@ const OutcomeNakladnoy = () => {
                 tableData={outcomeFuel}
                 loading={loading}
                 setLoading={setLoading}
-                pageSizeOptions={[10, 20]}
+                pageSizeOptions={[50, 100]}
             />
             <Row justify="end">
                 <Button
