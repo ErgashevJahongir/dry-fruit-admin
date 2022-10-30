@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Form, Modal } from "antd";
 import { EditOutlined } from "@ant-design/icons";
+import useKeyPress from "../../Hook/UseKeyPress";
 
 const EditData = ({
     selectedRowKeys,
@@ -11,6 +12,7 @@ const EditData = ({
 }) => {
     const [form] = Form.useForm();
     const [visible, setVisible] = useState(false);
+    const enter = useKeyPress("Enter");
 
     const onEdited = (values) => {
         onEdit(values, selectedRowKeys);
@@ -23,6 +25,21 @@ const EditData = ({
     };
 
     const initialData = { ...selectedRowKeys };
+
+    const formValidate = () => {
+        form.validateFields()
+            .then((values) => {
+                form?.resetFields();
+                onEdited(values);
+            })
+            .catch((info) => {
+                console.error("Validate Failed:", info);
+            });
+    };
+
+    if (enter && visible) {
+        formValidate();
+    }
 
     return (
         <div>
@@ -46,16 +63,7 @@ const EditData = ({
                 onCancel={() => {
                     onCancel();
                 }}
-                onOk={() => {
-                    form.validateFields()
-                        .then((values) => {
-                            form?.resetFields();
-                            onEdited(values);
-                        })
-                        .catch((info) => {
-                            console.error("Validate Failed:", info);
-                        });
-                }}
+                onOk={formValidate}
             >
                 <Form form={form} layout="vertical" name="form_in_modal">
                     {editData?.map((data) => {

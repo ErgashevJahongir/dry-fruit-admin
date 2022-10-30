@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Form, Modal } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import useKeyPress from "../../Hook/UseKeyPress";
 
 const CollectionCreateForm = ({
     visible,
@@ -10,6 +11,23 @@ const CollectionCreateForm = ({
     modalTitle,
 }) => {
     const [form] = Form.useForm();
+    const enter = useKeyPress("Enter");
+
+    const formValidate = () => {
+        form.validateFields()
+            .then((values) => {
+                form.resetFields();
+                onCreate(values);
+            })
+            .catch((info) => {
+                console.error("Validate Failed:", info);
+            });
+    };
+
+    if (enter && visible) {
+        formValidate();
+    }
+
     return (
         <Modal
             visible={visible}
@@ -20,16 +38,8 @@ const CollectionCreateForm = ({
             onCancel={() => {
                 onCancel();
             }}
-            onOk={() => {
-                form.validateFields()
-                    .then((values) => {
-                        form.resetFields();
-                        onCreate(values);
-                    })
-                    .catch((info) => {
-                        console.error("Validate Failed:", info);
-                    });
-            }}
+            onOk={formValidate}
+            forceRender
         >
             <Form
                 form={form}

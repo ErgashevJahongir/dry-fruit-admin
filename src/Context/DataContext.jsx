@@ -10,8 +10,6 @@ export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
     const [valueDebt, setValueDebt] = useState(null);
-    const [nakladnoyMeasurment, setNakladnoyMeasurment] = useState(1);
-    const [nakladnoyPrice, setNakladnoyPrice] = useState("");
     const [user, setUser] = useState({});
     const [usersData, setUsersData] = useState([]);
     const [clientData, setClientData] = useState([]);

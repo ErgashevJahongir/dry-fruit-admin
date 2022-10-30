@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button, Form, Modal } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import { useData } from "../Hook/UseData";
+import { EditOutlined } from "@ant-design/icons";
 import useKeyPress from "../Hook/UseKeyPress";
 
 const EditDataCustome = ({
@@ -10,15 +9,12 @@ const EditDataCustome = ({
     editData,
     editModalTitle,
     setSelectedRowKeys,
-    setNakladnoyDryFruitId,
 }) => {
     const [form] = Form.useForm();
     const [visible, setVisible] = useState(false);
     const enter = useKeyPress("Enter");
-    const { dryfruitData } = useData();
 
     const onEdited = (values) => {
-        setNakladnoyDryFruitId("");
         setSelectedRowKeys([[], []]);
         onEdit(values, selectedRowKeys);
         setVisible(false);
@@ -28,14 +24,9 @@ const EditDataCustome = ({
         setVisible(false);
     };
 
-    const dryFruit = dryfruitData.filter(
-        (item) => item.id === selectedRowKeys?.nakladnoyDryFruitId
-    );
-
     const initialData = {
-        dryFruitId: dryFruit[0].id,
-        measurementId: 1,
-        price: dryFruit[0].wholesalePrice,
+        productPrice: selectedRowKeys.productPrice,
+        amount: selectedRowKeys.amount,
     };
 
     const formValidate = () => {
@@ -62,16 +53,21 @@ const EditDataCustome = ({
                     setVisible(true);
                 }}
                 className="add-button"
-                icon={<PlusOutlined />}
+                icon={<EditOutlined />}
             >
-                Qo'shish
+                O'zgartirish
             </Button>
             <Modal
                 visible={visible}
                 title={editModalTitle}
-                okText="Qo'shish"
+                okText="O'zgartirish"
+                okButtonProps={{
+                    id: "submitButton",
+                    htmlType: "submit",
+                }}
                 cancelText="Bekor qilish"
                 width={350}
+                autoFocusButton
                 onCancel={() => {
                     onCancel();
                 }}

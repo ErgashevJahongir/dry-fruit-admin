@@ -3,15 +3,12 @@ import { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import instance from "../Api/Axios";
 import Loading from "../Components/Loading";
-import { useData } from "../Hook/UseData";
 
 const Dashboard = () => {
     const [loading, setLoading] = useState(true);
-    const [data, setData] = useState([]);
     const [totalsum, setTotalsum] = useState();
     const [totalsumOut, setTotalsumOut] = useState();
     const [currency, setCurrency] = useState(null);
-    const { branchData, dryfruitData } = useData();
 
     const getCurrency = () => {
         setLoading(true);
@@ -28,17 +25,6 @@ const Dashboard = () => {
                 console.error(err);
             })
             .finally(() => setLoading(false));
-    };
-
-    const getWerehouseDryFruit = () => {
-        instance
-            .get(`api/dry/fruit/dryFruitWarehouse/getAll`)
-            .then((data) => {
-                setData(data.data.data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
     };
 
     const getIncomeDryFruitsTimely = () => {
@@ -77,7 +63,6 @@ const Dashboard = () => {
 
     useEffect(() => {
         getCurrency();
-        getWerehouseDryFruit();
         getIncomeDryFruitsTimely();
         getOutcomeDryFruitsTimely();
     }, []);
@@ -163,124 +148,6 @@ const Dashboard = () => {
         );
     };
 
-    const ApexChart = () => {
-        const [options, setOptions] = useState({
-            chart: {
-                type: "bar",
-            },
-            plotOptions: {
-                bar: {
-                    barHeight: "100%",
-                    distributed: true,
-                    horizontal: true,
-                    dataLabels: {
-                        position: "bottom",
-                    },
-                },
-            },
-            colors: data.map((item) => {
-                const color =
-                    item?.amount > 1000
-                        ? "#0f0"
-                        : item?.amount > 100
-                        ? "#ff0"
-                        : "#f00";
-                return color;
-            }),
-            dataLabels: {
-                enabled: true,
-                textAnchor: "start",
-                style: {
-                    colors: ["#fff"],
-                },
-                formatter: function (val, opt) {
-                    return (
-                        opt.w.globals.labels[opt.dataPointIndex] + ":  " + val
-                    );
-                },
-                offsetX: 0,
-                dropShadow: {
-                    enabled: true,
-                },
-            },
-            stroke: {
-                width: 1,
-                colors: ["#fff"],
-            },
-            xaxis: {
-                categories: data?.map((item) => {
-                    const socks = dryfruitData?.filter(
-                        (data) => data?.id === item?.dryFruitId
-                    );
-                    const branch = branchData?.filter(
-                        (data) => data?.id === item?.branchId
-                    );
-                    return (
-                        `${socks[0]?.name}(${branch[0]?.name})` ||
-                        "tur o'chirilgan"
-                    );
-                }),
-            },
-            yaxis: {
-                labels: {
-                    show: false,
-                },
-            },
-            title: {
-                text: "Mahsulotlar soni",
-                align: "center",
-                floating: true,
-            },
-            subtitle: {
-                text: "Mahsulotlar soni haqida malumot",
-                align: "center",
-            },
-            tooltip: {
-                theme: "dark",
-                x: {
-                    show: false,
-                },
-                y: {
-                    title: {
-                        formatter: function () {
-                            return "";
-                        },
-                    },
-                },
-            },
-        });
-        const [series, setSeries] = useState([
-            {
-                data: data
-                    ? data?.map((item) => {
-                          return item?.amount;
-                      })
-                    : [],
-            },
-        ]);
-
-        return (
-            <div id="chart">
-                <ReactApexChart
-                    options={options}
-                    series={series}
-                    type="bar"
-                    height={
-                        data?.length > 150
-                            ? 7000
-                            : data?.length > 100
-                            ? 5000
-                            : data?.length > 50
-                            ? 2500
-                            : data?.length > 30
-                            ? 1500
-                            : 700
-                    }
-                />
-            </div>
-        );
-    };
-
     return (
         <>
             <Card
@@ -301,17 +168,6 @@ const Dashboard = () => {
                 ({currency?.ccy}) {currency?.ccyNmUZ}
             </Card>
             <div style={{ marginTop: 50 }}>
-                <Card
-                    xs={24}
-                    sm={24}
-                    md={24}
-                    lg={24}
-                    xl={24}
-                    xxl={24}
-                    key={"amount"}
-                >
-                    <ApexChart />
-                </Card>
                 <Row className="lineAmount">
                     <Card
                         xs={24}
