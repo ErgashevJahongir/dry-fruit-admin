@@ -22,9 +22,13 @@ const OutDebt = () => {
             .then((data) => {
                 let value = data.data?.data?.debts?.map((df) => {
                     const deadline = moment(df.deadline).format("DD-MM-YYYY");
+                    const createdDate = moment(df.createdDate).format(
+                        "DD-MM-YYYY"
+                    );
                     return {
                         ...df,
                         deadline: deadline,
+                        createdDate: createdDate,
                     };
                 });
                 setDebts(value);
@@ -159,9 +163,9 @@ const OutDebt = () => {
             },
         },
         {
-            title: "Olingan mahsulot",
-            dataIndex: "dryFruitId",
-            key: "dryFruitId",
+            title: "Olingan vaqt",
+            dataIndex: "createdDate",
+            key: "createdDate",
             width: "10%",
             search: false,
             render: (record) => {
@@ -169,10 +173,10 @@ const OutDebt = () => {
                 return name[0]?.name;
             },
             sorter: (a, b) => {
-                if (a.dryFruitId < b.dryFruitId) {
+                if (a.createdDate < b.createdDate) {
                     return -1;
                 }
-                if (a.dryFruitId > b.dryFruitId) {
+                if (a.createdDate > b.createdDate) {
                     return 1;
                 }
                 return 0;

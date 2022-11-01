@@ -25,7 +25,6 @@ const IncomeDryFruit = () => {
         setDeadlineValue,
         setQarzValue,
         setValueDebt,
-        getOutcomeDryfruitData,
     } = useData();
     const navigate = useNavigate();
 
@@ -56,7 +55,6 @@ const IncomeDryFruit = () => {
                         .slice(0, index + 3),
                     totalCash: data.data.data?.dryFruits.totalCash,
                 });
-                getOutcomeDryfruitData();
                 setOutcomeFuel(incomeDryfruit);
                 setTotalItems(data.data.data?.totalItems);
             })

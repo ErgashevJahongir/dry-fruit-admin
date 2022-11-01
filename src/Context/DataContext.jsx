@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import moment from "moment";
 import { DatePicker, Input, InputNumber, Radio } from "antd";
 import CustomSelect from "../Module/Select/Select";
+import { useSidebar } from "../Hook/UseSidebar";
 
 export const DataContext = createContext();
 
@@ -13,7 +14,6 @@ export const DataProvider = ({ children }) => {
     const [user, setUser] = useState({});
     const [usersData, setUsersData] = useState([]);
     const [clientData, setClientData] = useState([]);
-    const [outcomeDryfruitData, setOutcomeDryfruitData] = useState([]);
     const [incomeDryfruitData, setIncomeDryfruitData] = useState([]);
     const [userLoading, setUserLoading] = useState(true);
     const [workerData, setWorkerData] = useState([]);
@@ -26,6 +26,7 @@ export const DataProvider = ({ children }) => {
     const [countryData, setCountryData] = useState([]);
     const [qarzValue, setQarzValue] = useState("");
     const [deadlineValue, setDeadlineValue] = useState("");
+    const { setNakladnoySidebar, setKassaSidebar } = useSidebar();
     const { token } = useToken();
     let location = useLocation();
 
@@ -1455,31 +1456,6 @@ export const DataProvider = ({ children }) => {
 
     const editOutdebtFormData = [
         {
-            name: "outcomeDryFruitId",
-            label: "Qarzga olingan mahsulot",
-            inputSelect: (defaultId = null) => {
-                return (
-                    <CustomSelect
-                        backValue={"id"}
-                        placeholder={"Quruq mevani tanlang"}
-                        selectData={outcomeDryfruitData?.map((item) => {
-                            const name = dryfruitData?.filter(
-                                (data) => data.id === item.dryFruitId
-                            );
-                            const time = moment(item?.date).format(
-                                "DD-MM-YYYY"
-                            );
-                            return {
-                                ...item,
-                                name: `${name[0]?.name}  ${time}`,
-                            };
-                        })}
-                        DValue={defaultId}
-                    />
-                );
-            },
-        },
-        {
             name: "borrowAmount",
             label: "Qarz miqdori",
             input: <InputNumber style={{ width: "100%" }} />,
@@ -1541,15 +1517,6 @@ export const DataProvider = ({ children }) => {
             .get("api/dry/fruit/measurement/all")
             .then((data) => {
                 setMeasurementData(data.data.data);
-            })
-            .catch((err) => console.error(err));
-    };
-
-    const getOutcomeDryfruitData = () => {
-        instance
-            .get("api/dry/fruit/outcomeFruit/getAll")
-            .then((data) => {
-                setOutcomeDryfruitData(data.data.data);
             })
             .catch((err) => console.error(err));
     };
@@ -1638,9 +1605,20 @@ export const DataProvider = ({ children }) => {
         getDryfruitWareData();
         getRoleData();
         getClientData();
-        getOutcomeDryfruitData();
         getIncomeDryfruitData();
     }, []);
+
+    if (location.pathname === "/client-salelist") {
+        setNakladnoySidebar(true);
+    } else {
+        setNakladnoySidebar(false);
+    }
+
+    if (location.pathname === "/kassa") {
+        setKassaSidebar(true);
+    } else {
+        setKassaSidebar(false);
+    }
 
     let formData = {};
 
@@ -1909,7 +1887,6 @@ export const DataProvider = ({ children }) => {
         formData,
         getDryfruitData,
         getMeasurementData,
-        getOutcomeDryfruitData,
         getIncomeDryfruitData,
         getCategoryData,
         getDryfruitWareData,

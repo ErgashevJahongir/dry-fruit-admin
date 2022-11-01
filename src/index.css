@@ -109,6 +109,11 @@ li {
     margin: 0 auto;
 }
 
+.containerContent {
+    width: 1040px;
+    margin: 0 auto;
+}
+
 .burger-menu {
     display: none;
 }
@@ -161,11 +166,20 @@ li {
     .container {
         width: 1020px;
     }
+
+    .containerContent {
+        width: 620px;
+    }
 }
 
 @media screen and (max-width: 1020px) {
     .container {
         width: 768px;
+        padding: 0;
+    }
+
+    .containerContent {
+        width: 368px;
         padding: 0;
     }
 }

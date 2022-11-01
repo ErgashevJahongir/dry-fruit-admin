@@ -5,6 +5,7 @@ import { AxiosInterceptor } from "./Api/Axios";
 import useToken from "./Hook/UseToken";
 import Login from "./Login/Login";
 import RoutesPage from "./Routes";
+import { SidebarProvider } from "./Context/SidebarDataContext";
 
 function App() {
     const { token } = useToken();
@@ -19,11 +20,13 @@ function App() {
     return (
         <>
             {token ? (
-                <DataProvider>
-                    <AxiosInterceptor>
-                        <RoutesPage />
-                    </AxiosInterceptor>
-                </DataProvider>
+                <SidebarProvider>
+                    <DataProvider>
+                        <AxiosInterceptor>
+                            <RoutesPage />
+                        </AxiosInterceptor>
+                    </DataProvider>
+                </SidebarProvider>
             ) : null}
             {token ? null : (
                 <Routes>
