@@ -168,10 +168,6 @@ const OutDebt = () => {
             key: "createdDate",
             width: "10%",
             search: false,
-            render: (record) => {
-                const name = dryfruitData?.filter((item) => item.id === record);
-                return name[0]?.name;
-            },
             sorter: (a, b) => {
                 if (a.createdDate < b.createdDate) {
                     return -1;

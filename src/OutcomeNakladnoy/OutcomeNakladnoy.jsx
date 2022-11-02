@@ -332,7 +332,7 @@ const OutcomeNakladnoy = () => {
                                   .post("api/dry/fruit/debt/post", {
                                       incomeDryFruitId: null,
                                       workerId: null,
-                                      outcomeDryFruitId: null,
+                                      outcomeDryFruitId: response.data.data,
                                       deadline: deadlineValue,
                                       given: false,
                                       borrowAmount:
