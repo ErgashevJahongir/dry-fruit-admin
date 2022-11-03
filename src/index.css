@@ -162,6 +162,10 @@ li {
     width: 100%;
 }
 
+.navbar-drawer .ant-drawer-body {
+    padding: 0;
+}
+
 @media screen and (max-width: 1440px) {
     .container {
         width: 1020px;
