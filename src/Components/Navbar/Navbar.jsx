@@ -180,7 +180,7 @@ function Navbar() {
                     alignItems: "center",
                 }}
             >
-                <div className="logo" style={{ marginRight: "5%" }}>
+                <div className="logo">
                     <Link
                         to="/"
                         style={{ marginTop: "10px", display: "block" }}
@@ -190,6 +190,7 @@ function Navbar() {
                                 display: "flex",
                                 alignItems: "center",
                                 color: "#ff5722",
+                                width: 200,
                             }}
                         >
                             Сухофрукты №1
@@ -483,7 +484,10 @@ function Navbar() {
                         },
                     ]}
                 />
-                <span className="user" style={{ marginLeft: "auto" }}>
+                <span
+                    className="user"
+                    style={{ marginLeft: "auto", width: 90 }}
+                >
                     {user?.roleId !== 3 ? (
                         <Badge
                             size="small"

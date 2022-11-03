@@ -291,7 +291,7 @@ const OutcomeScanner = () => {
         const value = tableData.map((values) => {
             const date = new Date();
             return {
-                clientId: "c381fb83-7473-4f3e-8109-92f464166a99",
+                clientId: "69126c57-d5b2-42da-95e2-d577f27b2a3e",
                 measurementId: values.measurementId ? values.measurementId : 4,
                 amount: values.amount,
                 dryFruitId: values.id,

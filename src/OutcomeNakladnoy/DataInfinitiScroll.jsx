@@ -8,7 +8,6 @@ import { useData } from "../Hook/UseData";
 import useKeyPress from "../Hook/UseKeyPress";
 import { useSidebar } from "../Hook/UseSidebar";
 import CustomSelect from "../Module/Select/Select";
-import { Spin } from "antd";
 
 const style = {
     height: 30,
@@ -156,12 +155,30 @@ export default function DataInfinitiScroll() {
         setHasSearch(true);
         if (searchValue !== "") {
             instance
-                .get(`api/dry/fruit/dryFruit/code?code=${searchValue}`)
+                .get(`api/dry/fruit/dryFruit/search?word=${searchValue}`)
                 .then((data) => {
-                    setSearchData([data.data.data]);
+                    setSearchData(
+                        data.data.data.map((item) => {
+                            console.log(item);
+                            return {
+                                id: item.id,
+                                key: item.id,
+                                dryFruitId: item.id,
+                                name: item.name,
+                                amount: item?.amount ? item?.amount : 1,
+                                productPrice: item?.outcomePrice,
+                                measurment: item?.amount ? "kg" : "шт",
+                                measurementId: item?.amount ? 1 : 4,
+                                productTotalPrice:
+                                    (item?.amount ? item?.amount : 1) *
+                                    item?.outcomePrice,
+                            };
+                        })
+                    );
                 });
         } else {
             setData([]);
+            getWerehouseDryFruitScroll(0);
             setHasSearch(false);
         }
     };
@@ -178,7 +195,7 @@ export default function DataInfinitiScroll() {
             <Input
                 style={{ padding: 10, marginBottom: "20px" }}
                 icon={<SearchOutlined />}
-                placeholder={"Kode bo'yicha qidirish"}
+                placeholder={"Mahsulot nomi bo'yicha qidirish"}
                 onChange={(e) => {
                     searchItems(e.target.value);
                 }}
@@ -189,16 +206,6 @@ export default function DataInfinitiScroll() {
                         <InfiniteScroll
                             dataLength={data.length}
                             hasMore={hasMore}
-                            loader={
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        justifyContent: "center",
-                                    }}
-                                >
-                                    <Spin />
-                                </div>
-                            }
                             endMessage={
                                 <p style={{ textAlign: "center" }}>
                                     <b>Ombordagi quruq mevalar tugadi!</b>
@@ -252,7 +259,7 @@ export default function DataInfinitiScroll() {
                                         form.setFieldsValue({
                                             dryFruitId: qism?.id,
                                             measurementId: 1,
-                                            price: qism?.wholesalePrice,
+                                            price: qism?.productPrice,
                                         });
                                         setVisible(true);
                                     }}

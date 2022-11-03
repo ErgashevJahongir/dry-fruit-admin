@@ -1461,11 +1461,6 @@ export const DataProvider = ({ children }) => {
             input: <InputNumber style={{ width: "100%" }} />,
         },
         {
-            name: "deadline",
-            label: "Qarz berilgan vaqt",
-            input: <Input />,
-        },
-        {
             name: "given",
             label: "Qarz uzilganmi",
             inputSelect: (defaultId = null) => {

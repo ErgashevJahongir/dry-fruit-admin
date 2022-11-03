@@ -1,5 +1,5 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Spin } from "antd";
+import { Button, Input } from "antd";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useNavigate } from "react-router-dom";
@@ -94,6 +94,7 @@ export default function OutcomeScannerDataInfinitiScroll() {
                 });
         } else {
             setSearchData([]);
+            getWerehouseDryFruitScroll(0);
             setHasSearch(false);
         }
     };
@@ -121,16 +122,6 @@ export default function OutcomeScannerDataInfinitiScroll() {
                     <InfiniteScroll
                         dataLength={data.length}
                         hasMore={hasMore}
-                        loader={
-                            <div
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                }}
-                            >
-                                <Spin />
-                            </div>
-                        }
                         endMessage={
                             <p style={{ textAlign: "center" }}>
                                 <b>Ombordagi quruq mevalar tugadi!</b>
