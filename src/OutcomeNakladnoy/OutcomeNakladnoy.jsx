@@ -332,8 +332,9 @@ const OutcomeNakladnoy = () => {
                                   .post("api/dry/fruit/debt/post", {
                                       incomeDryFruitId: null,
                                       workerId: null,
-                                      outcomeDryFruitId: response.data.data,
-                                      deadline: deadlineValue,
+                                      clientId: values.clientId,
+                                      branchId: user.branchId,
+                                      date: deadlineValue,
                                       given: false,
                                       borrowAmount:
                                           values.price * values.amount * amount,
@@ -503,7 +504,7 @@ const OutcomeNakladnoy = () => {
                                                         marginLeft: "-25px",
                                                     }}
                                                 >
-                                                    Qaytarish vaqti
+                                                    Qarz berilgan vaqti
                                                     <DatePicker
                                                         style={{
                                                             width: "100%",

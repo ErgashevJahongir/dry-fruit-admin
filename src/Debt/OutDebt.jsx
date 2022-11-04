@@ -40,12 +40,16 @@ const OutDebt = () => {
     };
 
     const onEdit = (values, initial) => {
+        console.log(initial);
         setLoading(true);
         const val = values.given === "true" ? true : false;
         instance
             .put(`api/dry/fruit/debt/update${initial.id}`, {
                 ...values,
+                clientId: initial.clientId,
+                branchId: initial.branchId,
                 given: val,
+                date: null,
                 workerId: null,
                 incomeDryFruitId: null,
             })

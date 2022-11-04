@@ -25,6 +25,7 @@ const IncomeDryFruit = () => {
         setDeadlineValue,
         setQarzValue,
         setValueDebt,
+        user,
     } = useData();
     const navigate = useNavigate();
 
@@ -286,8 +287,9 @@ const IncomeDryFruit = () => {
                             .post("api/dry/fruit/debt/post", {
                                 incomeDryFruitId: null,
                                 workerId: null,
-                                outcomeDryFruitId: response.data.data,
-                                deadline: deadlineValue,
+                                clientId: values.clientId,
+                                branchId: user.branchId,
+                                date: deadlineValue,
                                 given: false,
                                 borrowAmount:
                                     values.price * values.amount * amount -
@@ -378,8 +380,9 @@ const IncomeDryFruit = () => {
                                 .post("api/dry/fruit/debt/post", {
                                     incomeDryFruitId: null,
                                     workerId: null,
-                                    outcomeDryFruitId: res.data.data,
-                                    deadline: deadlineValue,
+                                    clientId: initial.clientId,
+                                    branchId: user.branchId,
+                                    date: deadlineValue,
                                     given: false,
                                     borrowAmount:
                                         values.price * values.amount * amount -

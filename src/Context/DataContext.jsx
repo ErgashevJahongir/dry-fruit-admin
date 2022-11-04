@@ -496,7 +496,7 @@ export const DataProvider = ({ children }) => {
                                         marginLeft: "-25px",
                                     }}
                                 >
-                                    Qaytarish vaqti
+                                    Qarz berilgan vaqti
                                     <DatePicker
                                         style={{ width: "100%" }}
                                         onChange={onChangeDeadline}
@@ -692,7 +692,7 @@ export const DataProvider = ({ children }) => {
                                         marginLeft: "-25px",
                                     }}
                                 >
-                                    Qaytarish vaqti
+                                    Qarz berilgan vaqti
                                     <DatePicker
                                         style={{ width: "100%" }}
                                         onChange={onChangeDeadline}

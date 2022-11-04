@@ -22,6 +22,7 @@ const WorkerDebt = () => {
                 `api/dry/fruit/debt/get-worker?page=${current}&size=${pageSize}`
             )
             .then((data) => {
+                console.log(data);
                 const value = [
                     ...data.data?.data?.debts.map((item) => {
                         return {
@@ -49,7 +50,6 @@ const WorkerDebt = () => {
         instance
             .post("api/dry/fruit/debt/post", {
                 ...values,
-                outcomeDryFruitId: null,
                 incomeDryFruitId: null,
             })
             .then(function (response) {
@@ -73,7 +73,6 @@ const WorkerDebt = () => {
         instance
             .put(`api/dry/fruit/debt/update${initial.id}`, {
                 ...values,
-                outcomeDryFruitId: null,
                 incomeDryFruitId: null,
                 deadline: deadline,
                 given: val,
@@ -155,15 +154,6 @@ const WorkerDebt = () => {
             key: "deadline",
             width: "20%",
             search: false,
-            sorter: (a, b) => {
-                if (a.deadline < b.deadline) {
-                    return -1;
-                }
-                if (a.deadline > b.deadline) {
-                    return 1;
-                }
-                return 0;
-            },
         },
         {
             title: "To'liq uzilganmi",
