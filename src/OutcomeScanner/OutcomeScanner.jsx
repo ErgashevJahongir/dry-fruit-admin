@@ -24,9 +24,9 @@ import { useNavigate } from "react-router-dom";
 import { useData } from "../Hook/UseData";
 import { ComponentToPrint } from "./ComponentToPrint";
 import EditDataCustome from "./CustonEditTableData";
+import { useSidebar } from "../Hook/UseSidebar";
 
-const App = () => {
-    const [tableData, setTableData] = useState([]);
+const OutcomeScanner = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState([[], []]);
     const [totalInputValue, setTotalInputValue] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -34,6 +34,7 @@ const App = () => {
     const [searchInputRef, setSearchInputRef] = useState(true);
     const [text, setText] = React.useState("old boring text");
     const componentRef = React.useRef(null);
+    const { tableData, setTableData } = useSidebar();
     const navigate = useNavigate();
     const { user } = useData();
 
@@ -290,7 +291,7 @@ const App = () => {
         const value = tableData.map((values) => {
             const date = new Date();
             return {
-                clientId: "c381fb83-7473-4f3e-8109-92f464166a99",
+                clientId: "69126c57-d5b2-42da-95e2-d577f27b2a3e",
                 measurementId: values.measurementId ? values.measurementId : 4,
                 amount: values.amount,
                 dryFruitId: values.id,
@@ -552,72 +553,72 @@ const App = () => {
     );
 };
 
-const initialItems = [
-    {
-        label: "Tab",
-        children: <App />,
-        key: "0",
-        closable: false,
-    },
-];
+// const initialItems = [
+//     {
+//         label: "Tab",
+//         children: <App />,
+//         key: "0",
+//         closable: false,
+//     },
+// ];
 
-const OutcomeScanner = () => {
-    const [activeKey, setActiveKey] = useState(initialItems[0].key);
-    const [items, setItems] = useState(initialItems);
-    const newTabIndex = useRef(0);
+// const OutcomeScanner = () => {
+//     const [activeKey, setActiveKey] = useState(initialItems[0].key);
+//     const [items, setItems] = useState(initialItems);
+//     const newTabIndex = useRef(0);
 
-    const onChange = (newActiveKey) => {
-        setActiveKey(newActiveKey);
-    };
+//     const onChange = (newActiveKey) => {
+//         setActiveKey(newActiveKey);
+//     };
 
-    const add = () => {
-        const newActiveKey = `${++newTabIndex.current}`;
-        const newPanes = [...items];
-        newPanes.push({
-            label: `Tab ${newActiveKey}`,
-            children: <App />,
-            key: newActiveKey,
-        });
-        setItems(newPanes);
-        setActiveKey(newActiveKey);
-    };
+//     const add = () => {
+//         const newActiveKey = `${++newTabIndex.current}`;
+//         const newPanes = [...items];
+//         newPanes.push({
+//             label: `Tab ${newActiveKey}`,
+//             children: <App />,
+//             key: newActiveKey,
+//         });
+//         setItems(newPanes);
+//         setActiveKey(newActiveKey);
+//     };
 
-    const remove = (targetKey) => {
-        let newActiveKey = activeKey;
-        let lastIndex = -1;
-        items.forEach((item, i) => {
-            if (item.key === targetKey) {
-                lastIndex = i - 1;
-            }
-        });
-        const newPanes = items.filter((item) => item.key !== targetKey);
-        if (newPanes.length && newActiveKey === targetKey) {
-            if (lastIndex >= 0) {
-                newActiveKey = newPanes[lastIndex].key;
-            } else {
-                newActiveKey = newPanes[0].key;
-            }
-        }
-        setItems(newPanes);
-        setActiveKey(newActiveKey);
-    };
+//     const remove = (targetKey) => {
+//         let newActiveKey = activeKey;
+//         let lastIndex = -1;
+//         items.forEach((item, i) => {
+//             if (item.key === targetKey) {
+//                 lastIndex = i - 1;
+//             }
+//         });
+//         const newPanes = items.filter((item) => item.key !== targetKey);
+//         if (newPanes.length && newActiveKey === targetKey) {
+//             if (lastIndex >= 0) {
+//                 newActiveKey = newPanes[lastIndex].key;
+//             } else {
+//                 newActiveKey = newPanes[0].key;
+//             }
+//         }
+//         setItems(newPanes);
+//         setActiveKey(newActiveKey);
+//     };
 
-    const onEdit = (targetKey, action) => {
-        if (action === "add") {
-            add();
-        } else {
-            remove(targetKey);
-        }
-    };
+//     const onEdit = (targetKey, action) => {
+//         if (action === "add") {
+//             add();
+//         } else {
+//             remove(targetKey);
+//         }
+//     };
 
-    return (
-        <Tabs
-            type="editable-card"
-            onChange={onChange}
-            activeKey={activeKey}
-            onEdit={onEdit}
-            items={items}
-        />
-    );
-};
+//     return (
+//         <Tabs
+//             type="editable-card"
+//             onChange={onChange}
+//             activeKey={activeKey}
+//             onEdit={onEdit}
+//             items={items}
+//         />
+//     );
+// };
 export default OutcomeScanner;

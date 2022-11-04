@@ -5,7 +5,6 @@ import {
     Col,
     DatePicker,
     Drawer,
-    InputNumber,
     message,
     Radio,
     Row,
@@ -16,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { useData } from "../Hook/UseData";
 import CustomSelect from "../Module/Select/Select";
-import EditDataCustome from "./EditCustomTableData";
 import EditData from "./../Module/Table/EditTableData";
 import {
     CreditCardOutlined,
@@ -24,6 +22,7 @@ import {
     DownloadOutlined,
     DeleteOutlined,
 } from "@ant-design/icons";
+import { useSidebar } from "../Hook/UseSidebar";
 
 const CustomTable = (props) => {
     const {
@@ -32,39 +31,11 @@ const CustomTable = (props) => {
         columns,
         loading,
         pageSizeOptions,
-        onCreate,
         onEdit,
         onDelete,
     } = props;
     const [selectedRowKeys, setSelectedRowKeys] = useState([[], []]);
-    const [nakladnoyDryFruitId, setNakladnoyDryFruitId] = useState("");
-    const { formData, dryfruitData, dryfruitWareData, user, measurementData } =
-        useData();
-
-    const outcomeNakladnoyData = [
-        {
-            name: "measurementId",
-            label: "Quruq meva o'lchovi",
-            inputSelect: (defaultId = null) => (
-                <CustomSelect
-                    backValue={"id"}
-                    placeholder={"Quruq meva o'lchovi"}
-                    selectData={measurementData}
-                    DValue={1}
-                />
-            ),
-        },
-        {
-            name: "price",
-            label: "Quruq meva narxi",
-            input: <InputNumber style={{ width: "100%" }} />,
-        },
-        {
-            name: "amount",
-            label: "Quruq meva miqdori",
-            input: <InputNumber style={{ width: "100%" }} />,
-        },
-    ];
+    const { formData } = useData();
 
     useEffect(() => {
         getData();
@@ -102,117 +73,63 @@ const CustomTable = (props) => {
     const dataTableColumns = [...arr];
 
     return (
-        <>
-            <Space className="buttons" size="middle">
-                <Space align="center" size={0}>
-                    <CustomSelect
-                        backValue={"id"}
-                        placeholder={"Quruq mevani tanlang"}
-                        onChange={(e) => {
-                            setNakladnoyDryFruitId(e);
-                        }}
-                        selectData={
-                            user.roleId === 1
-                                ? dryfruitData.filter((item) => {
-                                      if (dryfruitWareData.length === 0)
-                                          return [];
-                                      for (
-                                          let index = 0;
-                                          index < dryfruitWareData.length;
-                                          index++
-                                      ) {
-                                          if (
-                                              item.id ===
-                                              dryfruitWareData[index].dryFruitId
-                                          )
-                                              return item;
-                                      }
-                                  })
-                                : dryfruitData.filter((item) => {
-                                      const branch = dryfruitWareData.filter(
-                                          (qism) =>
-                                              qism.branchId === user.branchId
-                                      );
-                                      if (branch.length === 0) return null;
-                                      for (
-                                          let index = 0;
-                                          index < branch.length;
-                                          index++
-                                      ) {
-                                          if (
-                                              item.id ===
-                                              branch[index].dryFruitId
-                                          )
-                                              return item;
-                                      }
-                                  })
-                        }
-                    />
+        <div>
+            <div>
+                <Space className="buttons" size="middle">
+                    <Space align="center" size="middle" className="new-buttons">
+                        {formData?.editInfo ? (
+                            selectedRowKeys[0]?.length === 1 ? (
+                                <EditData
+                                    selectedRowKeys={{
+                                        ...selectedRowKeys[1][0],
+                                    }}
+                                    onEdit={onEdit}
+                                    editData={formData?.editFormData}
+                                    editModalTitle={formData?.editModalTitle}
+                                    setSelectedRowKeys={setSelectedRowKeys}
+                                />
+                            ) : null
+                        ) : null}
+                        {formData?.deleteInfo ? (
+                            <Button
+                                className="add-button"
+                                icon={<DeleteOutlined />}
+                                type="primary"
+                                danger
+                                onClick={() => {
+                                    onDelete(selectedRowKeys[0]);
+                                    setSelectedRowKeys([[], []]);
+                                }}
+                            >
+                                O'chirish
+                            </Button>
+                        ) : null}
+                    </Space>
                 </Space>
-                <Space align="center" size="middle" className="new-buttons">
-                    {formData?.editInfo ? (
-                        selectedRowKeys[0]?.length === 1 ? (
-                            <EditData
-                                selectedRowKeys={{ ...selectedRowKeys[1][0] }}
-                                onEdit={onEdit}
-                                editData={formData?.editFormData}
-                                editModalTitle={formData?.editModalTitle}
-                                setSelectedRowKeys={setSelectedRowKeys}
-                            />
-                        ) : null
-                    ) : null}
-                    {formData?.deleteInfo ? (
-                        <Button
-                            className="add-button"
-                            icon={<DeleteOutlined />}
-                            type="primary"
-                            danger
-                            onClick={() => {
-                                onDelete(selectedRowKeys[0]);
-                                setSelectedRowKeys([[], []]);
-                            }}
-                        >
-                            O'chirish
-                        </Button>
-                    ) : null}
-                    {formData?.createInfo ? (
-                        nakladnoyDryFruitId ? (
-                            <EditDataCustome
-                                setNakladnoyDryFruitId={setNakladnoyDryFruitId}
-                                selectedRowKeys={{ nakladnoyDryFruitId }}
-                                onEdit={onCreate}
-                                editData={outcomeNakladnoyData}
-                                editModalTitle={formData?.modalTitle}
-                                setSelectedRowKeys={setSelectedRowKeys}
-                            />
-                        ) : null
-                    ) : null}
-                </Space>
-            </Space>
-            <Table
-                rowSelection={rowSelection}
-                loading={loading}
-                columns={dataTableColumns}
-                dataSource={tableData}
-                bordered
-                rowKey={"id"}
-                scroll={{ x: true }}
-                onRow={(record) => ({
-                    onClick: () => {
-                        handleSelect(record);
-                    },
-                })}
-                pagination={{
-                    pageSize: 50,
-                    pageSizeOptions: pageSizeOptions,
-                }}
-            />
-        </>
+                <Table
+                    rowSelection={rowSelection}
+                    loading={loading}
+                    columns={dataTableColumns}
+                    dataSource={tableData}
+                    bordered
+                    rowKey={"id"}
+                    scroll={{ x: true }}
+                    onRow={(record) => ({
+                        onClick: () => {
+                            handleSelect(record);
+                        },
+                    })}
+                    pagination={{
+                        pageSize: 50,
+                        pageSizeOptions: pageSizeOptions,
+                    }}
+                />
+            </div>
+        </div>
     );
 };
 
 const OutcomeNakladnoy = () => {
-    const [outcomeFuel, setOutcomeFuel] = useState([]);
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [totalInputValue, setTotalInputValue] = useState(null);
@@ -220,6 +137,12 @@ const OutcomeNakladnoy = () => {
     const [valueDebt, setValueDebt] = useState(null);
     const [deadlineValue, setDeadlineValue] = useState(null);
     const { dryfruitData, measurementData, user, clientData } = useData();
+    const {
+        setOutcomeNakladnoyDryFruit,
+        outcomeNakladnoyDryFruit,
+        totalSum,
+        setTotalSum,
+    } = useSidebar();
     const navigate = useNavigate();
 
     const columns = [
@@ -259,39 +182,16 @@ const OutcomeNakladnoy = () => {
         },
     ];
 
-    const onCreate = (values, initial) => {
-        setLoading(true);
-        setOutcomeFuel((prev) => {
-            const product = prev.filter(
-                (data) => data.dryFruitId === initial?.nakladnoyDryFruitId
-            );
-            if (product[0]) {
-                return prev.map((item) => {
-                    return item.dryFruitId === product[0].dryFruitId
-                        ? {
-                              ...item,
-                              amount: item.amount + values.amount,
-                          }
-                        : item;
-                });
-            } else {
-                return [
-                    ...prev,
-                    {
-                        ...values,
-                        id: initial?.nakladnoyDryFruitId,
-                        dryFruitId: initial?.nakladnoyDryFruitId,
-                    },
-                ];
-            }
-        });
-        setLoading(false);
-    };
-
     const onEdit = (values, initial) => {
         setLoading(true);
         values.dryFruitId === initial.dryFruitId
-            ? setOutcomeFuel((prev) => {
+            ? setOutcomeNakladnoyDryFruit((prev) => {
+                  setTotalSum(
+                      (prev) =>
+                          prev +
+                          values.amount * values.price -
+                          initial.amount * initial.price
+                  );
                   return prev.map((item) => {
                       return item.dryFruitId === values.dryFruitId
                           ? {
@@ -302,7 +202,7 @@ const OutcomeNakladnoy = () => {
                           : item;
                   });
               })
-            : setOutcomeFuel((prev) => {
+            : setOutcomeNakladnoyDryFruit((prev) => {
                   const borProduct = prev.filter(
                       (data) => data.dryFruitId !== values.dryFruitId
                   );
@@ -311,6 +211,12 @@ const OutcomeNakladnoy = () => {
                   );
                   return borProduct[0]
                       ? newProduct.map((item) => {
+                            setTotalSum(
+                                (prev) =>
+                                    prev +
+                                    values.amount * values.price -
+                                    borProduct[0].amount * borProduct[0].price
+                            );
                             return item.dryFruitId === values.dryFruitId
                                 ? {
                                       ...item,
@@ -319,6 +225,12 @@ const OutcomeNakladnoy = () => {
                                 : item;
                         })
                       : prev.map((item) => {
+                            setTotalSum(
+                                (prev) =>
+                                    prev +
+                                    values.amount * values.price -
+                                    initial.amount * initial.price
+                            );
                             return item.dryFruitId === initial.dryFruitId
                                 ? {
                                       ...values,
@@ -332,21 +244,25 @@ const OutcomeNakladnoy = () => {
 
     const handleDelete = (arr) => {
         setLoading(true);
-        let newTableData = [...outcomeFuel];
+        let newTableData = [...outcomeNakladnoyDryFruit];
         arr.map((itemId) => {
+            const dataId = outcomeNakladnoyDryFruit.filter(
+                (qism) => qism.id === itemId
+            );
+            setTotalSum((prev) => prev - dataId[0].amount * dataId[0].price);
             newTableData = [
                 ...newTableData.filter((item) => item.id !== itemId),
             ];
             return null;
         });
-        setOutcomeFuel(newTableData);
+        setOutcomeNakladnoyDryFruit(newTableData);
         setLoading(false);
     };
 
     const showLargeDrawer = () => {
         setOpen(true);
         let totalsumma = 0;
-        outcomeFuel.map((item) => {
+        outcomeNakladnoyDryFruit.map((item) => {
             const ulchov = measurementData.filter(
                 (data) => data.id === item.measurementId
             );
@@ -386,7 +302,7 @@ const OutcomeNakladnoy = () => {
             .post("api/dry/fruit/outcomeFruit/covenant", [...value])
             .then(function (response) {
                 message.success("Sotilgan quruq meva muvaffaqiyatli qo'shildi");
-                setOutcomeFuel([]);
+                setOutcomeNakladnoyDryFruit([]);
             })
             .catch(function (error) {
                 console.error(error);
@@ -416,8 +332,9 @@ const OutcomeNakladnoy = () => {
                                   .post("api/dry/fruit/debt/post", {
                                       incomeDryFruitId: null,
                                       workerId: null,
-                                      outcomeDryFruitId: response.data.data,
-                                      deadline: deadlineValue,
+                                      clientId: values.clientId,
+                                      branchId: user.branchId,
+                                      date: deadlineValue,
                                       given: false,
                                       borrowAmount:
                                           values.price * values.amount * amount,
@@ -455,6 +372,7 @@ const OutcomeNakladnoy = () => {
               })
             : console.error("salom");
         setOpen(false);
+        setTotalSum(0);
         setTotalInputValue(null);
         setDeadlineValue(null);
         setValueDebt(null);
@@ -494,15 +412,21 @@ const OutcomeNakladnoy = () => {
             </div>
             <CustomTable
                 onEdit={onEdit}
-                onCreate={onCreate}
                 onDelete={handleDelete}
                 getData={(a) => a}
                 columns={columns}
-                tableData={outcomeFuel}
+                tableData={outcomeNakladnoyDryFruit}
                 loading={loading}
                 setLoading={setLoading}
                 pageSizeOptions={[50, 100]}
             />
+            <Row justify="end">
+                <Col span={24} style={{ textAlign: "end" }}>
+                    <h3 style={{ fontWeight: 700, marginTop: 10 }}>
+                        Umumiy summa: {totalSum}
+                    </h3>
+                </Col>
+            </Row>
             <Row justify="end">
                 <Button
                     type="primary"
@@ -514,7 +438,7 @@ const OutcomeNakladnoy = () => {
                         marginTop: "20px",
                     }}
                     onClick={showLargeDrawer}
-                    disabled={outcomeFuel[0] ? false : true}
+                    disabled={outcomeNakladnoyDryFruit[0] ? false : true}
                 >
                     Sotish
                 </Button>
@@ -529,7 +453,9 @@ const OutcomeNakladnoy = () => {
                             <Button onClick={onClose}>Bekor qilish</Button>
                             <Button
                                 type="primary"
-                                onClick={() => onCash(true, outcomeFuel)}
+                                onClick={() =>
+                                    onCash(true, outcomeNakladnoyDryFruit)
+                                }
                             >
                                 Naqt pul
                             </Button>
@@ -578,7 +504,7 @@ const OutcomeNakladnoy = () => {
                                                         marginLeft: "-25px",
                                                     }}
                                                 >
-                                                    Qaytarish vaqti
+                                                    Qarz berilgan vaqti
                                                     <DatePicker
                                                         style={{
                                                             width: "100%",
@@ -624,7 +550,9 @@ const OutcomeNakladnoy = () => {
                         >
                             <Space size={"large"}>
                                 <Button
-                                    onClick={() => onCash(false, outcomeFuel)}
+                                    onClick={() =>
+                                        onCash(false, outcomeNakladnoyDryFruit)
+                                    }
                                     icon={<CreditCardOutlined />}
                                     style={{
                                         padding: "10px 30px",
@@ -637,7 +565,9 @@ const OutcomeNakladnoy = () => {
                                 <Button
                                     type="primary"
                                     icon={<DollarOutlined />}
-                                    onClick={() => onCash(true, outcomeFuel)}
+                                    onClick={() =>
+                                        onCash(true, outcomeNakladnoyDryFruit)
+                                    }
                                     style={{
                                         padding: "10px 30px",
                                         height: 60,

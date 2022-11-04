@@ -304,9 +304,8 @@ const IncomeDryFruit = () => {
                             .post("api/dry/fruit/debt/post", {
                                 incomeDryFruitId: response.data?.data,
                                 workerId: null,
-                                outcomeDryFruitId: null,
                                 given: false,
-                                deadline: deadlineValue,
+                                date: deadlineValue,
                                 borrowAmount:
                                     values.price * values.amount * amount -
                                     qarzValue,
@@ -374,9 +373,8 @@ const IncomeDryFruit = () => {
                                 .post("api/dry/fruit/debt/post", {
                                     incomeDryFruitId: res.data?.data,
                                     workerId: null,
-                                    outcomeDryFruitId: null,
                                     given: false,
-                                    deadline: deadlineValue,
+                                    date: deadlineValue,
                                     borrowAmount:
                                         values.price * values.amount * amount -
                                         qarzValue,

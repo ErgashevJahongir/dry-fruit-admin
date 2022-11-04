@@ -41,6 +41,7 @@ function DrapdownMenu({ onClose, isVisible }) {
             size="200px"
             onClose={onClose}
             visible={isVisible}
+            className={"navbar-drawer"}
         >
             <Menu
                 style={{

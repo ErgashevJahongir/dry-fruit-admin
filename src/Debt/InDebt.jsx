@@ -44,7 +44,6 @@ const InDebt = () => {
         instance
             .post("api/dry/fruit/debt/post", {
                 ...values,
-                outcomeDryFruitId: null,
                 workerId: null,
             })
             .then(function (response) {
@@ -167,15 +166,6 @@ const InDebt = () => {
             key: "deadline",
             width: "20%",
             search: false,
-            sorter: (a, b) => {
-                if (a.deadline < b.deadline) {
-                    return -1;
-                }
-                if (a.deadline > b.deadline) {
-                    return 1;
-                }
-                return 0;
-            },
         },
         {
             title: "To'liq uzilganmi",

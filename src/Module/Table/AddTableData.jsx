@@ -87,6 +87,7 @@ const AddData = ({ onCreate, formData, modalTitle }) => {
                     setVisible(true);
                 }}
                 className="add-button"
+                id={"addData"}
                 icon={<PlusOutlined />}
             >
                 Qo'shish

@@ -21,10 +21,12 @@ const OutDebt = () => {
             )
             .then((data) => {
                 let value = data.data?.data?.debts?.map((df) => {
-                    const deadline = moment(df.deadline).format("DD-MM-YYYY");
+                    const createdDate = moment(df.createdDate).format(
+                        "DD-MM-YYYY"
+                    );
                     return {
                         ...df,
-                        deadline: deadline,
+                        createdDate: createdDate,
                     };
                 });
                 setDebts(value);
@@ -37,32 +39,17 @@ const OutDebt = () => {
             .finally(() => setLoading(false));
     };
 
-    const onCreate = (values) => {
-        setLoading(true);
-        instance
-            .post("api/dry/fruit/debt/post", { ...values, borrower: null })
-            .then(function (response) {
-                message.success("Tashqi qarz muvofaqiyatli qo'shildi");
-                getDebts(current - 1, pageSize);
-            })
-            .catch(function (error) {
-                console.error(error);
-                message.error("Tashqi qarzni qo'shishda muammo bo'ldi");
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    };
-
     const onEdit = (values, initial) => {
+        console.log(initial);
         setLoading(true);
         const val = values.given === "true" ? true : false;
-        const deadline = moment(values.deadline, "DD-MM-YYYY").toISOString();
         instance
             .put(`api/dry/fruit/debt/update${initial.id}`, {
                 ...values,
-                deadline: deadline,
+                clientId: initial.clientId,
+                branchId: initial.branchId,
                 given: val,
+                date: null,
                 workerId: null,
                 incomeDryFruitId: null,
             })
@@ -79,30 +66,12 @@ const OutDebt = () => {
             });
     };
 
-    const handleDelete = (arr) => {
-        setLoading(true);
-        arr.map((item) => {
-            instance
-                .delete(`api/oil/station/debt/delete${item}`)
-                .then((data) => {
-                    message.success("Tashqi qarz muvofaqiyatli o'chirildi");
-                })
-                .catch((error) => {
-                    console.error(error);
-                    message.error("Tashqi qarzni o'chirishda muammo bo'ldi");
-                });
-            return null;
-        });
-        getDebts(current - 1, pageSize);
-        setLoading(false);
-    };
-
     const columns = [
         {
             title: "Qarzdor klient",
             dataIndex: "clientId",
             key: "clientId",
-            width: "15%",
+            width: "20%",
             search: false,
             render: (record) => {
                 const name = clientData?.filter((item) => item.id === record);
@@ -142,7 +111,7 @@ const OutDebt = () => {
             title: "Qarz beruvchi",
             dataIndex: "createdBy",
             key: "createdBy",
-            width: "15%",
+            width: "20%",
             search: false,
             render: (record) => {
                 const name = usersData?.filter((item) => item.id === record);
@@ -159,20 +128,16 @@ const OutDebt = () => {
             },
         },
         {
-            title: "Olingan mahsulot",
-            dataIndex: "dryFruitId",
-            key: "dryFruitId",
-            width: "10%",
+            title: "Olingan vaqt",
+            dataIndex: "createdDate",
+            key: "createdDate",
+            width: "20%",
             search: false,
-            render: (record) => {
-                const name = dryfruitData?.filter((item) => item.id === record);
-                return name[0]?.name;
-            },
             sorter: (a, b) => {
-                if (a.dryFruitId < b.dryFruitId) {
+                if (a.createdDate < b.createdDate) {
                     return -1;
                 }
-                if (a.dryFruitId > b.dryFruitId) {
+                if (a.createdDate > b.createdDate) {
                     return 1;
                 }
                 return 0;
@@ -189,22 +154,6 @@ const OutDebt = () => {
                     return -1;
                 }
                 if (a.borrowAmount > b.borrowAmount) {
-                    return 1;
-                }
-                return 0;
-            },
-        },
-        {
-            title: "Qaytarish vaqti",
-            dataIndex: "deadline",
-            key: "deadline",
-            width: "20%",
-            search: false,
-            sorter: (a, b) => {
-                if (a.deadline < b.deadline) {
-                    return -1;
-                }
-                if (a.deadline > b.deadline) {
                     return 1;
                 }
                 return 0;
@@ -236,9 +185,7 @@ const OutDebt = () => {
             <h3>Klientlar qarzlari</h3>
             <CustomTable
                 onEdit={onEdit}
-                onCreate={onCreate}
                 getData={getDebts}
-                onDelete={handleDelete}
                 columns={columns}
                 tableData={debts}
                 current={current}

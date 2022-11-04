@@ -149,13 +149,15 @@ const Dashboard = () => {
     };
 
     return (
-        <>
+        <div style={{ position: "relative" }}>
             <Card
                 className="currency"
                 style={{
                     width: "350px",
                     float: "right",
-                    zIndex: 1,
+                    position: "absolute",
+                    right: 0,
+                    zIndex: 2,
                     borderRadius: 5,
                     fontSize: 14,
                     marginTop: "-75px",
@@ -181,7 +183,7 @@ const Dashboard = () => {
                     </Card>
                 </Row>
             </div>
-        </>
+        </div>
     );
 };
 
